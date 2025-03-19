@@ -16,7 +16,8 @@
 
 **Документация**  
 - Техническое задание [pdf]() [dock]()  
-- Диаграммы [pdf]()  
+- Диаграммы [pdf]()
+- Финансовая модель [pdf](https://github.com/qudest/voyago/blob/VOYAGO-22/github-documentation/Documentation/Financial%20model.pdf) [dock](https://github.com/qudest/voyago/blob/VOYAGO-22/github-documentation/Documentation/Financial%20model.docx)  
 - Презентация (1 аттестация) [pdf](https://github.com/qudest/voyago/blob/VOYAGO-22/github-documentation/Documentation/Voyago-Presentation-1att.pdf) [pptx](https://github.com/qudest/voyago/blob/VOYAGO-22/github-documentation/Documentation/Voyago-Presentation-1att.pptx)  
 - [Инструкция по коммитам](https://drive.google.com/file/d/11163BSJbBptiCoLEdbwxT1hNaGvViPxv/view?usp=drive_link)
 
