@@ -18,6 +18,7 @@
 Техническое задание [pdf]() [dock]()  
 Диаграммы [pdf]()  
 Презентация (1 аттестация) [pdf]() [pptx]()  
+[Инструкция по коммитам](https://drive.google.com/file/d/11163BSJbBptiCoLEdbwxT1hNaGvViPxv/view?usp=drive_link)
 
 **Видео**  
 Видеопрезентация (1 аттестация) [YouTube](https://www.youtube.com/) [RuTube](https://rutube.ru/)  
