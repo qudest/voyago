@@ -19,7 +19,7 @@
 - Диаграммы [pdf]()
 - Финансовая модель [pdf](https://github.com/qudest/voyago/blob/1f462218669032b31a806e32f40bc3edc13be78f/Documentation/Financial%20model.pdf) [doc](https://github.com/qudest/voyago/blob/1f462218669032b31a806e32f40bc3edc13be78f/Documentation/Financial%20model.docx)
 - Презентация (1 аттестация) [pdf](https://github.com/qudest/voyago/blob/1f462218669032b31a806e32f40bc3edc13be78f/Documentation/Voyago-Presentation-1att.pdf) [pptx](https://github.com/qudest/voyago/blob/1f462218669032b31a806e32f40bc3edc13be78f/Documentation/Voyago-Presentation-1att.pptx)  
-- [Инструкция по коммитам](https://drive.google.com/file/d/11163BSJbBptiCoLEdbwxT1hNaGvViPxv/view?usp=drive_link) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
+- [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
 **Видео**  
 - Видеопрезентация (1 аттестация) [YouTube](https://www.youtube.com/) [RuTube](https://rutube.ru/)  
