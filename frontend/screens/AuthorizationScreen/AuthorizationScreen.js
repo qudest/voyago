@@ -1,51 +1,61 @@
-import React from 'react';
-import { View, Image, StyleSheet, TextInput, Text,  TouchableOpacity, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
+import { useNavigation } from "@react-navigation/native";
 
 const AutorizationScreen = () => {
+  const navigation = useNavigation();
+  const [phoneNumber, setPhoneNumber] = useState('+7'); 
 
-  const handleRegistrationPress = () => {
-    Alert.alert(
-      "Подтверждение", 
-      "Вы уверены, что хотите продолжить?", 
-      [
-        {
-          text: "Отмена",
-          onPress: () => console.log("Действие отменено"),
-          style: "cancel",
-        },
-        {
-          text: "Продолжить", 
-          onPress: () => {
-            console.log("Пользователь продолжил");
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+  const handleRegistrationAccessPress = () => {
+    navigation.navigate("AuthorizationAcceptScreen", {phoneNumber});
   };
+
+  const handlePhoneNumberChange = (text) => {
+    if (text.startsWith('+7')) {
+      const cleanedText = text.replace(/[^0-9]/g, ''); 
+      const formattedText = `+7${cleanedText.slice(1, 11)}`; 
+      setPhoneNumber(formattedText);
+    } else {
+      setPhoneNumber('+7');
+    }
+  };
+
+  const isButtonDisabled = phoneNumber.length < 12; 
 
   return (
     <View style={styles.container}>
       <View style={styles.containerMainInf}>
-      <Image
+        <Image
           source={require('../../assets/logoname.png')}
           style={styles.imageLogoName}
         />
-         <Text style={styles.textNumber} >Вход или регистрация</Text>
-          <TextInput style={styles.inputNumber}
-              maxLength={64}
-              placeholder="Номер телефона"
-              cursorColor="#606265"
-            />
+        <Text style={styles.textNumber}>Вход или регистрация</Text>
+        <TextInput
+          style={styles.inputNumber}
+          maxLength={12}
+          placeholder="+7XXXXXXXXXX"
+          cursorColor="#FCFFFF"
+          onChangeText={handlePhoneNumberChange}
+          value={phoneNumber}
+          keyboardType="phone-pad" 
+        />
       </View>
-        <TouchableOpacity  style={styles.loginLinkTextClickable} onPress={handleRegistrationPress}>
-          <Text style={styles.loginTextClickable}>
+      <TouchableOpacity
+        style={[
+          styles.enableButton,
+          isButtonDisabled && styles.disabledButton
+        ]}
+        onPress={handleRegistrationAccessPress}
+        disabled={isButtonDisabled}
+      >
+        <Text style={[
+          styles.loginTextClickable,
+          isButtonDisabled && styles.loginDisabledTextClickable
+        ]}>
           Продолжить
-          </Text>
-        </TouchableOpacity>
-      <Text style={styles.description} >Используя Voyago вы соглашаетесь с нашими Условиями и Политикой конфиденциальности</Text>
-     
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

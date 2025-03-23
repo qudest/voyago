@@ -13,21 +13,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-    height: 650,
+    height: 660,
   },
   imageLogoName: {
     width: 165,
     height: 35,
   },
-  textNumber: {
+  textNumberTitle: {
     marginTop: 100,
     fontSize: 19,
   },
+  textNumber: {
+    fontSize: 16,
+    color: '#606265'
+  },
   inputNumber: {
-    textAlign: 'left',
+    textAlign: 'center',
 
-    color: '#606265',
-    marginTop: 50,
+    marginTop:35,
     marginBottom: 0,
 
     width: 256,
@@ -39,7 +42,18 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
   },
-  enableButton: {
+  repeatCodeClickable: {
+    marginBottom: 10,
+    color: '#606265',
+  },
+  repeatCodeDisabled: {
+    marginBottom: 10,
+    color: '#3E3C80',
+  },
+  loginLinkTextClickable: {
+    color: '#606265',
+  },
+  loginLinkTextClickable: {
 
     bottom: 70,
 
@@ -85,7 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 500,
   },
-  loginDisabledTextClickable: {
+  disabledTextClickable: {
     alignSelf: 'center',
     color: '#3E3C80',
     fontSize: 16,
