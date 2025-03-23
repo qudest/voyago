@@ -29,6 +29,7 @@ jobs:
   install_and_build:
     runs-on: ubuntu-latest
     steps:
+      - run: cd frontend
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
