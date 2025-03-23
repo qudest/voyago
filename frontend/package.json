@@ -25,7 +25,8 @@
     "web-streams-polyfill": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "^6.0.0"
   },
   "private": true
 }
