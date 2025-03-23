@@ -37,7 +37,7 @@ jobs:
         run: cd frontend && npm ci
 
       - name: 🚀 Preview build app
-        run: cd frontend && eas update --auto --branch "${{ github.event.pull_request.head.ref }}" --non-interactive
+        run: cd frontend && eas init && eas update --auto --branch "${{ github.event.pull_request.head.ref }}" --non-interactive
         if: github.event.pull_request.base.ref == 'develop'
 
       - name: 🚀 Build app
