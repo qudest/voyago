@@ -1,22 +1,10 @@
 name: Frontend CI
 
 on:
-  push:
-    branches:
-      - main
-      - release
-      - develop
-      - 'bugfix/**'
-      - 'feature/**'
-    paths:
-      - 'frontend/**'
   pull_request:
     branches:
       - main
-      - release
       - develop
-      - 'bugfix/**'
-      - 'feature/**'
     paths:
       - 'frontend/**'
 
@@ -26,16 +14,32 @@ permissions:
   pull-requests: write
 
 jobs:
-  install_and_build:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - run: cd frontend
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v4
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - run: npx react-native run-android
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: cd frontend && npm ci
+
+      - name: 🚀 Preview build app
+        run: cd frontend && eas update --auto --branch "${{ github.event.pull_request.head.ref }}" --non-interactive
+        if: github.event.pull_request.base.ref == 'develop'
+
+      - name: 🚀 Build app
+        run: cd frontend && eas build --non-interactive
+        if: github.event.pull_request.base.ref == 'main'
