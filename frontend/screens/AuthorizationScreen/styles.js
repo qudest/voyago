@@ -3,11 +3,11 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    backgroundColor: '#FCFFFF',
     justifyContent: 'space-between', 
     alignItems: 'center', 
-
     flexGrow: 1, 
+
+    backgroundColor: '#FCFFFF',
   },
   containerMainInf: {
     alignItems: 'center',
@@ -21,36 +21,35 @@ const styles = StyleSheet.create({
   },
   textNumber: {
     marginTop: 100,
+
     fontSize: 19,
   },
   inputNumber: {
-    textAlign: 'left',
-
-    color: '#606265',
     marginTop: 50,
     marginBottom: 0,
 
     width: 256,
 
-    marginBottom: 0,
+    textAlign: 'left',
+    color: '#606265',
+    fontSize: 16,
+
     borderBottomWidth: 1, 
     borderBottomColor: 'black', 
     paddingBottom: 8,
-
-    fontSize: 16,
   },
   enableContinueButton: {
-
     bottom: 70,
-
-    backgroundColor: '#3E3C80',
-    borderRadius: 22,
+    alignSelf: 'center',
 
     width: 295,
     height: 44,
-
-    alignSelf: 'center',
     paddingTop: 10,
+
+    backgroundColor: '#3E3C80',
+
+    borderRadius: 22,
+
     shadowColor: '#000BD8', 
     shadowOffset: {
       width: 0,
@@ -61,15 +60,17 @@ const styles = StyleSheet.create({
     elevation: 5, 
   },
   disableContinueButton: {
-    backgroundColor: '#CECED1', 
-    color: '#3E3C80',
-    borderRadius: 22,
+    alignSelf: 'center',
 
     width: 295,
     height: 44,
-
-    alignSelf: 'center',
     paddingTop: 10,
+
+    backgroundColor: '#CECED1', 
+    color: '#3E3C80',
+
+    borderRadius: 22,
+
     shadowColor: '#000BD8', 
     shadowOffset: {
       width: 0,
@@ -81,22 +82,27 @@ const styles = StyleSheet.create({
   },
   enableContinueText: {
     alignSelf: 'center',
+
     color: '#FFFFFF',
+
     fontSize: 16,
     fontWeight: 500,
   },
   disableContinueText: {
     alignSelf: 'center',
+
     color: '#3E3C80',
+
     fontSize: 16,
     fontWeight: 500,
   },
   description: {
-    textAlign: 'center',
+    bottom: 10,
+
     position: 'absolute',
 
+    textAlign: 'center',
     fontSize: 10,
-    bottom: 10,
   },
 });
 

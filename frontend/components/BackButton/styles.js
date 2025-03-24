@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
         top: 18, 
         left: 10, 
         zIndex: 1, 
+        
         marginTop: 0,
       },
       image: {
