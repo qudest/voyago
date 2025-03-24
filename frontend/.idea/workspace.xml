@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bdf3443c-cc8c-4157-8971-20acf14e07c4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/styles.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/AuthorizationScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationScreen/styles.js" afterDir="false" />
     </list>
@@ -38,7 +38,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "feature/(VOYAGO-27)template-loading-screen",
+    "git-widget-placeholder": "feature/(VOYAGO-28)template-authorization-screen",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/uliana_dev/voyago/frontend",
     "settings.editor.selected.configurable": "AndroidSdkUpdater"

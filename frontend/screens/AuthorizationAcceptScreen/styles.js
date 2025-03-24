@@ -42,18 +42,15 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
   },
-  repeatCodeClickable: {
+  enableRepeatCodeButton: {
     marginBottom: 10,
     color: '#606265',
   },
-  repeatCodeDisabled: {
+  disableRepeatCodeButton: {
     marginBottom: 10,
     color: '#3E3C80',
   },
-  loginLinkTextClickable: {
-    color: '#606265',
-  },
-  loginLinkTextClickable: {
+  enableContinueButton: {
 
     bottom: 70,
 
@@ -74,7 +71,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, 
   },
-  disabledButton: {
+  disableContinueButton: {
     backgroundColor: '#CECED1', 
     color: '#3E3C80',
     borderRadius: 22,
@@ -93,13 +90,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, 
   },
-  loginTextClickable: {
+  enableContinueText: {
     alignSelf: 'center',
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 500,
   },
-  disabledTextClickable: {
+  disableContinueText: {
     alignSelf: 'center',
     color: '#3E3C80',
     fontSize: 16,

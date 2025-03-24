@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
+import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation } from "@react-navigation/native";
 
 const AutorizationScreen = () => {
@@ -41,21 +42,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <TouchableOpacity
-        style={[
-          styles.enableButton,
-          isButtonDisabled && styles.disabledButton
-        ]}
-        onPress={handleRegistrationAccessPress}
-        disabled={isButtonDisabled}
-      >
-        <Text style={[
-          styles.loginTextClickable,
-          isButtonDisabled && styles.loginDisabledTextClickable
-        ]}>
-          Продолжить
-        </Text>
-      </TouchableOpacity>
+      <ContinueButton onPress={handleRegistrationAccessPress} condition={isButtonDisabled}/>
     </View>
   );
 };

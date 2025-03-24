@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
   },
-  enableButton: {
+  enableContinueButton: {
 
     bottom: 70,
 
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, 
   },
-  disabledButton: {
+  disableContinueButton: {
     backgroundColor: '#CECED1', 
     color: '#3E3C80',
     borderRadius: 22,
@@ -79,13 +79,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5, 
   },
-  loginTextClickable: {
+  enableContinueText: {
     alignSelf: 'center',
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: 500,
   },
-  loginDisabledTextClickable: {
+  disableContinueText: {
     alignSelf: 'center',
     color: '#3E3C80',
     fontSize: 16,

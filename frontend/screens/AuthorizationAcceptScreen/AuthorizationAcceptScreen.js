@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Image, StyleSheet, TextInput, Text,  TouchableOpacity, Alert } from 'react-native';
 import styles from './styles';
 import BackButton from "../../components/BackButton/BackButton";
+import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const AuthorizationAcceptScreen = () => {
@@ -10,8 +11,6 @@ const AuthorizationAcceptScreen = () => {
     const [timer, setTimer] = useState(11); 
     const [isTimerActive, setIsTimerActive] = useState(true); 
     const route = useRoute(); 
-
-    const phoneNumber = route.params.phoneNumber;
 
     const handleRegistrationPress = () => {
         if (code == 6666){
@@ -28,6 +27,8 @@ const AuthorizationAcceptScreen = () => {
     const handleBackPress = () => {
         navigation.navigate("AuthorizationScreen");
     };
+
+    const phoneNumber = route.params.phoneNumber;
 
     useEffect(() => {
         let interval;
@@ -72,29 +73,16 @@ const AuthorizationAcceptScreen = () => {
         </View>
         <TouchableOpacity
         onPress={resetTimer} 
-        disabled={isTimerActive} 
-      >
+        disabled={isTimerActive} >
         <Text style={[
-                    styles.repeatCodeClickable,
-                    !isTimerActive && styles.repeatCodeDisabled]}>
+                    styles.enableRepeatCodeButton,
+                    !isTimerActive && styles.disableRepeatCodeButton]}>
           {isTimerActive
             ? `Получить новый код можно через ${timer} сек`
             : "Получить новый код"}
         </Text>
       </TouchableOpacity>
-            <TouchableOpacity style={[
-                    styles.loginLinkTextClickable,
-                    isButtonDisabled && styles.disabledButton
-                ]}
-                 onPress={handleRegistrationPress}
-                 disabled={isButtonDisabled}>
-            <Text style={[
-                    styles.loginTextClickable,
-                    isButtonDisabled && styles.disabledTextClickable]}>
-            Продолжить
-            </Text>
-            </TouchableOpacity>
-        
+      <ContinueButton onPress={handleRegistrationPress} condition={isButtonDisabled}/>
         </View>
     );
 };
