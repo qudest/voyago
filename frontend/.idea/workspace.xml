@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bdf3443c-cc8c-4157-8971-20acf14e07c4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/styles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/AuthorizationScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationScreen/styles.js" afterDir="false" />
-    </list>
+    <list default="true" id="bdf3443c-cc8c-4157-8971-20acf14e07c4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
