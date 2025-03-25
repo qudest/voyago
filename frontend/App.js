@@ -7,7 +7,6 @@ import LoadingScreen from './screens/LoadingScreen/LoadingScreen';
 import AuthorizationScreen from './screens/AuthorizationScreen/AuthorizationScreen';
 import AuthorizationAcceptScreen from './screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen';
 
-
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 

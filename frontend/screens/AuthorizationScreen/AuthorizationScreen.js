@@ -43,6 +43,7 @@ const AutorizationScreen = () => {
         />
       </View>
       <ContinueButton onPress={handleRegistrationAccessPress} condition={isButtonDisabled}/>
+      <Text style={styles.description} >Используя Voyago вы соглашаетесь с нашими Условиями и Политикой конфиденциальности</Text>
     </View>
   );
 };
