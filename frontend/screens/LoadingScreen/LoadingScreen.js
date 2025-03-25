@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Image, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Image, Animated, Easing } from 'react-native';
 import styles from './styles';
 
 const LoadingScreen = ({navigation}) => {
