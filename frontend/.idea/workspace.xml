@@ -7,8 +7,9 @@
     <list default="true" id="bdf3443c-cc8c-4157-8971-20acf14e07c4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/BackButton/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/BackButton/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +38,7 @@
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "VOYAGO-26/template",
+    "git-widget-placeholder": "fix/(VOYAGO-28)template-authorization-screen",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/uliana_dev/voyago/frontend/uiFrontend",
     "settings.editor.selected.configurable": "AndroidSdkUpdater"

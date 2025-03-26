@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoadingScreen from './screens/LoadingScreen/LoadingScreen';
 import AuthorizationScreen from './screens/AuthorizationScreen/AuthorizationScreen';
+import AuthorizationAcceptScreen from './screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen';
 
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
@@ -19,6 +20,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="LoadingScreen" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
           <Stack.Screen name="AuthorizationScreen" component={AuthorizationScreen} />
+          <Stack.Screen name="AuthorizationAcceptScreen" component={AuthorizationAcceptScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
