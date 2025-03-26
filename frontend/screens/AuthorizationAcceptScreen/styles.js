@@ -13,37 +13,49 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
 
-    height: 650,
+    height: 660,
   },
   imageLogoName: {
     width: 165,
     height: 35,
   },
-  textNumber: {
+  textNumberTitle: {
     marginTop: 100,
 
     fontSize: 19,
-    fontFamily: 'Roboto-Regular',
-    
+  },
+  textNumber: {
+    fontSize: 16,
+    color: '#606265'
   },
   inputNumber: {
-    marginTop: 50,
-    marginBottom: 0,
-
     width: 256,
 
-    textAlign: 'left',
-    color: '#606265',
-    fontSize: 16,
 
+    marginTop:35,
+    marginBottom: 0,
+    paddingBottom: 8,
+
+    textAlign: 'center',
+    fontSize: 16,
 
     borderBottomWidth: 1, 
     borderBottomColor: 'black', 
-    paddingBottom: 8,
+  },
+  enableRepeatCodeButton: {
+    marginBottom: 10,
+
+    color: '#606265',
+  },
+  disableRepeatCodeButton: {
+    marginBottom: 10,
+
+    color: '#3E3C80',
   },
   enableContinueButton: {
-    bottom: 70,
     alignSelf: 'center',
+
+    bottom: 70,
 
     width: 295,
     height: 44,
@@ -85,7 +97,6 @@ const styles = StyleSheet.create({
   },
   enableContinueText: {
     alignSelf: 'center',
-
     color: '#FFFFFF',
 
     fontSize: 16,
@@ -93,19 +104,17 @@ const styles = StyleSheet.create({
   },
   disableContinueText: {
     alignSelf: 'center',
-
     color: '#3E3C80',
 
     fontSize: 16,
     fontWeight: 500,
   },
   description: {
-    bottom: 10,
-
+    textAlign: 'center',
     position: 'absolute',
 
-    textAlign: 'center',
     fontSize: 10,
+    bottom: 10,
   },
 });
 
