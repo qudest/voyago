@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, TextInput, Text,  TouchableOpacity, Alert } from 'react-native';
+import { View, Image, StyleSheet, TextInput, Text,  TouchableOpacity, Alert,  Keyboard, TouchableWithoutFeedback } from 'react-native';
 import styles from './styles';
 import BackButton from "../../components/BackButton/BackButton";
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
@@ -53,6 +53,7 @@ const AuthorizationAcceptScreen = () => {
     const isButtonDisabled = code.length < 4;
 
     return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
         <BackButton onPress={handleBackPress} />
         <View style={styles.containerMainInf}>
@@ -84,6 +85,7 @@ const AuthorizationAcceptScreen = () => {
       </TouchableOpacity>
       <ContinueButton onPress={handleRegistrationPress} condition={isButtonDisabled}/>
         </View>
+      </TouchableWithoutFeedback>
     );
 };
 

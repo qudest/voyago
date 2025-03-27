@@ -1,8 +1,10 @@
 import React, { useState} from 'react';
-import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert,  Keyboard, TouchableWithoutFeedback} from 'react-native';
 import styles from './styles';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation } from "@react-navigation/native";
+
+
 
 const AutorizationScreen = () => {
   const navigation = useNavigation();
@@ -25,6 +27,7 @@ const AutorizationScreen = () => {
   const isButtonDisabled = phoneNumber.length < 12; 
 
   return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <View style={styles.container}>
       <View style={styles.containerMainInf}>
         <Image
@@ -46,6 +49,7 @@ const AutorizationScreen = () => {
       </View>
       <ContinueButton onPress={handleRegistrationAccessPress} condition={isButtonDisabled}/>
     </View>
+    </TouchableWithoutFeedback>
   );
 };
 
