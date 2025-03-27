@@ -6,7 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoadingScreen from './screens/LoadingScreen/LoadingScreen';
 import AuthorizationScreen from './screens/AuthorizationScreen/AuthorizationScreen';
 import AuthorizationAcceptScreen from './screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen';
-
+import PremiumScreen from './screens/PremiumScreen/PremiumScreen';
+import PremiumFreeScreen from './screens/PremiumFreeScreen/PremiumFreeScreen'
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
@@ -21,6 +22,8 @@ export default function App() {
           <Stack.Screen name="LoadingScreen" component={LoadingScreen} />
           <Stack.Screen name="AuthorizationScreen" component={AuthorizationScreen} />
           <Stack.Screen name="AuthorizationAcceptScreen" component={AuthorizationAcceptScreen} />
+          <Stack.Screen name="PremiumScreen" component={PremiumScreen} />
+          <Stack.Screen name="PremiumFreeScreen" component={PremiumFreeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
