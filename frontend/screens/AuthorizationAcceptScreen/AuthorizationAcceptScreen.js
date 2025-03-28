@@ -13,15 +13,7 @@ const AuthorizationAcceptScreen = () => {
     const route = useRoute(); 
 
     const handleRegistrationPress = () => {
-        if (code == 6666){
-            Alert.alert(
-                "Проходишь дальше"
-                );
-        } else {
-            Alert.alert(
-                "Код неверный"
-                );
-        }
+      navigation.navigate("PremiumScreen");
     };
 
     const handleBackPress = () => {
