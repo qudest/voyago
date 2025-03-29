@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     enableContinueButton: {
         alignSelf: 'center',
+        
         bottom: 70,
 
         width: 295,
