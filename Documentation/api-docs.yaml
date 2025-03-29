@@ -10,12 +10,7 @@ paths:
       - Route service
       summary: Find by id
       operationId: findRoute
-      parameters:
-      - name: Route id
-        in: query
-        required: true
-        schema:
-          type: string
+      parameters: []
       responses:
         "200":
           description: Correct response
@@ -45,7 +40,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/JSON route"
+              $ref: "#/components/schemas/JSON create or update"
         required: true
       responses:
         "200":
@@ -75,10 +70,6 @@ paths:
       responses:
         "200":
           description: Correct response
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/JSON route"
         "400":
           description: Invalid request
           content:
@@ -97,13 +88,7 @@ paths:
       - Route service
       summary: Rate route
       operationId: rate
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+      parameters: []
       requestBody:
         content:
           application/json:
@@ -208,16 +193,36 @@ paths:
       summary: Find all routes
       operationId: findAllRoutes
       parameters:
-      - name: dto
+      - name: filter
         in: query
         required: true
         schema:
           $ref: "#/components/schemas/JSON route"
-      - name: pageable
+      - name: page
         in: query
-        required: true
+        description: Zero-based page index (0..N)
+        required: false
         schema:
-          $ref: "#/components/schemas/Pageable"
+          minimum: 0
+          type: integer
+          default: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          minimum: 1
+          type: integer
+          default: 20
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
       responses:
         "200":
           description: Correct response
@@ -414,8 +419,11 @@ paths:
         content:
           application/json:
             schema:
+              maxLength: 6
+              minLength: 6
               type: string
               description: Confirmation code
+              example: "123456"
         required: true
       responses:
         "200":
@@ -444,6 +452,87 @@ components:
         Error message:
           type: string
           example: "Invalid request, error in JSON deserialization"
+    JSON create or update:
+      type: object
+      properties:
+        Route name:
+          type: string
+          example: Great Route
+        Route creator:
+          type: string
+          example: Great Route
+        Route tags:
+          type: array
+          example: "[VARIOUS, MOST_USED]"
+          items:
+            type: string
+            example: "[VARIOUS, MOST_USED]"
+            enum:
+            - RECOMMENDED_BY_US
+            - MOST_USED
+            - VARIOUS
+        Average time:
+          type: object
+          properties:
+            seconds:
+              type: integer
+              format: int64
+            zero:
+              type: boolean
+            nano:
+              type: integer
+              format: int32
+            negative:
+              type: boolean
+            positive:
+              type: boolean
+            units:
+              type: array
+              items:
+                type: object
+                properties:
+                  durationEstimated:
+                    type: boolean
+                  duration:
+                    type: object
+                    properties:
+                      seconds:
+                        type: integer
+                        format: int64
+                      zero:
+                        type: boolean
+                      nano:
+                        type: integer
+                        format: int32
+                      negative:
+                        type: boolean
+                      positive:
+                        type: boolean
+                  timeBased:
+                    type: boolean
+                  dateBased:
+                    type: boolean
+          description: Average travel time in minutes
+          example: 5000
+        Total distance:
+          type: integer
+          description: Total distance in meters
+          format: int32
+          example: 500
+        Point id's:
+          type: array
+          description: Id of key points on the map
+          example:
+          - 1500
+          - 134023
+          - 11
+          - 4054
+          - 4997
+          - 332
+          items:
+            type: integer
+            description: Id of key points on the map
+            format: int64
     JSON route:
       type: object
       properties:
@@ -556,99 +645,3 @@ components:
           minLength: 5
           type: string
           example: 12/35
-    JSON create or update:
-      type: object
-      properties:
-        Route name:
-          type: string
-          example: Great Route
-        Route creator:
-          type: string
-          example: Great Route
-        Route tags:
-          type: array
-          example: "[VARIOUS, MOST_USED]"
-          items:
-            type: string
-            example: "[VARIOUS, MOST_USED]"
-            enum:
-            - RECOMMENDED_BY_US
-            - MOST_USED
-            - VARIOUS
-        Average time:
-          type: object
-          properties:
-            seconds:
-              type: integer
-              format: int64
-            zero:
-              type: boolean
-            nano:
-              type: integer
-              format: int32
-            negative:
-              type: boolean
-            positive:
-              type: boolean
-            units:
-              type: array
-              items:
-                type: object
-                properties:
-                  durationEstimated:
-                    type: boolean
-                  duration:
-                    type: object
-                    properties:
-                      seconds:
-                        type: integer
-                        format: int64
-                      zero:
-                        type: boolean
-                      nano:
-                        type: integer
-                        format: int32
-                      negative:
-                        type: boolean
-                      positive:
-                        type: boolean
-                  timeBased:
-                    type: boolean
-                  dateBased:
-                    type: boolean
-          description: Average travel time in minutes
-          example: 5000
-        Total distance:
-          type: integer
-          description: Total distance in meters
-          format: int32
-          example: 500
-        Point id's:
-          type: array
-          description: Id of key points on the map
-          example:
-          - 1500
-          - 134023
-          - 11
-          - 4054
-          - 4997
-          - 332
-          items:
-            type: integer
-            description: Id of key points on the map
-            format: int64
-    Pageable:
-      type: object
-      properties:
-        page:
-          minimum: 0
-          type: integer
-          format: int32
-        size:
-          minimum: 1
-          type: integer
-          format: int32
-        sort:
-          type: array
-          items:
-            type: string
