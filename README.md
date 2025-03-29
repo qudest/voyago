@@ -22,6 +22,7 @@
 - Диаграммы [png](Documentation/uml)
 - План тестирования [pdf](Documentation/Testing-plan.pdf) [docs](Documentation/Testing-plan.docx)  
 - Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)
+- [Описание API](Documentation/api-docs.yaml)
 - [Чек-лист (1 аттестация)](https://docs.google.com/spreadsheets/d/1OioB3z3DnBsB88rAg54IMC_nxb7ORmjc_hf41RPbbbs/edit?usp=sharing)  
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
