@@ -17,7 +17,7 @@
 
 ### **Документация**  
 - Техническое задание [pdf](Documentation/Tech_zadanie_Voyago.pdf) [doc](Documentation/Tech_zadanie_Voyago.docx)  
-- SWOT и анализ конкурентов [pdf](Documentation/SWOT_and_competitors.pdf) [doc](Documentation/SWOT_and_competitors.docx)  
+- SWOT и анализ конкурентов [pdf](Documentation/SWOT-and-competitors.pdf) [doc](Documentation/SWOT-and-competitors.docx)  
 - Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)
 - Диаграммы [png](Documentation/uml)
 - План тестирования [pdf](Documentation/Testing-plan.pdf) [docs](Documentation/Testing-plan.docx)  
