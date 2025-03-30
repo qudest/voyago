@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FCFFF',
-    position: 'relative',
+    backgroundColor: '#FCFCFF',
+    width: '100%',
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 100,
   },
   mainInformationTitle: {
     color: '#000000',
@@ -26,11 +26,10 @@ const styles = StyleSheet.create({
   },
   fixedButton: {
     position: 'absolute',
-    marginTop: 'auto', 
     bottom: 0,
     left: 0,
     right: 0,
-    padding: 20,
+    bottom: 0,
   },
 });
 

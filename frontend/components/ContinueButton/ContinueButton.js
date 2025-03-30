@@ -4,6 +4,7 @@ import { Image, TouchableOpacity, Text } from 'react-native';
 
 const ContinueButton = ({ onPress, condition }) => {
   return (
+    
     <TouchableOpacity
     style={[
       styles.enableContinueButton,

@@ -4,11 +4,19 @@ import { View, TextInput, Text, Image, FlatList, TouchableOpacity, Keyboard, Tou
 import { useState } from 'react';
 
 
-const SearchCity = ({citiesData = []}) => {
+const SearchCity = ({ citiesData = [], onCitySelect }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredCities, setFilteredCities] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
   
+        
+    const handleCitySelect = (cityName) => {
+        setSearchQuery(cityName);
+        setFilteredCities([]);
+        setIsSearchFocused(false);
+        if(onCitySelect) onCitySelect(cityName);
+    };
+
     const handleSearch = (text) => {
           setSearchQuery(text);
           if (text.length > 0) {
@@ -21,15 +29,10 @@ const SearchCity = ({citiesData = []}) => {
           }
       };
   
-      const handleCitySelect = (cityName) => {
-          setSearchQuery(cityName);
-          setFilteredCities([]);
-          setIsSearchFocused(false);
-      };
-  
 
   return (      
       <View style={styles.searchContainer}>
+        <View style={styles.searchMain}>
         <TextInput
             style={styles.searchInput}
             value={searchQuery}
@@ -55,6 +58,8 @@ const SearchCity = ({citiesData = []}) => {
                 />
             </View>
         )}
+        
+        </View>
           <Image
             source={require('../../assets/search.png')}
             style={styles.imageSearch}

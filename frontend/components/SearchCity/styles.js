@@ -4,10 +4,15 @@ const styles = StyleSheet.create({
     searchContainer: {
         width: '100%',
         position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
       },
+
       imageSearch: {
         flexGrow: 1, 
-        marginTop: -50,
+        position: 'absolute',
+        right: 35,
+        bottom: 15,
       },
       searchInput: {
         height: 45,
