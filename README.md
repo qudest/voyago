@@ -24,10 +24,17 @@
 - Технические риски [pdf](Documentation/Tech-risks.pdf) [doc](Documentation/Tech-risks.docx)
 - Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)
 - [Описание API](Documentation/api-docs.yaml)
-- [Чек-лист (1 аттестация)](https://docs.google.com/spreadsheets/d/1OioB3z3DnBsB88rAg54IMC_nxb7ORmjc_hf41RPbbbs/edit?usp=sharing)  
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
 ### **Видео**  
-- [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)    
+- [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
 
+### **Чеклист**  
+[Чеклист](Documentation/Check-list.pdf)  
+  
+**Нас оценивали**   
+- Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист]()  
+- Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист]()  
+- Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист]()  
+- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист]()  
   
