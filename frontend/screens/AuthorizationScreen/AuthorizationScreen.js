@@ -47,7 +47,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <ContinueButton onPress={handleRegistrationAccessPress} condition={isButtonDisabled}/>
+      <ContinueButton onPress={handleRegistrationAccessPress} condition={!isButtonDisabled}/>
     </View>
     </TouchableWithoutFeedback>
   );

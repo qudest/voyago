@@ -8,9 +8,9 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/ContinueButton/ContinueButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/ContinueButton/ContinueButton.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/SearchCity/SearchCity.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/SearchCity/SearchCity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/SearchCity/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/SearchCity/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/AuthorizationScreen/AuthorizationScreen.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screens/ChooseCityScreen/ChooseCityScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/ChooseCityScreen/ChooseCityScreen.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screens/ChooseCityScreen/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/ChooseCityScreen/styles.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

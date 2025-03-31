@@ -8,14 +8,14 @@ const ContinueButton = ({ onPress, condition }) => {
     <TouchableOpacity
     style={[
       styles.enableContinueButton,
-      condition && styles.disableContinueButton
+      !condition && styles.disableContinueButton
     ]}
     onPress={onPress}
-    disabled={condition}
+    disabled={!condition}
   >
     <Text style={[
       styles.enableContinueText,
-      condition && styles.disableContinueText
+      !condition && styles.disableContinueText
     ]}>
       Продолжить
     </Text>
