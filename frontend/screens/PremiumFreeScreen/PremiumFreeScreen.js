@@ -26,7 +26,7 @@ const PremiumFreeScreen = () => {
       Alert.alert("rrrr")
     }
     const handleExitPress = () => {
-      navigation.navigate("ChooseCityScreen");
+      navigation.navigate("ChoosePreferencesScreen");
     }
     
     return (
