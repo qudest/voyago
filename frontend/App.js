@@ -8,6 +8,8 @@ import AuthorizationScreen from './screens/AuthorizationScreen/AuthorizationScre
 import AuthorizationAcceptScreen from './screens/AuthorizationAcceptScreen/AuthorizationAcceptScreen';
 import PremiumScreen from './screens/PremiumScreen/PremiumScreen';
 import PremiumFreeScreen from './screens/PremiumFreeScreen/PremiumFreeScreen'
+import ChooseCityScreen from './screens/ChooseCityScreen/ChooseCityScreen';
+import ChoosePreferencesScreen from './screens/ChoosePreferencesScreen/ChoosePreferencesScreen';
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
@@ -24,6 +26,8 @@ export default function App() {
           <Stack.Screen name="AuthorizationAcceptScreen" component={AuthorizationAcceptScreen} />
           <Stack.Screen name="PremiumScreen" component={PremiumScreen} />
           <Stack.Screen name="PremiumFreeScreen" component={PremiumFreeScreen} />
+          <Stack.Screen name="ChooseCityScreen" component={ChooseCityScreen} />
+          <Stack.Screen name="ChoosePreferencesScreen" component={ChoosePreferencesScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

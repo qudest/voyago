@@ -75,7 +75,7 @@ const AuthorizationAcceptScreen = () => {
             : "Получить новый код"}
         </Text>
       </TouchableOpacity>
-      <ContinueButton onPress={handleRegistrationPress} condition={isButtonDisabled}/>
+      <ContinueButton onPress={handleRegistrationPress} condition={!isButtonDisabled}/>
         </View>
       </TouchableWithoutFeedback>
     );
