@@ -31,7 +31,7 @@ const ChoosePreferencesScreen = ({ navigation }) => {
           />
         </View>
         <View style={styles.containerNav}>
-          <ContinueButton onPress={handleContinueButton} />
+          <ContinueButton onPress={handleContinueButton} condition={true}/>
         </View>
       </View>
     </TouchableWithoutFeedback>
