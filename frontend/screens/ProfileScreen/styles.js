@@ -15,6 +15,8 @@ const styles = StyleSheet.create({
   },
   mainInfTitle:{
     width: 200,
+    top: 30,
+
     color: '#3E3C80',
     fontSize: 23,
     fontWeight: 500,
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     width: 292,
     height: 48,
 
-    marginTop: 10,
+    marginTop: 20,
 
     backgroundColor: "#CAD6FF",
 

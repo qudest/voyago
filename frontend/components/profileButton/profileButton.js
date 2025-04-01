@@ -3,10 +3,10 @@ import { TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
 import styles from './styles';
 
 
-const ProfileButton = ({ title, onPress, style }) => {
+const ProfileButton = ({ title, onPress}) => {
   return (
     <TouchableOpacity 
-      style={[styles.button, style]}
+      style={styles.button}
       onPress={onPress}
     >
     <View style={styles.battonContainer}>
