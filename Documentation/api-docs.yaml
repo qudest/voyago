@@ -1,0 +1,647 @@
+openapi: 3.0.1
+info:
+  title: Voyago API
+  version: v0
+  description: This documentation provides a detailed description of the external endpoints of the Voyago application.
+paths:
+  /api/route/{id}:
+    get:
+      tags:
+      - Route service
+      summary: Find by id
+      operationId: findRoute
+      parameters: []
+      responses:
+        "200":
+          description: Correct response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON route"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+    put:
+      tags:
+      - Route service
+      summary: Update route
+      operationId: updateRoute
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JSON create or update"
+        required: true
+      responses:
+        "200":
+          description: Correct response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON route"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+    delete:
+      tags:
+      - Route service
+      summary: Delete route
+      operationId: deleteRoute
+      parameters: []
+      responses:
+        "200":
+          description: Correct response
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/route/rating/{id}:
+    put:
+      tags:
+      - Route service
+      summary: Rate route
+      operationId: rate
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              example: 4.5
+        required: true
+      responses:
+        "200":
+          description: Correct response
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/account/subscription:
+    put:
+      tags:
+      - Account service
+      summary: Add location
+      operationId: buyASubscription
+      responses:
+        "200":
+          description: Purchase request sent
+        "401":
+          description: User unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Card not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/account/location:
+    put:
+      tags:
+      - Account service
+      summary: Add location
+      operationId: changeLocation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JSON location"
+        required: true
+      responses:
+        "200":
+          description: Location updated
+        "400":
+          description: Invalid location
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "401":
+          description: User unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/account/credit-card:
+    put:
+      tags:
+      - Account service
+      summary: Add credit card
+      operationId: changeCreditCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JSON for credit card"
+        required: true
+      responses:
+        "200":
+          description: Credit card updated
+        "400":
+          description: Invalid card
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "401":
+          description: User unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/route:
+    get:
+      tags:
+      - Route service
+      summary: Find all routes
+      operationId: findAllRoutes
+      parameters:
+      - name: filter
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/JSON route"
+      - name: page
+        in: query
+        description: Zero-based page index (0..N)
+        required: false
+        schema:
+          minimum: 0
+          type: integer
+          default: 0
+      - name: size
+        in: query
+        description: The size of the page to be returned
+        required: false
+        schema:
+          minimum: 1
+          type: integer
+          default: 20
+      - name: sort
+        in: query
+        description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: Correct response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JSON route"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+    post:
+      tags:
+      - Route service
+      summary: Create route
+      operationId: createRoute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JSON create or update"
+        required: true
+      responses:
+        "200":
+          description: Correct response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON route"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/route/favorites/{id}:
+    post:
+      tags:
+      - Route service
+      summary: Add to favorites
+      operationId: favorite
+      parameters: []
+      responses:
+        "200":
+          description: Correct response
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/authentication:
+    post:
+      tags:
+      - Authentication service
+      summary: "User authentication, if there is no account - registration"
+      operationId: authenticate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              maxLength: 11
+              minLength: 11
+              type: string
+              description: User phone number
+              example: 88005553535
+      responses:
+        "200":
+          description: User authenticated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: /api/authentication/88005553535
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/authentication/{phone}:
+    post:
+      tags:
+      - Authentication service
+      summary: Code confirmation
+      operationId: confirmation
+      parameters:
+      - name: phone
+        in: path
+        description: User phone number
+        required: true
+        schema:
+          maxLength: 11
+          minLength: 11
+          type: string
+          description: User phone number
+          example: 88005553535
+        example: 88005553535
+      requestBody:
+        content:
+          application/json:
+            schema:
+              maxLength: 6
+              minLength: 6
+              type: string
+              description: Confirmation code
+              example: 123456
+      responses:
+        "200":
+          description: Code confirmed
+          content:
+            text/plain:
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30
+        "400":
+          description: Invalid code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/route/neural:
+    get:
+      tags:
+      - Route service
+      summary: Find by prompt to neural network
+      operationId: findNeuralRoutes
+      parameters:
+      - name: Prompt to neural network
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Correct response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JSON route"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "402":
+          description: Payment required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "404":
+          description: Not found route
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "408":
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "426":
+          description: Upgrade Required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+  /api/account:
+    delete:
+      tags:
+      - Account service
+      summary: Delete account
+      operationId: deleteAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              maxLength: 6
+              minLength: 6
+              type: string
+              description: Confirmation code
+              example: "123456"
+        required: true
+      responses:
+        "200":
+          description: Credit card updated
+        "400":
+          description: Invalid code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+        "401":
+          description: User unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JSON error"
+components:
+  schemas:
+    JSON error:
+      type: object
+      properties:
+        status code:
+          type: integer
+          format: int32
+          example: 400
+        Error message:
+          type: string
+          example: "Invalid request, error in JSON deserialization"
+    JSON create or update:
+      type: object
+      properties:
+        Route name:
+          type: string
+          example: Great Route
+        Route creator:
+          type: string
+          example: Great Route
+        Route tags:
+          type: array
+          example: "[VARIOUS, MOST_USED]"
+          items:
+            type: string
+            example: "[VARIOUS, MOST_USED]"
+            enum:
+            - RECOMMENDED_BY_US
+            - MOST_USED
+            - VARIOUS
+        Average time:
+          type: object
+          properties:
+            seconds:
+              type: integer
+              format: int64
+            zero:
+              type: boolean
+            nano:
+              type: integer
+              format: int32
+            negative:
+              type: boolean
+            positive:
+              type: boolean
+            units:
+              type: array
+              items:
+                type: object
+                properties:
+                  durationEstimated:
+                    type: boolean
+                  duration:
+                    type: object
+                    properties:
+                      seconds:
+                        type: integer
+                        format: int64
+                      zero:
+                        type: boolean
+                      nano:
+                        type: integer
+                        format: int32
+                      negative:
+                        type: boolean
+                      positive:
+                        type: boolean
+                  timeBased:
+                    type: boolean
+                  dateBased:
+                    type: boolean
+          description: Average travel time in minutes
+          example: 5000
+        Total distance:
+          type: integer
+          description: Total distance in meters
+          format: int32
+          example: 500
+        Point id's:
+          type: array
+          description: Id of key points on the map
+          example:
+          - 1500
+          - 134023
+          - 11
+          - 4054
+          - 4997
+          - 332
+          items:
+            type: integer
+            description: Id of key points on the map
+            format: int64
+    JSON route:
+      type: object
+      properties:
+        Route name:
+          type: string
+          example: Great Route
+        Route creator:
+          type: string
+          example: Great Route
+        Route tags:
+          type: array
+          example: "[VARIOUS, MOST_USED]"
+          items:
+            type: string
+            example: "[VARIOUS, MOST_USED]"
+            enum:
+            - RECOMMENDED_BY_US
+            - MOST_USED
+            - VARIOUS
+        Route rating:
+          type: number
+          format: float
+          example: 3.2
+        Average time:
+          type: object
+          properties:
+            seconds:
+              type: integer
+              format: int64
+            zero:
+              type: boolean
+            nano:
+              type: integer
+              format: int32
+            negative:
+              type: boolean
+            positive:
+              type: boolean
+            units:
+              type: array
+              items:
+                type: object
+                properties:
+                  durationEstimated:
+                    type: boolean
+                  duration:
+                    type: object
+                    properties:
+                      seconds:
+                        type: integer
+                        format: int64
+                      zero:
+                        type: boolean
+                      nano:
+                        type: integer
+                        format: int32
+                      negative:
+                        type: boolean
+                      positive:
+                        type: boolean
+                  timeBased:
+                    type: boolean
+                  dateBased:
+                    type: boolean
+          description: Average travel time in minutes
+          example: 5000
+        Total distance:
+          type: integer
+          description: Total distance in meters
+          format: int32
+          example: 500
+        Point id's:
+          type: array
+          description: Id of key points on the map
+          example:
+          - 1500
+          - 134023
+          - 11
+          - 4054
+          - 4997
+          - 332
+          items:
+            type: integer
+            description: Id of key points on the map
+            format: int64
+    JSON location:
+      type: object
+      properties:
+        County:
+          type: string
+          example: Russia
+        City:
+          type: string
+          example: Moscow
+    JSON for credit card:
+      type: object
+      properties:
+        Card number:
+          maxLength: 19
+          minLength: 19
+          type: string
+          example: 1234 5678 9123 4567
+        Card secret:
+          maxLength: 3
+          minLength: 3
+          type: string
+          example: "987"
+        Date:
+          maxLength: 5
+          minLength: 5
+          type: string
+          example: 12/35
