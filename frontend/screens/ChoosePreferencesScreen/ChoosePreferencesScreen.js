@@ -1,38 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import styles from './styles';
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import LocationButton from '../../components/LocationButton/LocationButton';
-import BackButton from '../../components/BackButton/BackButton';
-import ContinueButton from '../../components/ContinueButton/ContinueButton';
-import SearchCity from '../../components/SearchCity/SearchCity';
+import React, { useState } from 'react';
+import { View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import PreferenceCard from '../../components/PreferenceCard/PreferenceCard';
+import ContinueButton from '../../components/ContinueButton/ContinueButton';
+import styles from './styles';
 
-const ChoosePreferencesScreen = () => {
-    const navigation = useNavigation();
-  const [chosePreference, setChosePreference] = useState(false); 
-    
+const ChoosePreferencesScreen = ({ navigation }) => {
+  const [selectedPreferences, setSelectedPreferences] = useState([]);
 
-    const handleContinueButton = () => {
-        navigation.navigate('PremiumScreen')
-    }
-
-    const handleChoseButton = () => {
-        Alert.alert("Выбрано")
-    }
-    return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>   
-            <View style={styles.container}>
-                <View style={styles.containerMain}>
-                    <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
-                    <PreferenceCard onPress={handleChoseButton} condition={true}></PreferenceCard>
-                </View>
-                <View style={styles.containerNav}>
-                    <ContinueButton onPress={handleContinueButton} ></ContinueButton>
-                </View>
-            </View>
-        </TouchableWithoutFeedback>
+  const handleCardPress = (cardId) => {
+    setSelectedPreferences(prev => 
+      prev.includes(cardId)
+        ? prev.filter(item => item !== cardId) 
+        : [...prev, cardId] 
     );
+  };
+
+  const handleContinueButton = () => {
+    console.log('Выбранные предпочтения:', selectedPreferences);
+    navigation.navigate('PremiumScreen');
+  };
+
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.containerMain}>
+          <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
+          <PreferenceCard 
+            onCardPress={handleCardPress}
+            selectedPreferences={selectedPreferences}
+          />
+        </View>
+        <View style={styles.containerNav}>
+          <ContinueButton onPress={handleContinueButton} />
+        </View>
+      </View>
+    </TouchableWithoutFeedback>
+  );
 };
 
 export default ChoosePreferencesScreen;
