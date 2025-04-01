@@ -17,7 +17,7 @@ const ChoosePreferencesScreen = ({ navigation }) => {
 
   const handleContinueButton = () => {
     console.log('Выбранные предпочтения:', selectedPreferences);
-    navigation.navigate('PremiumScreen');
+    navigation.navigate('ProfileScreen');
   };
 
   return (
