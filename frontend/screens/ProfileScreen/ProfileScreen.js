@@ -3,6 +3,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
 import { View, Image, TextInput, Text, TouchableOpacity, Alert,  FlatList, TouchableWithoutFeedback} from 'react-native';
 import BackButton from '../../components/BackButton/BackButton';
+import ProfileButton from '../../components/ProfileButton/ProfileButton';
 
   const ProfileScreen = () => {
     const navigation = useNavigation();
@@ -20,23 +21,37 @@ import BackButton from '../../components/BackButton/BackButton';
                 <Text style={styles.mainInfTitle}>Привет, 
                 {profileName}!</Text>
                 <Image
-                    source={require('../../assets/logoprofile.png')}
+                    source={require('../../assets/profileImages/logoprofile.png')}
                     style={styles.imageLogo}
                 />
             </View>
             <View style={styles.navigationContainer}>
                 <View style={styles.navigationRouts}>
-                    <Text>Пройденных маршрутов:</Text>
-                    <Text>Мои маршруты:</Text>
-                    <Text>Избранное</Text>
-                    <Text>Создать маршрут</Text>
-                    <Text>Премиум</Text>
+                    <ProfileButton title="Пройденных маршрутов:" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
+                    <ProfileButton title="Мои маршруты:" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
+                    <ProfileButton title="Избранное" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
+                    <ProfileButton title="Создать маршрут" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
+                    <ProfileButton title="Премиум" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
                 </View>
                 <View style={styles.navigationSettings}>
-                    <Text>Дополнительные параметры</Text>
+                    <ProfileButton title="Дополнительные параметры" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
                 </View>
                 <View style={styles.navigationExit}>
-                    <Text>Выйти</Text>
+                    <ProfileButton title="Выйти" 
+                        onPress={() => Alert.alert("Dop parametri")}
+                    ></ProfileButton>
                 </View>
             </View>
         </View>

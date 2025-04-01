@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   },
   navigationRouts: {
     width: 292,
-    height: 216,
+    height: 240,
     bottom: 150,
     backgroundColor: "#CAD6FF",
     borderRadius: 16,
@@ -35,8 +35,9 @@ const styles = StyleSheet.create({
 
     marginTop: 10,
 
-    backgroundColor: "#CAD6FF",
     borderRadius: 16,
+
+    backgroundColor: "#CAD6FF",
   },
 
   navigationExit: {
@@ -46,8 +47,9 @@ const styles = StyleSheet.create({
 
     marginTop: 10,
 
-    backgroundColor: "#CAD6FF",
     borderRadius: 16,
+
+    backgroundColor: "#CAD6FF",
   },
 });
 
