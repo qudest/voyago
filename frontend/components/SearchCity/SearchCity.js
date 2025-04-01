@@ -1,21 +1,24 @@
 import React from 'react';
 import styles from './styles';
 import { View, TextInput, Text, Image, FlatList, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
-const SearchCity = ({ citiesData = [], onCitySelect }) => {
-    const [searchQuery, setSearchQuery] = useState('');
+const SearchCity = ({ citiesData = [], onCitySelect, selectedCity }) => {
+    const [searchQuery, setSearchQuery] = useState(selectedCity || '');
     const [filteredCities, setFilteredCities] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
-  
-        
+         
     const handleCitySelect = (cityName) => {
         setSearchQuery(cityName);
         setFilteredCities([]);
         setIsSearchFocused(false);
         if(onCitySelect) onCitySelect(cityName);
     };
+    
+    useEffect(() => {
+        setSearchQuery(selectedCity);
+    }, [selectedCity]);
 
     const handleSearch = (text) => {
           setSearchQuery(text);
@@ -26,9 +29,9 @@ const SearchCity = ({ citiesData = [], onCitySelect }) => {
               setFilteredCities(filtered);
           } else {
               setFilteredCities([]);
+              onCitySelect('');
           }
       };
-  
 
   return (      
       <View style={styles.searchContainer}>

@@ -10,7 +10,7 @@ import SearchCity from '../../components/SearchCity/SearchCity';
 
 const ChooseCityScreen = () => {
     const [selectedCity, setSelectedCity] = useState('');
-    
+    const [buttonEnabled, setButtonEnabled] = useState(false);
     const citiesData = [
         { id: 1, name: 'Москва' },
         { id: 2, name: 'Санкт-Петербург' },
@@ -30,8 +30,13 @@ const ChooseCityScreen = () => {
   
     const handleContinueButton = () => {
         Alert.alert('Выбранный город:', selectedCity);
+        console.log(buttonEnabled);
     };
-    
+
+    useEffect(() => {
+        setButtonEnabled(selectedCity.length > 0);
+    }, [selectedCity]);
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>   
             <View style={styles.container}>
@@ -44,11 +49,14 @@ const ChooseCityScreen = () => {
                     <Text style={styles.mainInformationTitle}>Введите город</Text>
                     <SearchCity 
                         citiesData={citiesData}
-                        onCitySelect={(city) => setSelectedCity(city)}
+                        selectedCity={selectedCity}
+                        onCitySelect={(city) => {
+                            setSelectedCity(city);
+                        }}
                     />
                 </View>
                 <View style={styles.fixedButton}>
-                    <ContinueButton onPress={handleContinueButton} />
+                    <ContinueButton onPress={handleContinueButton} condition={buttonEnabled}/>
                 </View>
                 
             </View>
