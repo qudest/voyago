@@ -4,17 +4,18 @@ import { Image, TouchableOpacity, Text } from 'react-native';
 
 const ContinueButton = ({ onPress, condition }) => {
   return (
+    
     <TouchableOpacity
     style={[
       styles.enableContinueButton,
-      condition && styles.disableContinueButton
+      !condition && styles.disableContinueButton
     ]}
     onPress={onPress}
-    disabled={condition}
+    disabled={!condition}
   >
     <Text style={[
       styles.enableContinueText,
-      condition && styles.disableContinueText
+      !condition && styles.disableContinueText
     ]}>
       Продолжить
     </Text>
