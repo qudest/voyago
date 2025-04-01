@@ -11,17 +11,19 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         paddingLeft: 16,           
         textAlign: 'left',       
-        lineHeight: 48,       
+        lineHeight: 44,       
 
         width: 270,
-        height: 48,
+        height: 44,
         backgroundColor: '#CAD6FF',
         fontSize: 16,
+        fontWeight: 400,
         color: '#000000',
 
         borderRadius: 16,
       },
       imageNavigation: {
+        right: 5,
       },
 });
 

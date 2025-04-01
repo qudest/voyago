@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { View, Image, TextInput, Text, TouchableOpacity, Alert,  FlatList, TouchableWithoutFeedback} from 'react-native';
 import BackButton from '../../components/BackButton/BackButton';
 import ProfileButton from '../../components/ProfileButton/ProfileButton';
+import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumProfileButton';
 
   const ProfileScreen = () => {
     const navigation = useNavigation();
@@ -39,9 +40,9 @@ import ProfileButton from '../../components/ProfileButton/ProfileButton';
                     <ProfileButton title="Создать маршрут" 
                         onPress={() => Alert.alert("Dop parametri")}
                     ></ProfileButton>
-                    <ProfileButton title="Премиум" 
+                    <PremiumProfileButton title="Премиум" 
                         onPress={() => Alert.alert("Dop parametri")}
-                    ></ProfileButton>
+                    ></PremiumProfileButton>
                 </View>
                 <View style={styles.navigationSettings}>
                     <ProfileButton title="Дополнительные параметры" 
