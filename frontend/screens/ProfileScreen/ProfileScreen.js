@@ -17,7 +17,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         Alert.alert("Пройднные")
     }
     const handleMyRoutesPress = () => {
-        Alert.alert("Мои")
+        navigation.navigate("MyRoutesScreen")
     }
     const handleLikeRoutesPress = () => {
         Alert.alert("Избранные")
