@@ -7,6 +7,7 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
     const [expanded, setExpanded] = useState(false);
     const [animation] = useState(new Animated.Value(0));
     const [contentHeight, setContentHeight] = useState(200); 
+    const [likeRoute, setLikeRoute] = useState(true);
     const contentRef = useRef(null);
 
     const {
@@ -46,7 +47,7 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
     };
 
     const handleLikeButton = () => {
-        Alert.alert("Редактировать")
+        setLikeRoute(!likeRoute);
     };
     
     const renderFunctionalButton = () => {
@@ -63,12 +64,15 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
             case 'like':
                 return (
                     <TouchableOpacity onPress={handleLikeButton}>
-                        <Image 
-                            source={require('../../assets/routeCardImages/like.png')}
+                           <Image 
+                            source={likeRoute 
+                                ? require('../../assets/routeCardImages/likecolor.png')
+                                : require('../../assets/routeCardImages/like.png')
+                            }
                             style={styles.functionalImage}
                         />
                     </TouchableOpacity>
-                );
+                );   
             case 'done':
                 return null; 
         }

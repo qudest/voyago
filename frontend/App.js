@@ -13,6 +13,7 @@ import ChoosePreferencesScreen from './screens/ChoosePreferencesScreen/ChoosePre
 import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import MyRoutesScreen from './screens/MyRoutesScreen/MyRoutesScreen';
 import DoneScreen from './screens/DoneScreen/DoneScreen';
+import LikeScreen from './screens/LikeScreen/LikeScreen';
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
@@ -34,6 +35,7 @@ export default function App() {
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="MyRoutesScreen" component={MyRoutesScreen} />
           <Stack.Screen name="DoneScreen" component={DoneScreen} />
+          <Stack.Screen name="LikeScreen" component={LikeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
