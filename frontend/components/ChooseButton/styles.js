@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         width: 295,
         height: 44,
         paddingTop: 10,
-        top: 20,
+        top: 18,
 
         backgroundColor: '#3E3C80',
 

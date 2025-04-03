@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(202, 214, 255, 0.25)',
+        backgroundColor: '#EFF3FF',
         borderRadius: 22,
         padding: 15,
         marginVertical: 10,
@@ -13,9 +13,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         marginBottom: 10,
-    },
-    editImage: {
-        left: 80,
     },
     timeDistanceContainer: {
         flexDirection: 'row',
@@ -36,20 +33,31 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 400,
     },
+    navigationBottomImage: {
+        marginTop: 15,
+        marginLeft: 150,
+    },
     headerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-between', 
     },
     title: {
+        marginRight: 10,
         fontSize: 18,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        flex: 1, 
+        overflow: 'hidden',
     },
-    content: {
-        paddingTop: 10,
+ 
+    contentPoints: {
+        top: 5,
+        left: 20,
     },
     pointText: {
-        marginVertical: 5,
+        marginVertical: 7,
+
+        fontSize: 16,
     },
     chooseButton: {
         marginTop: 15,
@@ -57,10 +65,12 @@ const styles = StyleSheet.create({
     footer: {
         alignItems: 'center',
         marginTop: 28,
+        zIndex: 2, 
     },
     navigationImage: {
         top: 5,
         zIndex: 10, 
+        resizeMode: 'contain',
     },
 });
 

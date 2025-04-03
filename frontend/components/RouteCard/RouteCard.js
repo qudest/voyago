@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import styles from './styles';
-import { Image, View, TouchableOpacity, Animated, Text } from 'react-native';
+import { Image, View, TouchableOpacity, Animated, Text, Alert  } from 'react-native';
 import ChooseButton from '../../components/ChooseButton/ChooseButton';
 
 const RouteCard = ({ cardInformation = {} }) => {
@@ -10,16 +10,16 @@ const RouteCard = ({ cardInformation = {} }) => {
     const contentRef = useRef(null);
 
     const {
-        title = "Хороший маршрут",
-        time = "7:77",
-        distance = "5",
-        points = ["Культурно коротко", "Театр драмы", "Концертный зал", "Культурно коротко", "Театр драмы", "Культурно коротко", "Театр драмы"]
+        title = "",
+        time = "",
+        distance = "",
+        points = []
     } = cardInformation;
 
     useEffect(() => {
         if (contentRef.current) {
             contentRef.current.measure((x, y, width, height) => {
-                setContentHeight(height + 135);
+                setContentHeight(height + 155);
             });
         }
     }, [points]); 
@@ -41,16 +41,26 @@ const RouteCard = ({ cardInformation = {} }) => {
         outputRange: [120, contentHeight] 
     });
 
+    const handleEditButton = () => {
+        Alert.alert("Редактировать")
+    };
+
     return (
         <TouchableOpacity activeOpacity={0.9} onPress={handleToggleExpand}>
             <Animated.View style={[styles.container, { height: cardHeight }]}>
                 <View style={styles.header}>
                     <View style={styles.headerContainer}>
-                        <Text style={styles.title}>{title}</Text>
-                        <Image 
-                            source={require('../../assets/routeCardImages/edit.png')}
-                            style={styles.editImage}
-                        />
+                        <Text 
+                                   style={styles.title}
+                                   numberOfLines={1}
+                                   ellipsizeMode="tail">{title}</Text>
+
+                        <TouchableOpacity onPress={handleEditButton}> 
+                            <Image 
+                                source={require('../../assets/routeCardImages/edit.png')}
+                                style={styles.editImage}
+                            />
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.timeDistanceContainer}>
                         <View style={styles.timeContainer}>
@@ -62,16 +72,22 @@ const RouteCard = ({ cardInformation = {} }) => {
                         </View>
                         <Text style={styles.distance}>{distance} км</Text>
                     </View>
+                    <Image 
+                        source={!expanded && require('../../assets/routeCardImages/bottom.png')
+                        }
+                        style={styles.navigationBottomImage}
+                    />
                 </View>
                 
                 <View 
                     ref={contentRef}
                     style={[styles.content, {opacity: expanded ? 1 : 0}]}
-                    pointerEvents={expanded ? 'auto' : 'none'}
-                >
+                >  
+                <View style={styles.contentPoints}>
                     {points.map((point, index) => (
                         <Text key={index} style={styles.pointText}>{point}</Text>
                     ))}
+                </View>
                     <ChooseButton style={styles.chooseButton}/>
                 </View>
                 
