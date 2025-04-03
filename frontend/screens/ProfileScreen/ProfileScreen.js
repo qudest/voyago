@@ -14,7 +14,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
     }
 
     const handleDoneRoutesPress = () => {
-        Alert.alert("Пройднные")
+        navigation.navigate("DoneScreen")
     }
     const handleMyRoutesPress = () => {
         navigation.navigate("MyRoutesScreen")

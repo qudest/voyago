@@ -17,27 +17,6 @@ const MyRoutesScreen = () => {
             distance: "5",
             points: ["Точка раз", "Точка двас", "Точка трис"],
         },
-        {
-            id: 2,
-            title: "Культурный тур",
-            time: "3:20",
-            distance: "4",
-            points: ["Музей искусств", "Театр драмы", "Концертный зал"],
-        },
-        {
-            id: 3,
-            title: "Исторический маршрут",
-            time: "5:45",
-            distance: "6",
-            points: ["Крепость", "Старый город", "Исторический музей"],
-        },
-        {
-            id: 4,
-            title: "Развлекательный маршрут",
-            time: "3:45",
-            distance: "3",
-            points: ["Крепость", "Исторический музей"],
-        }
     ];
 
     const filteredRoutes = allRoutes.filter(route => {
@@ -60,13 +39,12 @@ const MyRoutesScreen = () => {
     const handlerBackButton = () => {
         navigation.navigate("ProfileScreen");
     };
-
-    const functional = "edit";
+    const functional = "done";
 
     return (
         <View style={styles.container}>
             <BackButton onPress={handlerBackButton} />
-            <Text style={styles.containerTitle}>Мои маршруты</Text>
+            <Text style={styles.containerTitle}>Пройденные маршруты</Text>
             
             <View style={styles.header}>
                 <View style={styles.searchContainer}>

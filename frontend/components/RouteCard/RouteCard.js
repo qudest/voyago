@@ -3,7 +3,7 @@ import styles from './styles';
 import { Image, View, TouchableOpacity, Animated, Text, Alert  } from 'react-native';
 import ChooseButton from '../../components/ChooseButton/ChooseButton';
 
-const RouteCard = ({ cardInformation = {} }) => {
+const RouteCard = ({ cardInformation = {}, functional}) => {
     const [expanded, setExpanded] = useState(false);
     const [animation] = useState(new Animated.Value(0));
     const [contentHeight, setContentHeight] = useState(200); 
@@ -45,6 +45,35 @@ const RouteCard = ({ cardInformation = {} }) => {
         Alert.alert("Редактировать")
     };
 
+    const handleLikeButton = () => {
+        Alert.alert("Редактировать")
+    };
+    
+    const renderFunctionalButton = () => {
+        switch(functional) {
+            case 'edit':
+                return (
+                    <TouchableOpacity onPress={handleEditButton}>
+                        <Image 
+                            source={require('../../assets/routeCardImages/edit.png')}
+                            style={styles.functionalImage}
+                        />
+                    </TouchableOpacity>
+                );
+            case 'like':
+                return (
+                    <TouchableOpacity onPress={handleLikeButton}>
+                        <Image 
+                            source={require('../../assets/routeCardImages/like.png')}
+                            style={styles.functionalImage}
+                        />
+                    </TouchableOpacity>
+                );
+            case 'done':
+                return null; 
+        }
+    };
+
     return (
         <TouchableOpacity activeOpacity={0.9} onPress={handleToggleExpand}>
             <Animated.View style={[styles.container, { height: cardHeight }]}>
@@ -55,12 +84,7 @@ const RouteCard = ({ cardInformation = {} }) => {
                                    numberOfLines={1}
                                    ellipsizeMode="tail">{title}</Text>
 
-                        <TouchableOpacity onPress={handleEditButton}> 
-                            <Image 
-                                source={require('../../assets/routeCardImages/edit.png')}
-                                style={styles.editImage}
-                            />
-                        </TouchableOpacity>
+                    {renderFunctionalButton()}
                     </View>
                     <View style={styles.timeDistanceContainer}>
                         <View style={styles.timeContainer}>
