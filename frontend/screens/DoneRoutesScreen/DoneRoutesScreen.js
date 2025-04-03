@@ -5,7 +5,7 @@ import { View, ScrollView, Text, TextInput, Image, TouchableOpacity } from 'reac
 import BackButton from '../../components/BackButton/BackButton';
 import RouteCard from '../../components/RouteCard/RouteCard';
 
-const MyRoutesScreen = () => {
+const DoneRoutesScreen = () => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -88,4 +88,4 @@ const MyRoutesScreen = () => {
     );
 };
 
-export default MyRoutesScreen;
+export default DoneRoutesScreen;

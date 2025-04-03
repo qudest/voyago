@@ -14,13 +14,13 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
     }
 
     const handleDoneRoutesPress = () => {
-        navigation.navigate("DoneScreen")
+        navigation.navigate("DoneRoutesScreen")
     }
     const handleMyRoutesPress = () => {
         navigation.navigate("MyRoutesScreen")
     }
     const handleLikeRoutesPress = () => {
-        navigation.navigate("LikeScreen")
+        navigation.navigate("LikeRoutesScreen")
     }
     const handlePremiumRoutesPress = () => {
         Alert.alert("Создать")
