@@ -10,6 +10,10 @@ import PremiumScreen from './screens/PremiumScreen/PremiumScreen';
 import PremiumFreeScreen from './screens/PremiumFreeScreen/PremiumFreeScreen'
 import ChooseCityScreen from './screens/ChooseCityScreen/ChooseCityScreen';
 import ChoosePreferencesScreen from './screens/ChoosePreferencesScreen/ChoosePreferencesScreen';
+import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
+import MyRoutesScreen from './screens/MyRoutesScreen/MyRoutesScreen';
+import DoneRoutesScreen from './screens/DoneRoutesScreen/DoneRoutesScreen';
+import LikeRoutesScreen from './screens/LikeRoutesScreen/LikeRoutesScreen';
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
@@ -28,6 +32,10 @@ export default function App() {
           <Stack.Screen name="PremiumFreeScreen" component={PremiumFreeScreen} />
           <Stack.Screen name="ChooseCityScreen" component={ChooseCityScreen} />
           <Stack.Screen name="ChoosePreferencesScreen" component={ChoosePreferencesScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="MyRoutesScreen" component={MyRoutesScreen} />
+          <Stack.Screen name="DoneRoutesScreen" component={DoneRoutesScreen} />
+          <Stack.Screen name="LikeRoutesScreen" component={LikeRoutesScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

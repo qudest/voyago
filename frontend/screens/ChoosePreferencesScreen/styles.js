@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     color: '#3E3C80',
   },
   containerNav: {
-    
+    marginTop: 40,
   },
 });
 
