@@ -9,7 +9,6 @@ const ProfileButton = ({ title, onPress}) => {
       style={styles.button}
       onPress={onPress}
     >
-      
     <View style={styles.battonContainer}>
     <Text style={styles.text}>{title}</Text>
         <Image
