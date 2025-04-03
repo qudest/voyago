@@ -36,6 +36,15 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/json" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../ProgrammsUtils/gradle-8.12" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/json" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/map-service" />
         <option name="modules">
           <set>
