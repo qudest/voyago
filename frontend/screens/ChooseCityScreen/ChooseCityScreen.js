@@ -29,8 +29,7 @@ const ChooseCityScreen = () => {
     };
   
     const handleContinueButton = () => {
-        Alert.alert('Выбранный город:', selectedCity);
-        console.log(buttonEnabled);
+        navigation.navigate('ChoosePreferencesScreen')
     };
 
     useEffect(() => {
