@@ -14,6 +14,8 @@ import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import MyRoutesScreen from './screens/MyRoutesScreen/MyRoutesScreen';
 import DoneRoutesScreen from './screens/DoneRoutesScreen/DoneRoutesScreen';
 import LikeRoutesScreen from './screens/LikeRoutesScreen/LikeRoutesScreen';
+import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
+
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
@@ -36,6 +38,7 @@ export default function App() {
           <Stack.Screen name="MyRoutesScreen" component={MyRoutesScreen} />
           <Stack.Screen name="DoneRoutesScreen" component={DoneRoutesScreen} />
           <Stack.Screen name="LikeRoutesScreen" component={LikeRoutesScreen} />
+          <Stack.Screen name="PaymentScreen" component={PaymentScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

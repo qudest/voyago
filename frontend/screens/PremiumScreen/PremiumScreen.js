@@ -29,7 +29,7 @@ const GradientBackground = ({ children }) => (
     ];
   
     const handleBuyPress = () => {
-      Alert.alert("rrrr")
+      navigation.navigate("PaymentScreen")
     }
     const handleExitPress = () => {
       navigation.navigate("PremiumFreeScreen");
