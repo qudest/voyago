@@ -19,19 +19,15 @@ jobs:
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
- 
       - name: 🏗 Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'gradle'
-	  
       - name: 🏗 Setup Docker
         uses: docker/setup-docker-action@v4
-	
       - name: 🚀 Build
         run: ./gradlew build --no-daemon
-	
       - name: ✅ Tests
         run: ./gradlew test --no-daemon
