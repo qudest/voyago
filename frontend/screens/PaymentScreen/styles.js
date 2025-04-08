@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',  
   },
   nextDebitTitle: {
-    top: 20,
+    marginTop: 20,
     textAlign: 'center',
     width: 270,
     fontSize: 19,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     color: "#3E3C80",
   },
   remindTitle: {
-    top: 60,
+    marginTop: 40,
     textAlign: 'center',
     width: 300,
     fontSize: 19,
