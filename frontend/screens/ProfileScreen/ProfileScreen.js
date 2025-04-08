@@ -23,7 +23,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         navigation.navigate("LikeRoutesScreen")
     }
     const handlePremiumRoutesPress = () => {
-        Alert.alert("Создать")
+        navigation.navigate("RecommendationsRoutesScreen")
     }
     const handleCreatePress = () => {
         Alert.alert("Премиум")
