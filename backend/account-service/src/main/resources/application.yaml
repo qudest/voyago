@@ -2,11 +2,37 @@ spring:
   application:
     name: account-service
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      hbm2ddl.auto: validate
+      show_sql: true
 
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: db/changelog/db.changelog.master.yaml
+
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
+      key-serializer: org.apache.kafka.common.serialization.StringSe
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+    consumer:
+      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS}
+      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      group-id: payment-subscription-events
+      properties:
+        spring.json.trusted.packages: "*"
+        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 server:
-  port: 8090
+  port: ${APP_PORT}

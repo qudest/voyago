@@ -1,0 +1,35 @@
+version: "3.5"
+
+networks:
+  app:
+    driver: bridge
+
+services:
+  postgres:
+    container_name: "postgres"
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=account_service_db
+    volumes:
+      - "./postgres:/var/lib/postgresql"
+    expose:
+      - "5432"
+    networks:
+      - app
+
+  account-service:
+    container_name: "account-service"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/account_service_db
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - APP_PORT=8090
+    build: .
+    ports:
+      - "127.0.0.1:8090:8090"
+    networks:
+      - app
+    depends_on:
+      - postgres
