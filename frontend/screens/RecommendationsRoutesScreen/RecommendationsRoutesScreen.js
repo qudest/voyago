@@ -35,7 +35,7 @@ const RecommendationsRoutesScreen = () => {
     ];
 
     const handlerBackButton = () => {
-        navigation.navigate("ProfileScreen");
+        navigation.navigate("MainScreen");
     };
     const functional = "like";
 
