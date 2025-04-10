@@ -35,9 +35,22 @@ const styles = StyleSheet.create({
     borderRadius: 22,
   },
   topInfo: {
-    justifyContent: 'center',
+    marginTop: 5,
+    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
+    width: '100%',
+    paddingHorizontal: 16,
+  },
+  counterText: {
+    flex: 1, 
+  },
+  settingsIconContainer: {
+    flex: 1, 
+    alignItems: 'center', 
+  },
+  settingsIcon: {
+
   },
   routeText: {
     fontSize: 16,
@@ -58,10 +71,16 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     padding: 10,
   },
+  activePoint: {
+    color: '#006CCC',
+    fontWeight: 'bold',
+    fontWeight: 400,
+    padding: 10,
+  },
   timeDistanceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-
+    padding: 20,
     top: 15,
   },
   timeContainer: {

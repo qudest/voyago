@@ -5,24 +5,34 @@ import RoutesButton from '../../components/RoutesButton/RoutesButton';
 import ProfileIconButton from '../../components/ProfileIconButton/ProfileIconButton';
 import styles from './styles';
 import NavRouteButton from '../../components/NavRouteButton/NavRouteButton';
-import YaMap from 'react-native-yamap';
 
 const { height } = Dimensions.get('window');
 
 const MainScreen = () => {
   const navigation = useNavigation();
 
-  const [isVisible, setIsVisible] = useState(true); // Установите true по умолчанию
-  const pan = useRef(new Animated.Value(0)).current; // Начальная позиция 0
-  const mokRoute = ['точка раз', 'точка двас', 'Точка раз', 'точка двас'];
+  const [isVisible, setIsVisible] = useState(true); 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const pan = useRef(new Animated.Value(0)).current; 
+  const mokRoute = ['точка раз', 'точка двас', 'Точка раз', 'точка двас', 'точка двас', 'Точка раз', 'точка двас'];
 
+  const handleNext = () => {
+    if (currentIndex < mokRoute.length - 1) {
+      setCurrentIndex(prev => prev + 1);
+    }
+  };
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
+  };
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         return gestureState.dy !== 0;
       },
       onPanResponderMove: (evt, gestureState) => {
-        pan.setValue(gestureState.dy); // Движение на основе жеста
+        pan.setValue(gestureState.dy); 
       },
       onPanResponderRelease: (evt, gestureState) => {
         if (gestureState.dy < -50 && !isVisible) {
@@ -57,17 +67,7 @@ const MainScreen = () => {
 
   return (
     <View style={styles.container}>
-        <YaMap
-        userLocationIcon={{ uri: 'https://www.clipartmax.com/png/middle/180-1801760_pin-png.png' }}
-        initialRegion={{
-          lat: 50,
-          lon: 50,
-          zoom: 10,
-          azimuth: 80,
-          tilt: 100
-        }}
-        style={{ flex: 1 }}
-      />
+  
       <View style={styles.topElement}>
         <RoutesButton onPress={handleRoutesPress} />
         <ProfileIconButton onPress={handleProfilePress} />
@@ -77,20 +77,28 @@ const MainScreen = () => {
         {...panResponder.panHandlers}
         style={[styles.bouncingElement, { transform: [{ translateY: pan }] }]}
       >
-        {/* Элементы будут видны сразу при загрузке */}
         <View style={styles.routeInfo}>
-          <View style={styles.topInfo}>
-            <Image
-              source={require('../../assets/mainImages/line.png')}
-              style={styles.settingsIcon}
-            />
-            <Text>2/4</Text>
+        <View style={styles.topInfo}>
+            <Text style={styles.counterText}>{currentIndex + 1}/{mokRoute.length}</Text>
+            <View style={styles.settingsIconContainer}>
+              <Image
+                source={require('../../assets/mainImages/line.png')}
+                style={styles.settingsIcon}
+              />
+            </View>
+            <View style={{ flex: 1 }} /> 
           </View>
-          <NavRouteButton style={styles.navRoute}></NavRouteButton>
+          <NavRouteButton style={styles.navRoute}         
+              onPressLeft={handlePrevious}
+              onPressRight={handleNext} 
+          ></NavRouteButton>
           <View style={styles.routePointsContainer}>
             <View style={styles.routePoints}>
               {mokRoute.map((point, index) => (
-                <Text key={index} style={styles.pointText}>
+                <Text key={index} style={[
+                    styles.pointText,
+                    index === currentIndex && styles.activePoint 
+                ]}>
                   {point}
                 </Text>
               ))}

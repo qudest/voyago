@@ -18,22 +18,12 @@ import LikeRoutesScreen from './screens/LikeRoutesScreen/LikeRoutesScreen';
 import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import RecommendationsRoutesScreen from './screens/RecommendationsRoutesScreen/RecommendationsRoutesScreen';
 import MainScreen from './screens/MainScreen/MainScreen';
-import YaMap from 'react-native-yamap';
 import { TextEncoder } from 'text-encoding';
 global.TextEncoder = TextEncoder;
 
 const Stack = createStackNavigator();
 
 export default function App() {
-    useEffect(() => {
-      YaMap.init('4e2e4718-feea-4d54-bb3e-2e48a9e0e409')
-        .then(() => {
-          console.log("YaMap initialized successfully");
-        })
-        .catch((error) => {
-          console.error("Error initializing YaMap:", error);
-        });
-    }, []);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="auto" />
