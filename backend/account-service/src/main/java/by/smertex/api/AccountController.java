@@ -10,7 +10,5 @@ public interface AccountController {
 
     ResponseEntity<Void> update(Long id, AccountUpdateDto dto);
 
-    ResponseEntity<Void> buyPremium(Long id);
-
     ResponseEntity<Void> delete(Long id);
 }

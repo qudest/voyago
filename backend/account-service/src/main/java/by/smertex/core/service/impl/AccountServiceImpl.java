@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -76,8 +77,17 @@ public class AccountServiceImpl implements AccountService, SubscriptionService {
                 .orElseThrow(() -> new CrudException("Delete account exception, entity not found", HttpStatus.NOT_FOUND.value()));
     }
 
-    public void buyPremium(Long id) {
-        //TODO: отправка запроса на кафку
+    @Transactional
+    public void buyPremium(String phoneNumber, LocalDateTime endDate) {
+        accountRepository.saveAndFlush(
+                accountRepository.findByPhoneNumber(phoneNumber)
+                        .map(account -> {
+                            account.setPremium(true);
+                            account.setEndDate(endDate);
+                            return account;
+                        })
+                        .orElseThrow(() -> new CrudException("Buy premium exception", HttpStatus.BAD_REQUEST.value()))
+        );
     }
 
     @Autowired

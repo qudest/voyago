@@ -2,5 +2,6 @@ package by.smertex.core.dto.event;
 
 import java.time.LocalDateTime;
 
-public record PaymentSubscriptionEvent(LocalDateTime endDate) {
+public record PaymentSubscriptionEvent(String phoneNumber,
+                                       LocalDateTime endDate) {
 }

@@ -10,7 +10,7 @@ CREATE SEQUENCE IF NOT EXISTS account_seq START WITH 1 INCREMENT BY 3
 CREATE TABLE account.account
 (
     id              BIGINT          PRIMARY KEY         DEFAULT nextval('account_seq'),
-    name            VARCHAR(16)     UNIQUE  NOT NULL,
+    name            VARCHAR(24)     UNIQUE  NOT NULL,
     phone_number    VARCHAR(11)     UNIQUE  NOT NULL,
     role            VARCHAR(16)     NOT NULL            DEFAULT 'ROLE_USER',
     status          VARCHAR(16)     NOT NULL            DEFAULT 'ACTIVE',

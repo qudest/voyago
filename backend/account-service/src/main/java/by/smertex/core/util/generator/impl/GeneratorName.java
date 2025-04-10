@@ -16,9 +16,11 @@ public class GeneratorName implements Generator<String> {
 
     private static final Long MAX_VALUE = 999_999_999L;
 
+    private static final Long RANGE = MAX_VALUE - MIN_VALUE + 1;
+
     private final Random random;
 
     public String generate() {
-        return PREFIX + (MIN_VALUE + random.nextLong(MAX_VALUE));
+        return PREFIX + (MIN_VALUE + random.nextLong(RANGE));
     }
 }

@@ -34,13 +34,6 @@ public class AccountControllerImpl implements AccountController {
                 .build();
     }
 
-    @PutMapping("/premium/{id}")
-    public ResponseEntity<Void> buyPremium(@PathVariable Long id) {
-        subscriptionService.buyPremium(id);
-        return ResponseEntity.noContent()
-                .build();
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         accountService.delete(id);

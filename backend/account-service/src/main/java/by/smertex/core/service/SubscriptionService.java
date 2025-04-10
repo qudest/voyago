@@ -1,5 +1,7 @@
 package by.smertex.core.service;
 
+import java.time.LocalDateTime;
+
 public interface SubscriptionService {
-    void buyPremium(Long id);
+    void buyPremium(String phoneNumber, LocalDateTime endDate);
 }

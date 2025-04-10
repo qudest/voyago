@@ -5,7 +5,7 @@ networks:
     driver: bridge
 
 services:
-  postgres:
+  account-service-db:
     container_name: "postgres"
     image: postgres
     environment:
@@ -13,7 +13,7 @@ services:
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=account_service_db
     volumes:
-      - "./postgres:/var/lib/postgresql"
+      - "./account-service/postgres:/var/lib/postgresql"
     expose:
       - "5432"
     networks:
@@ -26,12 +26,11 @@ services:
       - DB_USERNAME=admin
       - DB_PASSWORD=admin
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1,kafka-2
-      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1,kafka-2
       - APP_PORT=8090
-    build: .
+    build: ./account-service
     ports:
       - "127.0.0.1:8090:8090"
     networks:
       - app
     depends_on:
-      - postgres
+      - account-service-db

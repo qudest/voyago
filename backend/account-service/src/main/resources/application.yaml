@@ -19,12 +19,6 @@ spring:
     change-log: db/changelog/db.changelog.master.yaml
 
   kafka:
-    producer:
-      bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
-      key-serializer: org.apache.kafka.common.serialization.StringSe
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        enable.idempotence: true
     consumer:
       bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS}
       key-deserializer: org.apache.kafka.common.serialization.StringSerializer
