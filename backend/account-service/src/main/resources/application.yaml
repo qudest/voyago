@@ -35,4 +35,4 @@ spring:
         value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 server:
-  port: ${APP_PORT}
+  port: ${APP_PORT:8090}

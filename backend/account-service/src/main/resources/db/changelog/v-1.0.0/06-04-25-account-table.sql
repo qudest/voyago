@@ -10,11 +10,11 @@ CREATE SEQUENCE IF NOT EXISTS account_seq START WITH 1 INCREMENT BY 3
 CREATE TABLE account.account
 (
     id              BIGINT          PRIMARY KEY         DEFAULT nextval('account_seq'),
-    name            VARCHAR(32)     UNIQUE,
+    name            VARCHAR(16)     UNIQUE  NOT NULL,
     phone_number    VARCHAR(11)     UNIQUE  NOT NULL,
-    role            VARCHAR(16)     NOT NULL,
-    status          VARCHAR(16)     NOT NULL,
-    premium         BOOLEAN         NOT NULL,
+    role            VARCHAR(16)     NOT NULL            DEFAULT 'ROLE_USER',
+    status          VARCHAR(16)     NOT NULL            DEFAULT 'ACTIVE',
+    premium         BOOLEAN         NOT NULL            DEFAULT false,
     end_date        TIMESTAMP,
     country         TEXT,
     city            TEXT,

@@ -25,6 +25,8 @@ services:
       - DB_URL=jdbc:postgresql://postgres:5432/account_service_db
       - DB_USERNAME=admin
       - DB_PASSWORD=admin
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1,kafka-2
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1,kafka-2
       - APP_PORT=8090
     build: .
     ports:

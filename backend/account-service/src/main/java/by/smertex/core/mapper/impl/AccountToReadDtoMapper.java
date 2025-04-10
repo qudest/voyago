@@ -13,6 +13,7 @@ public class AccountToReadDtoMapper implements Mapper<Account, AccountReadDto> {
                 .phoneNumber(from.getPhoneNumber())
                 .name(from.getName())
                 .role(from.getRole())
+                .status(from.getStatus())
                 .premium(from.getPremium())
                 .preferences(from.getPreferences())
                 .endDate(from.getEndDate())

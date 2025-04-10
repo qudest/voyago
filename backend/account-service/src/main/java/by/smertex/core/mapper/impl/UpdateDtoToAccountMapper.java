@@ -10,19 +10,19 @@ public class UpdateDtoToAccountMapper implements Mapper<AccountUpdateDto, Accoun
     @Override
     public Account map(AccountUpdateDto from) {
         return Account.builder()
-                .phoneNumber(from.phoneNumber())
                 .country(from.country())
                 .city(from.city())
+                .preferences(from.preferences())
                 .creditCard(from.creditCard())
                 .build();
     }
 
     @Override
     public Account map(AccountUpdateDto from, Account to) {
-        to.setPhoneNumber(from.phoneNumber());
         to.setCountry(from.country());
         to.setCity(from.city());
         to.setCreditCard(from.creditCard());
+        to.setPreferences(from.preferences());
         return to;
     }
 }

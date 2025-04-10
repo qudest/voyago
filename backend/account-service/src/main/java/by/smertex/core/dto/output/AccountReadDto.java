@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
-public record AccountReadDto(String phoneNumber,
+public record AccountReadDto(Long id,
+                             String phoneNumber,
                              String name,
                              Role role,
                              Status status,

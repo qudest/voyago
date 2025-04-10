@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,18 +57,19 @@ public class Account implements AbstractEntity<Long> {
     )
     @Enumerated(EnumType.STRING)
     @Column(name = "preference")
-    private List<Preference> preferences;
+    @Builder.Default
+    private List<Preference> preferences = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
-        return Objects.equals(id, account.id) && Objects.equals(phoneNumber, account.phoneNumber);
+        return Objects.equals(id, account.id) && Objects.equals(name, account.name) && Objects.equals(phoneNumber, account.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, phoneNumber);
+        return Objects.hash(id, name, phoneNumber);
     }
 }
