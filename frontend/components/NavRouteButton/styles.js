@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
         height: 44,
 
         marginTop: 5,
-        marginLeft: 20,
+        marginLeft: 40,
 
         backgroundColor: '#FFFFFF',
 

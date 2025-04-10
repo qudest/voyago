@@ -31,13 +31,11 @@ const styles = StyleSheet.create({
   routeInfo: {
     width: '100%',
     height: '100%',
-    padding: 20,
     backgroundColor: 'white',
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
+    borderRadius: 22,
   },
   topInfo: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -50,6 +48,10 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "rgba(202, 214, 255, 0.25)",
     borderRadius: 16,
+  },
+  routePointsContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   pointText: {
     fontSize: 16,

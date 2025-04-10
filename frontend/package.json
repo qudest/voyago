@@ -24,6 +24,7 @@
     "react-native-safe-area-context": "^5.3.0",
     "react-native-screens": "^4.9.2",
     "react-native-shimmer-placeholder": "^2.0.9",
+    "react-native-yamap": "^4.8.3",
     "text-encoding": "^0.7.0",
     "web-streams-polyfill": "^4.1.0"
   },
