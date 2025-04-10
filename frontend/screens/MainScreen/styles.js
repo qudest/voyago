@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(62, 60, 128, 0.38)',
     borderWidth: 5,
   },
+  scrollContent: {
+    paddingBottom: 40,
+  },
   routeInfo: {
     width: '100%',
     height: '100%',
@@ -57,6 +60,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   routePoints: {
+    minHeight: 150,
     marginTop: 30,
     padding: 20,
     backgroundColor: "rgba(202, 214, 255, 0.25)",

@@ -14,7 +14,7 @@ const MainScreen = () => {
   const [isVisible, setIsVisible] = useState(true); 
   const [currentIndex, setCurrentIndex] = useState(0);
   const pan = useRef(new Animated.Value(0)).current; 
-  const mokRoute = ['точка раз', 'точка двас', 'Точка раз', 'точка двас', 'точка двас', 'Точка раз', 'точка двас'];
+  const mokRoute = ['точка раз', 'точка двас', 'Точка раз', 'точка двас'];
 
   const handleNext = () => {
     if (currentIndex < mokRoute.length - 1) {
