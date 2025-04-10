@@ -1,14 +1,17 @@
 package by.smertex.core.dto.output;
 
-import by.smertex.core.database.entity.Preference;
-import by.smertex.core.database.entity.Role;
-import by.smertex.core.database.entity.Status;
+import by.smertex.core.database.model.impl.Preference;
+import by.smertex.core.database.model.impl.Role;
+import by.smertex.core.database.model.impl.Status;
+import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record AccountReadDto(String phoneNumber,
-                             String secretName,
+@Builder
+public record AccountReadDto(Long id,
+                             String phoneNumber,
+                             String name,
                              Role role,
                              Status status,
                              Boolean premium,
