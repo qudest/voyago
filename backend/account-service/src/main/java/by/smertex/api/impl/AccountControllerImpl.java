@@ -1,6 +1,7 @@
 package by.smertex.api.impl;
 
 import by.smertex.api.AccountController;
+import by.smertex.core.dto.input.AccountPhoneDto;
 import by.smertex.core.dto.input.AccountUpdateDto;
 import by.smertex.core.dto.output.AccountReadDto;
 import by.smertex.core.service.AccountService;
@@ -19,9 +20,9 @@ public class AccountControllerImpl implements AccountController {
     private final SubscriptionService subscriptionService;
 
     @GetMapping
-    public ResponseEntity<AccountReadDto> findByPhoneNumber(String phoneNumber) {
+    public ResponseEntity<AccountReadDto> findByPhoneNumber(@RequestBody AccountPhoneDto dto) {
         return ResponseEntity.ok(
-                accountService.findByPhoneNumber(phoneNumber)
+                accountService.findByPhoneNumber(dto.phoneNumber())
         );
     }
 
