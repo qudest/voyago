@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+
 import { SafeAreaView, StatusBar } from 'react-native';
 import 'web-streams-polyfill';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,7 +15,14 @@ import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import MyRoutesScreen from './screens/MyRoutesScreen/MyRoutesScreen';
 import DoneRoutesScreen from './screens/DoneRoutesScreen/DoneRoutesScreen';
 import LikeRoutesScreen from './screens/LikeRoutesScreen/LikeRoutesScreen';
+import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
+import RecommendationsRoutesScreen from './screens/RecommendationsRoutesScreen/RecommendationsRoutesScreen';
+import MainScreen from './screens/MainScreen/MainScreen';
+import CreateRouteScreen from './screens/CreateRouteScreen/CreateRouteScreen';
+import EditRouteScreen from './screens/EditRouteScreen/EditRouteScreen';
 import { TextEncoder } from 'text-encoding';
+
+
 global.TextEncoder = TextEncoder;
 
 const Stack = createStackNavigator();
@@ -36,6 +44,11 @@ export default function App() {
           <Stack.Screen name="MyRoutesScreen" component={MyRoutesScreen} />
           <Stack.Screen name="DoneRoutesScreen" component={DoneRoutesScreen} />
           <Stack.Screen name="LikeRoutesScreen" component={LikeRoutesScreen} />
+          <Stack.Screen name="PaymentScreen" component={PaymentScreen}/>
+          <Stack.Screen name="RecommendationsRoutesScreen" component={RecommendationsRoutesScreen}/>
+          <Stack.Screen name="MainScreen" component={MainScreen}/>
+          <Stack.Screen name="CreateRouteScreen" component={CreateRouteScreen}/>
+          <Stack.Screen name="EditRouteScreen" component={EditRouteScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

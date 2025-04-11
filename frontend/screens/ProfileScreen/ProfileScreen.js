@@ -10,7 +10,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
     const navigation = useNavigation();
 
     const handleBackPress = () => {
-      navigation.navigate("ChoosePreferencesScreen");
+      navigation.navigate("MainScreen");
     }
 
     const handleDoneRoutesPress = () => {
@@ -23,10 +23,10 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         navigation.navigate("LikeRoutesScreen")
     }
     const handlePremiumRoutesPress = () => {
-        Alert.alert("Создать")
+        navigation.navigate("RecommendationsRoutesScreen")
     }
     const handleCreatePress = () => {
-        Alert.alert("Премиум")
+        navigation.navigate("CreateRouteScreen")
     }
     const handleSettingsPress = () => {
         Alert.alert("Настроечки")
