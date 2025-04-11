@@ -23,8 +23,9 @@ const PremiumFreeScreen = () => {
     const navigation = useNavigation();
   
     const handleBuyPress = () => {
-      Alert.alert("rrrr")
+      navigation.navigate("PaymentScreen", { costOfPremium: "0" })
     }
+
     const handleExitPress = () => {
       navigation.navigate("ChooseCityScreen");
     }

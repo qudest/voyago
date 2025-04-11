@@ -61,6 +61,15 @@ const MyRoutesScreen = () => {
         navigation.navigate("ProfileScreen");
     };
 
+    const handleEditRoute = (route) => {
+        navigation.navigate('EditRouteScreen', { 
+            route: {
+                ...route,
+            } 
+        });
+    };
+
+
     const functional = "edit";
 
     return (
@@ -99,6 +108,7 @@ const MyRoutesScreen = () => {
                         key={route.id}
                         cardInformation={route}
                         functional={functional}
+                        onEditPress={handleEditRoute}
                     />
                 ))}
                 
