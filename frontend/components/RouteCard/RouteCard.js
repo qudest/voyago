@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Image, View, TouchableOpacity, Animated, Text, Alert  } from 'react-native';
 import ChooseButton from '../../components/ChooseButton/ChooseButton';
 
-const RouteCard = ({ cardInformation = {}, functional}) => {
+const RouteCard = ({ cardInformation = {}, functional, onEditPress }) => {
     const [expanded, setExpanded] = useState(false);
     const [animation] = useState(new Animated.Value(0));
     const [contentHeight, setContentHeight] = useState(200); 
@@ -45,7 +45,11 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
     });
 
     const handleEditButton = () => {
-        navigation.navigate("EditRouteScreen")
+        if (onEditPress) {
+            onEditPress(cardInformation);
+        } else {
+            navigation.navigate("EditRouteScreen", { route: cardInformation });
+        }
     };
 
     const handleLikeButton = () => {

@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
     enableContinueButton: {
         alignSelf: 'center',
         marginTop: 10,
+        marginBottom: 20,
 
         width: 295,
         height: 44,

@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Modal from 'react-native-modal';
 import styles from './styles';
 import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
 import DeleteRouteButton from '../../components/DeleteRouteButton/DeleteRouteButton';
+import AlertDeleteRoute from '../../components/AlertDeleteRoute/AlertDeleteRoute';
 
 const EditRouteScreen = () => {
-    const [selectedAddress, setselectedAddress] = useState(['', '']); 
+    const navigation = useNavigation();
+    const { params } = useRoute();
+    
+    const initialRoute = params?.route || { 
+        title: 'Новый маршрут', 
+        points: ['', ''] 
+    };
+    
+    const [selectedAddress, setSelectedAddress] = useState(initialRoute.points);
+    const [routeTitle, setRouteTitle] = useState(initialRoute.title);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
-    const navigation = useNavigation();
-
+    const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const addressData = [
         { id: 1, name: 'ул. Ленина, 10' },
@@ -29,44 +39,67 @@ const EditRouteScreen = () => {
     ];
 
     useEffect(() => {
-        const filledCount = selectedAddress.filter(address => address.length > 0).length;
-        setButtonEnabled(filledCount >= 2);
-        setShowEmptyFieldsWarning(false);
+        const allFilled = selectedAddress.every(addr => addr && addr.length > 0);
+        const hasMinimum = selectedAddress.length >= 2;
+        setButtonEnabled(allFilled && hasMinimum);
+        
+        if (showEmptyFieldsWarning && allFilled) {
+            setShowEmptyFieldsWarning(false);
+        }
     }, [selectedAddress]);
 
-    const handleBackButton = () => {
-        navigation.navigate("MyRoutesScreen")
-    }
-
     const handleAddPoint = () => {
-        setselectedAddress([...selectedAddress, '']); 
+        if (selectedAddress.length >= 6) {
+            Alert.alert('Максимум 6 точек');
+            return;
+        }
+        setSelectedAddress([...selectedAddress, '']);
     };
 
     const handleRemovePoint = (index) => {
-        const newCities = [...selectedAddress];
-        newCities.splice(index, 1);
-        setselectedAddress(newCities);
+        if (selectedAddress.length <= 2) {
+            Alert.alert('Минимум 2 точки');
+            return;
+        }
+        const newAddresses = [...selectedAddress];
+        newAddresses.splice(index, 1);
+        setSelectedAddress(newAddresses);
     };
 
     const handleAddressSelect = (index, address) => {
-        const newCities = [...selectedAddress];
-        newCities[index] = address;
-        setselectedAddress(newCities);
+        const newAddresses = [...selectedAddress];
+        newAddresses[index] = address;
+        setSelectedAddress(newAddresses);
     };
 
-    const handleContinueButton = () => {
-        const hasEmptyFields = selectedAddress.some(address => address.length === 0);
-        if (hasEmptyFields) setShowEmptyFieldsWarning(true); else navigation.navigate('ProfileScreen');
+    const handleSave = () => {
+        if (!buttonEnabled) {
+            setShowEmptyFieldsWarning(true);
+            return;
+        }      
+    };
+
+    const handleDelete = () => {
+        setDeleteModalVisible(true);
+    };
+
+    const confirmDelete = () => {
+        setDeleteModalVisible(false);
+        navigation.navigate('MyRoutesScreen');
+    };
+
+    const cancelDelete = () => {
+        setDeleteModalVisible(false);
     };
 
     return (
         <View style={styles.container}>
-            <BackButton onPress={handleBackButton}/>
+            <BackButton onPress={() => navigation.goBack()} />
             
-            <View style={styles.topContainer}> 
+            <View style={styles.topContainer}>
                 <Text style={styles.createTitle}>Редактирование маршрута</Text>
-                <Text style={styles.createDiscription}>Измените точки маршрута</Text>
-            </View>   
+                <Text style={styles.createDiscription}>{routeTitle}</Text>
+            </View>
             
             <View style={styles.pointsContainer}>
                 {selectedAddress.map((address, index) => (
@@ -74,7 +107,7 @@ const EditRouteScreen = () => {
                         key={index}
                         addressData={addressData}
                         selectedAddress={address}
-                        onAddressSelect={(selectedAddress) => handleAddressSelect(index, selectedAddress)}
+                        onAddressSelect={(addr) => handleAddressSelect(index, addr)}
                         onRemove={() => handleRemovePoint(index)}
                         showRemoveButton={selectedAddress.length > 2}
                     />
@@ -82,19 +115,28 @@ const EditRouteScreen = () => {
             </View>
             
             {showEmptyFieldsWarning && (
-                <Text style={styles.warningText}>Не все точки заполнены!</Text>
+                <Text style={styles.warningText}>Заполните все точки маршрута!</Text>
             )}
             
             <AddPoint 
                 onPress={handleAddPoint} 
-                condition={selectedAddress.length >= 6}
+                disabled={selectedAddress.length >= 6}
             />
             
-            <CreateRouteButton
-                onPress={handleContinueButton}
-                condition={buttonEnabled}
+            <View style={styles.actionsContainer}>
+                <CreateRouteButton
+                    onPress={handleSave}
+                    disabled={!buttonEnabled}
+                    title="Сохранить изменения"
+                />
+                <DeleteRouteButton onPress={handleDelete} />
+            </View>
+
+            <AlertDeleteRoute
+                isVisible={isDeleteModalVisible}
+                onCancel={cancelDelete}
+                onConfirm={confirmDelete}
             />
-           <DeleteRouteButton/>
         </View>
     );
 };
