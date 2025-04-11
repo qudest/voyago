@@ -21,8 +21,6 @@ const styles = StyleSheet.create({
         borderColor: 'rgba(96, 98, 101, 1)',
         backgroundColor: '#FFFFFF',
         borderRadius: 22,
-        paddingHorizontal: 10,
-        marginBottom: 10,
       },
       dropdown: {
         position: 'absolute',

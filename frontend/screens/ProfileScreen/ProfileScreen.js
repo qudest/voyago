@@ -26,7 +26,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         navigation.navigate("RecommendationsRoutesScreen")
     }
     const handleCreatePress = () => {
-        Alert.alert("Премиум")
+        navigation.navigate("CreateRouteScreen")
     }
     const handleSettingsPress = () => {
         Alert.alert("Настроечки")
