@@ -13,17 +13,20 @@ spring:
     properties.hibernate:
       hbm2ddl.auto: validate
 
+  liquibase:
+    enabled: false
+    change-log: db/changelog/db.changelog-master.yaml
+
   kafka:
+    bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
     producer:
-      bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVER}
-      key-serializer: org.apache.kafka.common.serialization.StringSerialization
-      value-serializer: org.apache.kafka.common.serialization.JsonSerialization
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
         enable.idempotence: true
 
-  liquibase:
-    enabled: true
-    change-log: db/changelog/db.changelog-master.yaml
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 server:
   port: ${APP_PORT:8090}

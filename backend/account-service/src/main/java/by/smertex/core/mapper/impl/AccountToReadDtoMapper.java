@@ -11,6 +11,7 @@ public class AccountToReadDtoMapper implements Mapper<Account, AccountReadDto> {
     public AccountReadDto map(Account from) {
         return AccountReadDto.builder()
                 .phoneNumber(from.getPhoneNumber())
+                .id(from.getId())
                 .name(from.getName())
                 .role(from.getRole())
                 .status(from.getStatus())

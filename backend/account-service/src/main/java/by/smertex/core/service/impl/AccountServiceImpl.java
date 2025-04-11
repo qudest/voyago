@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class AccountServiceImpl implements AccountService, SubscriptionService {
 
     private final AccountRepository accountRepository;
@@ -43,7 +43,6 @@ public class AccountServiceImpl implements AccountService, SubscriptionService {
                 .orElseGet(() -> accountService.create(phoneNumber));
     }
 
-    @Transactional
     public AccountReadDto create(String phoneNumber) {
         return Optional.of(accountRepository.save(
                         Account.builder()
@@ -58,7 +57,6 @@ public class AccountServiceImpl implements AccountService, SubscriptionService {
                 .orElseThrow(() -> new CrudException("Create account exception", HttpStatus.BAD_REQUEST.value()));
     }
 
-    @Transactional
     public void update(Long id, AccountUpdateDto dto) {
         accountRepository.saveAndFlush(
                 accountRepository.findById(id)
@@ -67,7 +65,6 @@ public class AccountServiceImpl implements AccountService, SubscriptionService {
         );
     }
 
-    @Transactional
     public void delete(Long id) {
         accountRepository.findById(id)
                 .map(account -> {
@@ -77,7 +74,6 @@ public class AccountServiceImpl implements AccountService, SubscriptionService {
                 .orElseThrow(() -> new CrudException("Delete account exception, entity not found", HttpStatus.NOT_FOUND.value()));
     }
 
-    @Transactional
     public void buyPremium(String phoneNumber, LocalDateTime endDate) {
         accountRepository.saveAndFlush(
                 accountRepository.findByPhoneNumber(phoneNumber)

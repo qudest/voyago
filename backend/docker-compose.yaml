@@ -12,6 +12,7 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=account_service_db
+      - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
       - "./account-service/postgres:/var/lib/postgresql"
     expose:
@@ -21,16 +22,95 @@ services:
 
   account-service:
     container_name: "account-service"
+    build: ./account-service
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/account_service_db
       - DB_USERNAME=admin
       - DB_PASSWORD=admin
-      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1,kafka-2
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
-    build: ./account-service
     ports:
       - "127.0.0.1:8090:8090"
     networks:
       - app
     depends_on:
       - account-service-db
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  subscribe-service:
+    container_name: "subscribe-service"
+    build: ./subscription-service
+    environment:
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8091
+      - ALLOW_RUNNING_AS_ROOT=yes
+    ports:
+      - "127.0.0.1:8091:8091"
+    networks:
+      - app
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  kafka-1:
+    container_name: kafka-1
+    image: bitnami/kafka:latest
+    expose:
+      - 9092
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9090,EXTERNAL://kafka-1:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - "./volume/kafka/server-1:/bitnami/kafka"
+    networks:
+      - app
+
+  kafka-2:
+    container_name: kafka-2
+    image: bitnami/kafka:latest
+    expose:
+      - 9094
+    environment:
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9090,EXTERNAL://kafka-2:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - "./volume/kafka/server-2:/bitnami/kafka"
+    networks:
+      - app
+
+  kafka-3:
+    container_name: kafka-3
+    image: bitnami/kafka:latest
+    expose:
+      - 9096
+    environment:
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9096
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:9090,EXTERNAL://kafka-3:9096
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - "./volume/kafka/server-3:/bitnami/kafka"
+    networks:
+      - app

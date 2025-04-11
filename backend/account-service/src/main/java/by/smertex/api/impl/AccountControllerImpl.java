@@ -17,8 +17,6 @@ public class AccountControllerImpl implements AccountController {
 
     private final AccountService accountService;
 
-    private final SubscriptionService subscriptionService;
-
     @GetMapping
     public ResponseEntity<AccountReadDto> findByPhoneNumber(@RequestBody AccountPhoneDto dto) {
         return ResponseEntity.ok(
