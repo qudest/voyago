@@ -2,11 +2,31 @@ spring:
   application:
     name: subscription-service
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  datasource:
+    url: ${DB_URL}
+    username: {DB_USERNAME}
+    password: {DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      hbm2ddl.auto: validate
 
   liquibase:
     enabled: false
+    change-log: db/changelog/db.changelog-master.yaml
+
+  kafka:
+    bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 
 server:
-  port: 8090
+  port: ${APP_PORT:8090}

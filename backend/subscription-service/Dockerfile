@@ -12,4 +12,4 @@ FROM eclipse-temurin:21-jdk-alpine
 ARG JAR_FILE_DIR=/app/build/libs
 COPY --from=build $JAR_FILE_DIR /app/jar
 
-ENTRYPOINT ["java","-jar","/app/jar/account-service-1.0.jar"]
+ENTRYPOINT ["java","-jar","/app/jar/subscription-service-1.0.jar"]

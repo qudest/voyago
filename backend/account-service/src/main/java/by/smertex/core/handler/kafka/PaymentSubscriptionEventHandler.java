@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class PaymentSubscriptionEventHandler {
     private final SubscriptionService subscriptionService;
 
-    @KafkaListener(topics = "payment-subscription-events-topic")
+    @KafkaListener(topics = "payment-subscriptions-events-topic")
     public void receive(PaymentSubscriptionEvent event) {
         subscriptionService.buyPremium(event.phoneNumber(), event.endDate());
     }
