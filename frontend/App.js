@@ -20,6 +20,7 @@ import RecommendationsRoutesScreen from './screens/RecommendationsRoutesScreen/R
 import MainScreen from './screens/MainScreen/MainScreen';
 import CreateRouteScreen from './screens/CreateRouteScreen/CreateRouteScreen';
 import EditRouteScreen from './screens/EditRouteScreen/EditRouteScreen';
+import FiltersScreen from './screens/FiltersScreen/FiltersScreen';
 import { TextEncoder } from 'text-encoding';
 
 
@@ -49,6 +50,7 @@ export default function App() {
           <Stack.Screen name="MainScreen" component={MainScreen}/>
           <Stack.Screen name="CreateRouteScreen" component={CreateRouteScreen}/>
           <Stack.Screen name="EditRouteScreen" component={EditRouteScreen}/>
+          <Stack.Screen name="FiltersScreen" component={FiltersScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

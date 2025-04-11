@@ -37,6 +37,11 @@ const RecommendationsRoutesScreen = () => {
     const handlerBackButton = () => {
         navigation.navigate("MainScreen");
     };
+
+    const handleSettingsButton = () => {
+        navigation.navigate("FiltersScreen");
+    };
+
     const functional = "like";
 
     return (
@@ -45,7 +50,7 @@ const RecommendationsRoutesScreen = () => {
             
             <View style={styles.header}>
                 <PremiunRoutesButton/>
-                <SettingsButton/>
+                <SettingsButton onPress={handleSettingsButton}/>
             </View>
 
             <ScrollView 
