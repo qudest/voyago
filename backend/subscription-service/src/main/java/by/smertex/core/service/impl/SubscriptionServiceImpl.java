@@ -1,0 +1,28 @@
+package by.smertex.core.service.impl;
+
+import by.smertex.core.dto.event.PaymentSubscriptionEvent;
+import by.smertex.core.dto.input.SubscriptionDataDto;
+import by.smertex.core.exception.KafkaResponseException;
+import by.smertex.core.service.SendPremiumService;
+import by.smertex.core.service.SubscriptionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class SubscriptionServiceImpl implements SubscriptionService, SendPremiumService {
+
+    private final KafkaTemplate<String, PaymentSubscriptionEvent> kafkaTemplate;
+
+    public void pay(SubscriptionDataDto dto) {
+
+    }
+
+    public void sendPremium(PaymentSubscriptionEvent event) {
+        kafkaTemplate.send("payment-subscriptions-events-topic", null, event)
+                .exceptionally(exception -> {
+                    throw new KafkaResponseException(exception.getMessage());
+                });
+    }
+}
