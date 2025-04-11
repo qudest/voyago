@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         justifyContent: 'center', 
 
+        marginTop: 10,
         width: 295,
         height: 44,
         backgroundColor: '#FCFCFF',
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
         borderWidth: 4,
         borderColor: '#606265',
 
-        shadowColor: '#000BD8', 
+        shadowColor: '#000000', 
         shadowOffset: {
           width: 0,
           height: 2,

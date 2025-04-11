@@ -19,6 +19,7 @@ import PaymentScreen from './screens/PaymentScreen/PaymentScreen';
 import RecommendationsRoutesScreen from './screens/RecommendationsRoutesScreen/RecommendationsRoutesScreen';
 import MainScreen from './screens/MainScreen/MainScreen';
 import CreateRouteScreen from './screens/CreateRouteScreen/CreateRouteScreen';
+import EditRouteScreen from './screens/EditRouteScreen/EditRouteScreen';
 import { TextEncoder } from 'text-encoding';
 
 
@@ -47,6 +48,7 @@ export default function App() {
           <Stack.Screen name="RecommendationsRoutesScreen" component={RecommendationsRoutesScreen}/>
           <Stack.Screen name="MainScreen" component={MainScreen}/>
           <Stack.Screen name="CreateRouteScreen" component={CreateRouteScreen}/>
+          <Stack.Screen name="EditRouteScreen" component={EditRouteScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

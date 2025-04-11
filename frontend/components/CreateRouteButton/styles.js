@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     enableContinueButton: {
         alignSelf: 'center',
+        marginTop: 10,
 
         width: 295,
         height: 44,
@@ -23,7 +24,8 @@ const styles = StyleSheet.create({
       },
       disableContinueButton: {
         alignSelf: 'center',
-    
+        marginTop: 10,
+
         width: 295,
         height: 44,
         paddingTop: 10,
@@ -32,7 +34,7 @@ const styles = StyleSheet.create({
         color: '#3E3C80',
         borderRadius: 22,
 
-        shadowColor: '#000BD8', 
+        shadowColor: '#000000', 
         shadowOffset: {
           width: 0,
           height: 2,
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
       disableContinueText: {
         alignSelf: 'center',
 
-        color: '#3E3C80',
+        color: '#FFFFFF',
         
         fontSize: 16,
         fontWeight: 500,

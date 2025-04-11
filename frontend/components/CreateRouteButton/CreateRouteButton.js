@@ -17,7 +17,7 @@ const ContinueButton = ({ onPress, condition }) => {
       styles.enableContinueText,
       !condition && styles.disableContinueText
     ]}>
-      Создать
+      Сохранить
     </Text>
   </TouchableOpacity>
   );

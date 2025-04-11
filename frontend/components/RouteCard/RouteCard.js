@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 import styles from './styles';
+import { useNavigation } from "@react-navigation/native";
 import { Image, View, TouchableOpacity, Animated, Text, Alert  } from 'react-native';
 import ChooseButton from '../../components/ChooseButton/ChooseButton';
 
@@ -9,6 +10,7 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
     const [contentHeight, setContentHeight] = useState(200); 
     const [likeRoute, setLikeRoute] = useState(true);
     const contentRef = useRef(null);
+    const navigation = useNavigation();
 
     const {
         title = "",
@@ -43,7 +45,7 @@ const RouteCard = ({ cardInformation = {}, functional}) => {
     });
 
     const handleEditButton = () => {
-        Alert.alert("Редактировать")
+        navigation.navigate("EditRouteScreen")
     };
 
     const handleLikeButton = () => {

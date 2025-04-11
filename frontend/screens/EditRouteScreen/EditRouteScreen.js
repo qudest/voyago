@@ -6,8 +6,9 @@ import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
+import DeleteRouteButton from '../../components/DeleteRouteButton/DeleteRouteButton';
 
-const CreateRouteScreen = () => {
+const EditRouteScreen = () => {
     const [selectedAddress, setselectedAddress] = useState(['', '']); 
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
@@ -34,7 +35,7 @@ const CreateRouteScreen = () => {
     }, [selectedAddress]);
 
     const handleBackButton = () => {
-        navigation.navigate("ProfileScreen")
+        navigation.navigate("MyRoutesScreen")
     }
 
     const handleAddPoint = () => {
@@ -63,8 +64,8 @@ const CreateRouteScreen = () => {
             <BackButton onPress={handleBackButton}/>
             
             <View style={styles.topContainer}> 
-                <Text style={styles.createTitle}>Создание маршрута</Text>
-                <Text style={styles.createDiscription}>Выберите от 2 до 6 точек</Text>
+                <Text style={styles.createTitle}>Редактирование маршрута</Text>
+                <Text style={styles.createDiscription}>Измените точки маршрута</Text>
             </View>   
             
             <View style={styles.pointsContainer}>
@@ -93,8 +94,9 @@ const CreateRouteScreen = () => {
                 onPress={handleContinueButton}
                 condition={buttonEnabled}
             />
+           <DeleteRouteButton/>
         </View>
     );
 };
 
-export default CreateRouteScreen;
+export default EditRouteScreen;
