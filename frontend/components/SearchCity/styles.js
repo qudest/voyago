@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         width: 323,
-        backgroundColor: 'rgba(202, 214, 255, 0.25)',
+        backgroundColor: '#EFF3FF',
         borderRadius: 8,
         maxHeight: 200,
         zIndex: -1,

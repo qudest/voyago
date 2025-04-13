@@ -29,7 +29,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         navigation.navigate("CreateRouteScreen")
     }
     const handleSettingsPress = () => {
-        Alert.alert("Настроечки")
+        navigation.navigate("AdditionalParametersScreen")
     }
     const handleExitPress = () => {
         Alert.alert("Выход")
