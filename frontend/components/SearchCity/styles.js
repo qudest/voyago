@@ -7,16 +7,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
       },
-
       imageSearch: {
         flexGrow: 1, 
         position: 'absolute',
-        right: 35,
-        bottom: 15,
+        right: 10,
+        bottom: 7,
       },
       searchInput: {
         height: 45,
         width: 323,
+        paddingLeft: 10,
+        paddingRight: 30,
         borderWidth: 1,
         borderColor: 'rgba(96, 98, 101, 1)',
         backgroundColor: '#FFFFFF',

@@ -41,6 +41,9 @@ const RecommendationsRoutesScreen = () => {
     const handleSettingsButton = () => {
         navigation.navigate("FiltersScreen");
     };
+    const handleRouteButton = () => {
+        navigation.navigate("PreviewRouteScreen")
+    }
 
     const functional = "like";
 
@@ -63,6 +66,7 @@ const RecommendationsRoutesScreen = () => {
                         key={route.id}
                         cardInformation={route}
                         functional={functional}
+                        onPress={handleRouteButton}
                     />
                 ))}
                 

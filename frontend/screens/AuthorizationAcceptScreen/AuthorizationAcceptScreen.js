@@ -17,7 +17,7 @@ const AuthorizationAcceptScreen = () => {
     };
 
     const handleBackPress = () => {
-        navigation.navigate("PreviewRouteScreen");
+        navigation.navigate("AuthorizationScreen");
     };
 
     const phoneNumber = route.params.phoneNumber;

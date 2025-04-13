@@ -2,13 +2,20 @@ import BackButton from "../../components/BackButton/BackButton";
 import styles from "./styles";
 import ChooseButton from "../../components/ChooseButton/ChooseButton";
 import { View, Image, Text, ScrollView, SafeAreaView } from 'react-native';
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 const PreviewRouteScreen = () => {
+    const navigation = useNavigation();
+
+    const handleBackButton = () => {
+        navigation.goBack(); 
+    }
+    
     const points = ["Точка раз", "Точка двас", "Точка трис"];
     return (
         <SafeAreaView style={styles.safeContainer}>
             <View style={styles.container}>
-                <BackButton/>
+                <BackButton onPress={handleBackButton}/>
                 
                 <View style={styles.headerContainer}>
                     <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
