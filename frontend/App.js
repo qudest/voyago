@@ -21,6 +21,7 @@ import MainScreen from './screens/MainScreen/MainScreen';
 import CreateRouteScreen from './screens/CreateRouteScreen/CreateRouteScreen';
 import EditRouteScreen from './screens/EditRouteScreen/EditRouteScreen';
 import FiltersScreen from './screens/FiltersScreen/FiltersScreen';
+import PreviewRouteScreen from './screens/PreviewRouteScreen/PreviewRouteScreen';
 import { TextEncoder } from 'text-encoding';
 
 
@@ -51,6 +52,7 @@ export default function App() {
           <Stack.Screen name="CreateRouteScreen" component={CreateRouteScreen}/>
           <Stack.Screen name="EditRouteScreen" component={EditRouteScreen}/>
           <Stack.Screen name="FiltersScreen" component={FiltersScreen}/>
+          <Stack.Screen name="PreviewRouteScreen" component={PreviewRouteScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
