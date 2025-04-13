@@ -50,7 +50,6 @@ const FiltersScreen = () => {
             <Text style={styles.filtersTitle}>Фильтры</Text>
             
             <View style={styles.filtersContainer}>
-                {/* Фильтр по местам */}
                 <View style={styles.filtersPlaceContainer}>
                     {mockPlace.map(place => (
                         <TouchableOpacity
@@ -77,8 +76,6 @@ const FiltersScreen = () => {
                         </TouchableOpacity>
                     ))}
                 </View>
-
-                {/* Фильтр по длительности */}
                 <View style={styles.filtersDurationContainer}>
                     <View style={styles.durationTitleContainer}>
                         <Text style={styles.durationTitle}>Длительность</Text>

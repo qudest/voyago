@@ -41,7 +41,7 @@ const DoneRoutesScreen = () => {
     };
     const handleFiltersButton = () => {
         navigation.navigate("FiltersScreen");
-    }
+    };
     const functional = "done";
 
     return (
