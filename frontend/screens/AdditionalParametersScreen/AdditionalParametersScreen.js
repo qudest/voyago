@@ -148,7 +148,7 @@ import React, { useState, useEffect } from 'react';
                     isVisible={isSubscriptionCancelled}
                     onCancel={handleAlertChangeClose}
                     title="Подписка успешно отменена"
-                    message=""
+                    message=" "
                 />
             </View>
         );
