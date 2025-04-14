@@ -2,11 +2,13 @@ spring:
   application:
     name: auth-service
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-
-  liquibase:
-    enabled: false
+  kafka:
+    bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
 
 server:
   port: 8090
