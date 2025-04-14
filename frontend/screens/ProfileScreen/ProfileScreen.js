@@ -10,7 +10,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
     const navigation = useNavigation();
 
     const handleBackPress = () => {
-      navigation.navigate("MainScreen");
+        navigation.goBack(); 
     }
 
     const handleDoneRoutesPress = () => {

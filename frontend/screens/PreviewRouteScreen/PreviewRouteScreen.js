@@ -1,14 +1,29 @@
+import React from 'react';
 import BackButton from "../../components/BackButton/BackButton";
 import styles from "./styles";
 import ChooseButton from "../../components/ChooseButton/ChooseButton";
 import { View, Image, Text, ScrollView, SafeAreaView } from 'react-native';
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const PreviewRouteScreen = () => {
     const navigation = useNavigation();
 
     const handleBackButton = () => {
         navigation.goBack(); 
+    }
+
+    const handleChooseButton = () => {
+        navigation.navigate("MainScreen", {
+            selectedRoute: {
+                id: 1,
+                title: "Маршрут 2",
+                location: "Воронеж",
+                time: "2",
+                distance: "2",
+                rating: 4.5,
+                points: ["Точка раз", "Точка двас", "Точка трис"],
+            },
+        });
     }
     
     const points = ["Точка раз", "Точка двас", "Точка трис"];
@@ -19,7 +34,7 @@ const PreviewRouteScreen = () => {
                 
                 <View style={styles.headerContainer}>
                     <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-                        Маршрут2
+                        Маршрут 2
                     </Text>
 
                     <View style={styles.locationContainer}>
@@ -71,11 +86,11 @@ const PreviewRouteScreen = () => {
                 </ScrollView>
 
                 <View style={styles.footer}>
-                    <ChooseButton style={styles.chooseButton}/>
+                    <ChooseButton style={styles.chooseButton} onPress={handleChooseButton}/>
                 </View>
             </View>
         </SafeAreaView>
-    )
+    );
 }
 
 export default PreviewRouteScreen;

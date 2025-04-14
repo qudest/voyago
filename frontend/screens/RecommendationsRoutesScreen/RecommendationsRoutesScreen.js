@@ -35,7 +35,7 @@ const RecommendationsRoutesScreen = () => {
     ];
 
     const handlerBackButton = () => {
-        navigation.navigate("MainScreen");
+        navigation.goBack(); 
     };
 
     const handleSettingsButton = () => {

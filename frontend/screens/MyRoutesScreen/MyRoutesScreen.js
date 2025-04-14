@@ -71,6 +71,9 @@ const MyRoutesScreen = () => {
         });
     };
 
+    const handlePreviewRoute = () => {
+        navigation.navigate("PreviewRouteScreen");
+    }
 
     const functional = "edit";
 
@@ -111,6 +114,7 @@ const MyRoutesScreen = () => {
                         cardInformation={route}
                         functional={functional}
                         onEditPress={handleEditRoute}
+                        onPress={handlePreviewRoute}
                     />
                 ))}
                 
