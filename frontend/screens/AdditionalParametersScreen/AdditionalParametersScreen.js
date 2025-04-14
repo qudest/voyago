@@ -6,11 +6,17 @@ import BackButton from '../../components/BackButton/BackButton';
 import SearchCity from '../../components/SearchCity/SearchCity';
 import ProfileButton from '../../components/ProfileButton/ProfileButton';
 import { TextInput } from 'react-native-gesture-handler';
+import AlertChange from '../../components/AlertChange/AlertChange';
+import AlertDelete from '../../components/AlertDelete/AlertDelete';
 
 const AdditionalParametersScreen = () => {
     const [selectedCity, setSelectedCity] = useState('');
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [name, setName] = useState('');
+    const [isChangeModalVisible, setChangeModalVisible] = useState(false);
+    const [isDeleteAccountModalVisible, setDeleteAccountModalVisible] = useState(false);
+    const [isCancellationConfirmModalVisible, setCancellationConfirmModalVisible] = useState(false);
+    const [isCancellationModalVisible, setCancellationModalVisible] = useState(false);
 
     const citiesData = [
         { id: 1, name: 'Москва' },
@@ -27,17 +33,37 @@ const AdditionalParametersScreen = () => {
 
     const handleBackButton = () => {
         navigation.goBack(); 
-    }
+    };
     const handleSavePress = () => {
-        Alert.alert("СОХРАНИТЬ")
-    }
-    const handleCancelPress = () => {
-        Alert.alert("ОТМЕНА ПОДПИСКИ")
-    }
-    const handleDeletePress = () => {
-        Alert.alert("УДАЛЕНИЕ АККАУНТА")
-    }
+        setChangeModalVisible(true);
+    };
     
+    const cancelChanges = () => {
+        setChangeModalVisible(false);
+        setCancellationConfirmModalVisible(false);
+        navigation.navigate("ProfileScreen");
+    };
+
+    const handleDeletePress = () => {
+        setDeleteAccountModalVisible(true);
+    };
+    const handleCancelPress = () => {
+       setCancellationModalVisible(true);
+    };
+
+    const cancelDelete = () => {
+        setDeleteAccountModalVisible(false);
+        setCancellationModalVisible(false);
+    };
+    const confirmDelete = () => {
+        setDeleteAccountModalVisible(false);
+    };
+
+    const confirmCancellation = () => {
+        setCancellationModalVisible(false);
+        setCancellationConfirmModalVisible(true);
+    };
+
 
     return (
         <View style={styles.container}>
@@ -92,6 +118,32 @@ const AdditionalParametersScreen = () => {
                     />
                 </View>
             </View>
+            <AlertChange
+                isVisible={isChangeModalVisible}
+                onCancel={cancelChanges}
+            />
+            
+            <AlertDelete
+                isVisible={isDeleteAccountModalVisible}
+                onCancel={cancelDelete}
+                onConfirm={confirmDelete}
+                title="Удаление аккаунта"
+                message='Вы точно хотите удалить свой аккаунт?'
+            />
+
+            <AlertDelete
+                isVisible={isCancellationModalVisible}
+                onCancel={cancelDelete}
+                onConfirm={confirmCancellation}
+                title="Отмена подписки"
+                message='Вы точно хотите отменить подписку?'
+            />
+
+            <AlertChange
+                isVisible={isCancellationConfirmModalVisible}
+                onCancel={cancelChanges}
+            />
+            
         </View>
     );
 };
