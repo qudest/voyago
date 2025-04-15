@@ -6,7 +6,7 @@ import by.smertex.core.dto.input.PhoneNotificationDto;
 import by.smertex.core.dto.input.RefreshTokenDto;
 import by.smertex.core.dto.output.TokenDto;
 import by.smertex.core.service.JwtService;
-import by.smertex.core.service.PhoneCodeService;
+import by.smertex.core.service.SendCodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthControllerImpl implements AuthController {
 
-    private final PhoneCodeService phoneCodeService;
+    private final SendCodeService sendCodeService;
 
     private final JwtService jwtService;
 
     public ResponseEntity<Void> sendCodeForAccess(PhoneNotificationDto dto) {
-        phoneCodeService.send(dto);
+        sendCodeService.send(dto);
         return ResponseEntity.ok()
                 .build();
     }

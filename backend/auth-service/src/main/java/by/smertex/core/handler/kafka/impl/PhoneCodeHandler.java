@@ -5,6 +5,7 @@ import by.smertex.core.dto.event.PhoneCodeEvent;
 import by.smertex.core.handler.kafka.AbstractKafkaHandler;
 import by.smertex.core.service.PhoneCodeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +15,16 @@ public class PhoneCodeHandler implements AbstractKafkaHandler<PhoneCodeEvent> {
 
     private final PhoneCodeService phoneCodeService;
 
+    @Value("${code.lifetime}")
+    private Long codeLifetime;
+
     @KafkaListener(topics = "phone-code-events-topic")
     public void receive(PhoneCodeEvent event) {
         phoneCodeService.save(
                 PhoneCode.builder()
                         .phoneNumber(event.phoneNumber())
                         .code(event.code())
+                        .ttl(codeLifetime)
                         .build()
         );
     }
