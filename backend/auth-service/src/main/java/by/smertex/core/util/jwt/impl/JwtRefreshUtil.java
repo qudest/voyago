@@ -14,7 +14,7 @@ public class JwtRefreshUtil implements JwtUtil<String> {
     @Value("${jwt.refresh.secret}")
     private String secret;
 
-    @Value("${jwt.refresh.secret}")
+    @Value("${jwt.refresh.lifetime}")
     private Duration lifetime;
 
     @Override
@@ -22,8 +22,8 @@ public class JwtRefreshUtil implements JwtUtil<String> {
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + lifetime.toMillis());
 
-        return jwtBuilder(secret, issuedDate, expiredDate)
-                .setSubject(phoneNumber)
+        return jwtBuilder(issuedDate, expiredDate)
+                .subject(phoneNumber)
                 .compact();
     }
 

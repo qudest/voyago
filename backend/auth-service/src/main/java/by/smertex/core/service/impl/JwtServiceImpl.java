@@ -56,12 +56,10 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public TokenDto updateToken(RefreshTokenDto dto) {
+        jwtRefreshUtil.validateToken(dto.refreshToken());
         return tokenRepository.findById(dto.phoneNumber())
                 .filter(entity ->
                         jwtRefreshUtil.getUsername(entity.getRefreshToken()).equals(dto.phoneNumber())
-                )
-                .filter(entity ->
-                        entity.getRefreshToken().equals(dto.refreshToken())
                 )
                 .map(entity -> {
                     entity.setAccessToken(
@@ -81,6 +79,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private AccountReadDto getAccount(String phoneNumber) {
-        return restTemplate.getForObject(path + "/{phoneNumber}", AccountReadDto.class, phoneNumber);
+        return restTemplate.getForObject(path + "/phoneNumber", AccountReadDto.class, phoneNumber);
     }
 }

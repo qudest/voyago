@@ -26,9 +26,9 @@ public class JwtAccessUtil implements JwtUtil<AccountReadDto> {
         Date issuedDate = new Date();
         Date expiredDate = new Date(issuedDate.getTime() + lifetime.toMillis());
 
-        return jwtBuilder(secret, issuedDate, expiredDate)
-                .setClaims(claims)
-                .setSubject(account.phoneNumber())
+        return jwtBuilder(issuedDate, expiredDate)
+                .claims(claims)
+                .subject(account.phoneNumber())
                 .compact();
     }
 

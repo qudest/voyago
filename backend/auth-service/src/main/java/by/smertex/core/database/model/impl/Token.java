@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @Builder
 @RedisHash("PhoneRefreshToken")
 public class Token implements AbstractEntity<String> {

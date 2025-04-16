@@ -27,10 +27,10 @@ spring:
 
 jwt:
   access:
-    secret: ${JWT_SECRET:access_secret}
-    lifetime: ${JWT_LIFETIME:60m}
+    secret: ${JWT_SECRET:887cc2e79f9044cdf72aa19ba913cd48e4063a3f2129983abcd85b6bd1102eb8}
+    lifetime: ${JWT_LIFETIME:30m}
   refresh:
-    secret: ${JWT_SECRET:refresh_secret}
+    secret: ${JWT_SECRET:60b263b26771adae5d9519096730c16ef634fcbe0976040bb0e0375bd4318124}
     lifetime: ${JWT_LIFETIME:4320m}
 
 code.lifetime: 3

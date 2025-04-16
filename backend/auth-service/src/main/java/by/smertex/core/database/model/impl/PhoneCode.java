@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 @Builder
 @RedisHash("PhoneCode")
 public class PhoneCode implements AbstractEntity<String> {
@@ -22,6 +23,7 @@ public class PhoneCode implements AbstractEntity<String> {
     private Integer code;
 
     @TimeToLive(unit = TimeUnit.MINUTES)
+    @EqualsAndHashCode.Exclude
     private Long ttl = 3L;
 
     @Override
