@@ -10,7 +10,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
     const navigation = useNavigation();
 
     const handleBackPress = () => {
-      navigation.navigate("MainScreen");
+        navigation.goBack(); 
     }
 
     const handleDoneRoutesPress = () => {
@@ -29,7 +29,7 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         navigation.navigate("CreateRouteScreen")
     }
     const handleSettingsPress = () => {
-        Alert.alert("Настроечки")
+        navigation.navigate("AdditionalParametersScreen")
     }
     const handleExitPress = () => {
         Alert.alert("Выход")

@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Image, View, TouchableOpacity, Animated, Text, Alert  } from 'react-native';
 import ChooseButton from '../../components/ChooseButton/ChooseButton';
 
-const RouteCard = ({ cardInformation = {}, functional, onEditPress }) => {
+const RouteCard = ({ cardInformation = {}, functional, onEditPress, onPress }) => {
     const [expanded, setExpanded] = useState(false);
     const [animation] = useState(new Animated.Value(0));
     const [contentHeight, setContentHeight] = useState(200); 
@@ -122,7 +122,7 @@ const RouteCard = ({ cardInformation = {}, functional, onEditPress }) => {
                         <Text key={index} style={styles.pointText}>{point}</Text>
                     ))}
                 </View>
-                    <ChooseButton style={styles.chooseButton}/>
+                    <ChooseButton style={styles.chooseButton} onPress={onPress}/>
                 </View>
                 
                 <View style={styles.footer}>

@@ -5,6 +5,7 @@ COPY src    src
 COPY gradle  gradle
 COPY build.gradle settings.gradle gradlew ./
 
+RUN chmod +x gradlew
 RUN  ./gradlew build -x test
 
 FROM eclipse-temurin:21-jdk-alpine

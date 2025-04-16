@@ -44,6 +44,11 @@ const SearchCity = ({ citiesData = [], onCitySelect, selectedCity }) => {
             onBlur={() => setIsSearchFocused(false)}
         />
         
+        <Image
+            source={require('../../assets/search.png')}
+            style={styles.imageSearch}
+        />
+        
         {(isSearchFocused || filteredCities.length > 0) && (
             <View style={styles.dropdown}>
                 <FlatList
@@ -61,12 +66,7 @@ const SearchCity = ({ citiesData = [], onCitySelect, selectedCity }) => {
                 />
             </View>
         )}
-        
         </View>
-          <Image
-            source={require('../../assets/search.png')}
-            style={styles.imageSearch}
-        />
   </View>
   );
 };

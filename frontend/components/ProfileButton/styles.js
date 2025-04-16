@@ -22,6 +22,24 @@ const styles = StyleSheet.create({
 
         borderRadius: 16,
       },
+      disabledText: {
+        textAlignVertical: 'center',
+        paddingLeft: 16,           
+        textAlign: 'left',       
+        lineHeight: 44,       
+
+        width: 270,
+        height: 44,
+        backgroundColor: '#AEAFB2',
+        fontSize: 16,
+        fontWeight: 400,
+        color: '#000000',
+
+        borderRadius: 16,
+      },
+      battonDisabledContainer: {
+
+      },
       imageNavigation: {
         right: 5,
       },
