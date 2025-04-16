@@ -1,5 +1,8 @@
 package by.smertex.core.dto.output;
 
-public record TokenDto(String jwtToken,
+import lombok.Builder;
+
+@Builder
+public record TokenDto(String accessToken,
                        String refreshToken) {
 }

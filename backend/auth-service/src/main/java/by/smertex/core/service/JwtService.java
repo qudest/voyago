@@ -8,4 +8,6 @@ public interface JwtService {
     TokenDto generateToken(PhoneCodeDto dto);
 
     TokenDto updateToken(RefreshTokenDto dto);
+
+    void removeToken(String phoneNumber);
 }

@@ -3,7 +3,6 @@ package by.smertex;
 import by.smertex.core.AbstractTest;
 import by.smertex.core.database.model.impl.PhoneCode;
 import by.smertex.core.database.repository.PhoneCodeRepository;
-import by.smertex.core.dto.event.PhoneNotificationEvent;
 import by.smertex.core.dto.input.PhoneCodeDto;
 import by.smertex.core.exception.InvalidCodeException;
 import by.smertex.core.service.PhoneCodeService;
@@ -12,22 +11,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Bean;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @EnableAutoConfiguration(exclude = KafkaAutoConfiguration.class)
-@ImportAutoConfiguration(PhoneCodeServiceTest.KafkaMockConfiguration.class)
 public class PhoneCodeServiceTest extends AbstractTest {
 
     @Autowired
@@ -41,14 +34,6 @@ public class PhoneCodeServiceTest extends AbstractTest {
     static GenericContainer<?> redisContainer =
             new GenericContainer<>("redis:latest")
                     .withExposedPorts(6379);
-
-    @TestConfiguration
-    static class KafkaMockConfiguration{
-        @Bean
-        KafkaTemplate<String, PhoneNotificationEvent> kafkaTemplate(){
-            return Mockito.mock(KafkaTemplate.class);
-        }
-    }
 
     @BeforeAll
     static void setApp(){

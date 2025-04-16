@@ -25,7 +25,18 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
+jwt:
+  access:
+    secret: ${JWT_SECRET:access_secret}
+    lifetime: ${JWT_LIFETIME:60m}
+  refresh:
+    secret: ${JWT_SECRET:refresh_secret}
+    lifetime: ${JWT_LIFETIME:4320m}
+
 code.lifetime: 3
+
+path:
+  account-service: ${ACCOUNT_SERVICE:account-service}
 
 server:
   port: ${APP_PORT:8090}

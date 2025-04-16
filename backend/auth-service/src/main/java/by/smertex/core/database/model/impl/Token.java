@@ -11,10 +11,12 @@ import org.springframework.data.redis.core.RedisHash;
 @Setter
 @Builder
 @RedisHash("PhoneRefreshToken")
-public class PhoneRefreshToken implements AbstractEntity<String> {
+public class Token implements AbstractEntity<String> {
 
     @Id
     private String phoneNumber;
+
+    private String accessToken;
 
     private String refreshToken;
 
