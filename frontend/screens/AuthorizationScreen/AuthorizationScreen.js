@@ -3,16 +3,61 @@ import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert,  Key
 import styles from './styles';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation } from "@react-navigation/native";
-
-
+import axios from "axios";
+import {API_URL} from '../../variables/ip';
 
 const AutorizationScreen = () => {
   const navigation = useNavigation();
   const [phoneNumber, setPhoneNumber] = useState('+7'); 
   
   const handleRegistrationAccessPress = () => {
-    navigation.navigate("AuthorizationAcceptScreen", {phoneNumber});
+    console.log(cleanedPhoneNumber)
   };
+
+  const fetchPhoneNumber = async () => {
+    try {
+      const cleanedPhoneNumber = phoneNumber.replace('+', '');
+      const response = await axios.get(`http://${API_URL}:8091/api/account/${cleanedPhoneNumber}`);
+      
+      console.log('Ответ сервера:', response);
+
+      if (response.status === 200){
+        fetchCode(cleanedPhoneNumber);
+      }
+    } catch (error) {
+      console.log('Ошибка при запросе:', error);
+      if (error.response) {
+        console.log("Ошибка статус:", error.response.status);
+      } else if (error.request) {
+        console.log("Ошибка: Нет ответа от сервера");
+      } else {
+        console.log("Ошибка:", error.message);
+      }
+    }
+  }
+
+  const fetchCode = async (cleanedPhoneNumber) => {
+    try {
+      const response = await axios.post(`http://${API_URL}:8090/api/security/send`, 
+        {
+          "phoneNumber": cleanedPhoneNumber
+      }
+      );
+
+      if (response.status === 200){
+        navigation.navigate("AuthorizationAcceptScreen", {cleanedPhoneNumber});
+      }
+    } catch (error) {
+      console.log('Ошибка при запросе:', error);
+      if (error.response) {
+        console.log("Ошибка статус:", error.response.status);
+      } else if (error.request) {
+        console.log("Ошибка: Нет ответа от сервера");
+      } else {
+        console.log("Ошибка:", error.message);
+      }
+    }
+  }
 
   const handlePhoneNumberChange = (text) => {
     if (text.startsWith('+7')) {
@@ -47,7 +92,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <ContinueButton onPress={handleRegistrationAccessPress} condition={!isButtonDisabled}/>
+      <ContinueButton onPress={() => { console.log('Кнопка нажата'); fetchPhoneNumber(); }} condition={!isButtonDisabled}/>
     </View>
     </TouchableWithoutFeedback>
   );
