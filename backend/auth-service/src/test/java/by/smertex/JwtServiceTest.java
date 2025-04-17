@@ -90,7 +90,7 @@ public class JwtServiceTest extends AbstractTest {
                 .when(phoneCodeService)
                 .verifyCode(phoneCodeDto);
         Mockito
-                .when(restTemplate.getForObject(restTemplatePath + "/phoneNumber", AccountReadDto.class, phoneCodeDto.phoneNumber()))
+                .when(restTemplate.getForObject(restTemplatePath, AccountReadDto.class, phoneCodeDto.phoneNumber()))
                 .thenReturn(returnedAccount);
     }
 
@@ -141,7 +141,7 @@ public class JwtServiceTest extends AbstractTest {
 
     @Test
     @DisplayName("Test update token")
-    void testUpdateToken() {
+    void testUpdateToken() throws InterruptedException {
         String phoneNumber = "88006663535";
         AccountReadDto account = AccountReadDto.builder()
                 .id(3L)
@@ -169,7 +169,7 @@ public class JwtServiceTest extends AbstractTest {
                 .build();
 
         Mockito
-                .when(restTemplate.getForObject(restTemplatePath + "/phoneNumber", AccountReadDto.class, phoneNumber))
+                .when(restTemplate.getForObject(restTemplatePath, AccountReadDto.class, phoneNumber))
                 .thenReturn(account);
 
         tokenRepository.findById(phoneNumber).ifPresentOrElse(
@@ -180,6 +180,7 @@ public class JwtServiceTest extends AbstractTest {
                 () -> Assertions.fail("Token not found")
         );
 
+        Thread.sleep(1000);
         jwtService.updateToken(refreshTokenDto);
 
         tokenRepository.findById(phoneNumber).ifPresentOrElse(

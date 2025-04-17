@@ -79,6 +79,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private AccountReadDto getAccount(String phoneNumber) {
-        return restTemplate.getForObject(path + "/phoneNumber", AccountReadDto.class, phoneNumber);
+        return restTemplate.getForObject(path, AccountReadDto.class, phoneNumber);
     }
 }
