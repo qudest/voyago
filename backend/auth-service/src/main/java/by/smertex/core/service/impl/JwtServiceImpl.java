@@ -57,14 +57,12 @@ public class JwtServiceImpl implements JwtService {
 
     public TokenDto updateToken(RefreshTokenDto dto) {
         jwtRefreshUtil.validateToken(dto.refreshToken());
-        return tokenRepository.findById(dto.phoneNumber())
-                .filter(entity ->
-                        jwtRefreshUtil.getUsername(entity.getRefreshToken()).equals(dto.phoneNumber())
-                )
+        String username = jwtRefreshUtil.getUsername(dto.refreshToken());
+        return tokenRepository.findById(username)
                 .map(entity -> {
                     entity.setAccessToken(
                             jwtAccessUtil.generateToken(
-                                    getAccount(dto.phoneNumber())
+                                    getAccount(username)
                             )
                     );
                     return tokenRepository.save(entity);
