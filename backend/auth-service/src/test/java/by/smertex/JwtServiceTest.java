@@ -164,7 +164,6 @@ public class JwtServiceTest extends AbstractTest {
                         .build()
         );
         RefreshTokenDto refreshTokenDto = RefreshTokenDto.builder()
-                .phoneNumber(phoneNumber)
                 .refreshToken(refreshToken)
                 .build();
 
