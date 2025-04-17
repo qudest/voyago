@@ -5,6 +5,40 @@ networks:
     driver: bridge
 
 services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
+    expose:
+      - "6379"
+    volumes:
+      - "./volume/redis:/data"
+    networks:
+      - app
+
+  auth-service:
+    container_name: "auth-service"
+    build: ./auth-service
+    environment:
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVER=kafka-1:9090,kafka-2:9090
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=admin
+      - ACCOUNT_SERVICE=http://account-service:8090/api/account/{phone-number}
+      - APP_PORT=8090
+    ports:
+      - "127.0.0.1:8090:8090"
+    networks:
+      - app
+    depends_on:
+      - account-service
+      - redis
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
   account-service-db:
     container_name: "postgres"
     image: postgres
@@ -14,7 +48,7 @@ services:
       - POSTGRES_DB=account_service_db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - "./account-service/postgres:/var/lib/postgresql"
+      - "./volume/postgres/account-service:/var/lib/postgresql"
     expose:
       - "5432"
     networks:
@@ -30,7 +64,7 @@ services:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     ports:
-      - "127.0.0.1:8090:8090"
+      - "127.0.0.1:8091:8090"
     networks:
       - app
     depends_on:
@@ -47,7 +81,7 @@ services:
       - APP_PORT=8091
       - ALLOW_RUNNING_AS_ROOT=yes
     ports:
-      - "127.0.0.1:8091:8091"
+      - "127.0.0.1:8092:8091"
     networks:
       - app
     depends_on:
