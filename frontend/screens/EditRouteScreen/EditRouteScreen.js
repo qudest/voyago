@@ -8,7 +8,7 @@ import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
 import DeleteRouteButton from '../../components/DeleteRouteButton/DeleteRouteButton';
-import AlertDeleteRoute from '../../components/AlertDeleteRoute/AlertDeleteRoute';
+import AlertDelete from '../../components/AlertDelete/AlertDelete';
 
 const EditRouteScreen = () => {
     const navigation = useNavigation();
@@ -132,10 +132,12 @@ const EditRouteScreen = () => {
                 <DeleteRouteButton onPress={handleDelete} />
             </View>
 
-            <AlertDeleteRoute
+            <AlertDelete
                 isVisible={isDeleteModalVisible}
                 onCancel={cancelDelete}
                 onConfirm={confirmDelete}
+                title = "Удаление маршрута"
+                message = "Вы точно хотите удалить маршрут?"
             />
         </View>
     );

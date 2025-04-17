@@ -25,10 +25,12 @@ const ChoosePreferencesScreen = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.containerMain}>
           <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
-          <PreferenceCard 
-            onCardPress={handleCardPress}
-            selectedPreferences={selectedPreferences}
-          />
+          <View style={styles.preference}>
+              <PreferenceCard 
+                onCardPress={handleCardPress}
+                selectedPreferences={selectedPreferences}
+              />
+          </View>
         </View>
         <View style={styles.containerNav}>
           <ContinueButton onPress={handleContinueButton} condition={true}/>
