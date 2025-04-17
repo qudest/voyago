@@ -11,8 +11,8 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
         value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
     producer:
-      bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
@@ -22,7 +22,6 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
 jwt:

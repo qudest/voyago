@@ -21,7 +21,7 @@ public class AuthControllerImpl implements AuthController {
     private final JwtService jwtService;
 
     @PostMapping("/send")
-    public ResponseEntity<Void> sendCodeForAccess(@RequestParam PhoneDto dto) {
+    public ResponseEntity<Void> sendCodeForAccess(@RequestBody PhoneDto dto) {
         sendCodeService.send(dto);
         return ResponseEntity.ok()
                 .build();
