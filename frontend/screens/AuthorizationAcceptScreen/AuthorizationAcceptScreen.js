@@ -5,7 +5,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AlertError from '../../components/AlertError/AlertError';
-import { getAccountTockens, sendSecurityCode } from '../../services/authApi';
+import { getAccountTockens, sendSecurityCode, getAccountInfo } from '../../services/authApi';
 
 
 const AuthorizationAcceptScreen = () => {
@@ -31,7 +31,7 @@ const AuthorizationAcceptScreen = () => {
             accessToken,
             refreshToken
           } = response.data;
-          navigation.navigate("PremiumScreen");
+          fetchPhoneNumber();
         }
       } catch (error) {
         let message = '';
@@ -39,6 +39,30 @@ const AuthorizationAcceptScreen = () => {
           message = `Неверный код подтверждения`;
         } else if (error.request) {
           message = 'Что-то пошло не так';
+        } else {
+          message = 'Что-то пошло не так';
+        }
+        setErrorMessage(message);
+        setErrorModalVisible(true);
+      }
+    }
+
+    const fetchPhoneNumber = async () => {
+      try {
+        const response = await getAccountInfo(phoneNumber);
+        if (response.status === 200){
+          if (response.data.city === null ){
+            navigation.navigate('ChooseCityScreen')
+          } else {
+            navigation.navigate('MainScreen')
+          }
+        }
+      } catch (error) {
+        let message = '';
+        if (error.response) {
+          message = 'Что-то пошло не так';
+        } else if (error.request) {
+          message = 'Нет ответа от сервера. Проверьте подключение к интернету.';
         } else {
           message = 'Что-то пошло не так';
         }

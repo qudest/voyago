@@ -27,7 +27,7 @@ const AutorizationScreen = () => {
       } else if (error.request) {
         message = 'Нет ответа от сервера. Проверьте подключение к интернету.';
       } else {
-        message = 'Ошибка: ' + error.message;
+        message = 'Что-то пошло не так';
       }
       setErrorMessage(message);
       setErrorModalVisible(true);
