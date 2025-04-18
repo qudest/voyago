@@ -1,61 +1,56 @@
 import React, { useState} from 'react';
-import { View, Image, StyleSheet, TextInput, Text, TouchableOpacity, Alert,  Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { View, Image, TextInput, Text, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import styles from './styles';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
+import AlertError from '../../components/AlertError/AlertError';
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import {API_URL} from '../../variables/ip';
+import { getAccountInfo, sendSecurityCode } from '../../services/authApi';
+
 
 const AutorizationScreen = () => {
   const navigation = useNavigation();
   const [phoneNumber, setPhoneNumber] = useState('+7'); 
-  
-  const handleRegistrationAccessPress = () => {
-    console.log(cleanedPhoneNumber)
-  };
+  const [cleanedPhoneNumber, setCleanedPhoneNumber] = useState('');
+  const [isErrorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchPhoneNumber = async () => {
     try {
-      const cleanedPhoneNumber = phoneNumber.replace('+', '');
-      const response = await axios.get(`http://${API_URL}:8091/api/account/${cleanedPhoneNumber}`);
-      
-      console.log('Ответ сервера:', response);
-
+      const response = await getAccountInfo(cleanedPhoneNumber);
       if (response.status === 200){
         fetchCode(cleanedPhoneNumber);
       }
     } catch (error) {
-      console.log('Ошибка при запросе:', error);
+      let message = '';
       if (error.response) {
-        console.log("Ошибка статус:", error.response.status);
+        message = 'Что-то пошло не так';
       } else if (error.request) {
-        console.log("Ошибка: Нет ответа от сервера");
+        message = 'Нет ответа от сервера. Проверьте подключение к интернету.';
       } else {
-        console.log("Ошибка:", error.message);
+        message = 'Ошибка: ' + error.message;
       }
+      setErrorMessage(message);
+      setErrorModalVisible(true);
     }
   }
 
   const fetchCode = async (cleanedPhoneNumber) => {
     try {
-      const response = await axios.post(`http://${API_URL}:8090/api/security/send`, 
-        {
-          "phoneNumber": cleanedPhoneNumber
-      }
-      );
-
+      const response = await sendSecurityCode(cleanedPhoneNumber);
       if (response.status === 200){
         navigation.navigate("AuthorizationAcceptScreen", {cleanedPhoneNumber});
       }
     } catch (error) {
-      console.log('Ошибка при запросе:', error);
+      let message = '';
       if (error.response) {
-        console.log("Ошибка статус:", error.response.status);
+          message = 'Что-то пошло не так';
       } else if (error.request) {
-        console.log("Ошибка: Нет ответа от сервера");
+          message = 'Что-то пошло не так';
       } else {
-        console.log("Ошибка:", error.message);
+          message = 'Что-то пошло не так';
       }
+      setErrorMessage(message);
+      setErrorModalVisible(true);
     }
   }
 
@@ -64,9 +59,15 @@ const AutorizationScreen = () => {
       const cleanedText = text.replace(/[^0-9]/g, ''); 
       const formattedText = `+7${cleanedText.slice(1, 11)}`; 
       setPhoneNumber(formattedText);
+      setCleanedPhoneNumber(cleanedText);
     } else {
       setPhoneNumber('+7');
+      setCleanedPhoneNumber('');
     }
+  };
+
+  const confirmError = () => {
+    setErrorModalVisible(false);
   };
 
   const isButtonDisabled = phoneNumber.length < 12; 
@@ -74,6 +75,12 @@ const AutorizationScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <View style={styles.container}>
+    <AlertError
+        isVisible={isErrorModalVisible}
+        onConfirm={confirmError}
+        title = "Ошибка!"
+        message = {errorMessage}
+    />
       <View style={styles.containerMainInf}>
         <Image
           source={require('../../assets/logoname.png')}
@@ -92,7 +99,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <ContinueButton onPress={() => { console.log('Кнопка нажата'); fetchPhoneNumber(); }} condition={!isButtonDisabled}/>
+      <ContinueButton onPress={() => { fetchPhoneNumber(); }} condition={!isButtonDisabled}/>
     </View>
     </TouchableWithoutFeedback>
   );

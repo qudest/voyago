@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, StyleSheet, TextInput, Text,  TouchableOpacity, Alert,  Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, Image, TextInput, Text,  TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import styles from './styles';
 import BackButton from "../../components/BackButton/BackButton";
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
-import {API_URL} from '../../variables/ip';
+import AlertError from '../../components/AlertError/AlertError';
+import { getAccountTockens, sendSecurityCode } from '../../services/authApi';
+
 
 const AuthorizationAcceptScreen = () => {
     const navigation = useNavigation();
     const [code, setCode] = useState('');
     const [timer, setTimer] = useState(11); 
     const [isTimerActive, setIsTimerActive] = useState(true); 
+    const [isErrorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const route = useRoute(); 
 
     const phoneNumber = route.params.cleanedPhoneNumber;
-
-    const handleRegistrationPress = () => {
-      navigation.navigate("PremiumScreen");
-    };
 
     const handleBackPress = () => {
         navigation.navigate("AuthorizationScreen");
@@ -26,56 +25,45 @@ const AuthorizationAcceptScreen = () => {
     
     const fetchCodeAccess = async () => {
       try {
-        const response = await axios.post(`http://${API_URL}:8090/api/security`, 
-          {
-            "phoneNumber": phoneNumber,
-            "code": code
-        }
-        );
-
-  
+        const response = await getAccountTockens(phoneNumber, code);
         if (response.status === 200){
           const {
             accessToken,
             refreshToken
           } = response.data;
-  
           navigation.navigate("PremiumScreen");
         }
       } catch (error) {
-        console.log('Ошибка при запросе:', error);
-        console.log(phoneNumber, code);
+        let message = '';
         if (error.response) {
-          console.log("Ошибка статус:", error.response.status);
+          message = `Неверный код подтверждения`;
         } else if (error.request) {
-          console.log("Ошибка: Нет ответа от сервера");
+          message = 'Что-то пошло не так';
         } else {
-          console.log("Ошибка:", error.message);
+          message = 'Что-то пошло не так';
         }
+        setErrorMessage(message);
+        setErrorModalVisible(true);
       }
     }
 
     const fetchCode = async () => {
       try {
-        const response = await axios.post(`http://${API_URL}:8090/api/security/send`, 
-          {
-            "phoneNumber": phoneNumber
-        }
-        );
-
+        const response = await sendSecurityCode(phoneNumber);
         if (response.status === 200){
-
+          console.log("Код отправлен")
         }
-
       } catch (error) {
-        console.log('Ошибка при запросе:', error);
+        let message = '';
         if (error.response) {
-          console.log("Ошибка статус:", error.response.status);
+          message = 'Что-то пошло не так';
         } else if (error.request) {
-          console.log("Ошибка: Нет ответа от сервера");
+          message = 'Что-то пошло не так';
         } else {
-          console.log("Ошибка:", error.message);
+          message = 'Что-то пошло не так';
         }
+        setErrorMessage(message);
+        setErrorModalVisible(true);
       }
     }
 
@@ -94,12 +82,13 @@ const AuthorizationAcceptScreen = () => {
       const resetTimer = () => {
         setCode('');
         fetchCode()
-        Alert.alert(
-            "Код отправлен"
-            );
         setTimer(5); 
         setIsTimerActive(true); 
       };
+
+    const confirmError = () => {
+        setErrorModalVisible(false);
+    };
 
     const isButtonDisabled = code.length < 6;
 
@@ -107,6 +96,12 @@ const AuthorizationAcceptScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
         <BackButton onPress={handleBackPress} />
+        <AlertError
+                isVisible={isErrorModalVisible}
+                onConfirm={confirmError}
+                title = "Ошибка!"
+                message = {errorMessage}
+            />
         <View style={styles.containerMainInf}>
         <Image
             source={require('../../assets/logoname.png')}
