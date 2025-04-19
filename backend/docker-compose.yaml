@@ -21,8 +21,7 @@ services:
     container_name: "auth-service"
     build: ./auth-service
     environment:
-      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
-      - KAFKA_PRODUCER_BOOTSTRAP_SERVER=kafka-1:9090,kafka-2:9090
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=admin
