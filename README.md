@@ -38,3 +38,6 @@
 - Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%201%20этап.pdf)  
 - Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)  
   
+### **Отчёты PM**   
+- [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)
+- [07.04.2025-13.04.2025](Documentation/07_04_2025_13_04_2025.pdf)
