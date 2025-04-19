@@ -81,24 +81,21 @@ public class PhoneCodeServiceTest extends AbstractTest {
     }
 
     @Test
-    @DisplayName("Test save entity")
-    void testSaveEntity() {
-        String phone = "89005553535";
-        int code = 654321;
+    @DisplayName("Test generate code")
+    void testGenerateCode() {
+        String phoneNumber = "89005553535";
+        PhoneCode generatePhoneCode = phoneCodeService.generate(phoneNumber);
 
-        PhoneCode savePhoneCode = PhoneCode.builder()
-                .phoneNumber(phone)
-                .code(code)
-                .build();
-        phoneCodeService.save(savePhoneCode);
-
-        phoneCodeRepository.findById(phone)
+        phoneCodeRepository.findById(phoneNumber)
                 .ifPresentOrElse(
                         entity -> {
-                            Assertions.assertEquals(phone, entity.getPhoneNumber());
-                            Assertions.assertEquals(code, entity.getCode());
+                            Assertions.assertEquals(phoneNumber, entity.getPhoneNumber());
+                            Assertions.assertEquals(generatePhoneCode.getPhoneNumber(), entity.getPhoneNumber());
+                            Assertions.assertEquals(generatePhoneCode.getCode(), entity.getCode());
                         },
-                        () -> Assertions.fail("Entity not found")
+                        () -> Assertions.fail("Phone code generation failed")
                 );
     }
+
+
 }

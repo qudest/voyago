@@ -1,4 +1,8 @@
 package by.smertex.core.dto.event;
 
-public record PhoneNotificationEvent(String phoneNumber) {
+import lombok.Builder;
+
+@Builder
+public record PhoneNotificationEvent(String phoneNumber,
+                                     Integer code) {
 }
