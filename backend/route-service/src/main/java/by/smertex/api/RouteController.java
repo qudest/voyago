@@ -10,19 +10,19 @@ import java.util.List;
 
 public interface RouteController {
 
-    ResponseEntity<RouteReadDto> findById(Long id);
+    RouteReadDto findById(Long id);
 
-    ResponseEntity<List<RouteReadDto>> findAll(RouteFilter filter, Pageable pageable);
+    List<RouteReadDto> findAll(RouteFilter filter, Pageable pageable);
 
-    ResponseEntity<List<RouteReadDto>> findAllFavorites(Long userId);
+    List<RouteReadDto> findAllFavorites(Long userId);
 
-    ResponseEntity<RouteReadDto> create(RouteCreateOrUpdateDto dto);
+    RouteReadDto create(RouteCreateOrUpdateDto dto);
 
-    ResponseEntity<RouteReadDto> update(Long id, RouteCreateOrUpdateDto dto);
+    RouteReadDto update(Long id, RouteCreateOrUpdateDto dto);
 
-    ResponseEntity<Void> rate(Long userId, Long rating);
+    void rate(Long userId, Long rating);
 
-    ResponseEntity<Void> addToFavorites(Long routeId, Long userId);
+    void addToFavorites(Long routeId, Long userId);
 
-    ResponseEntity<Void> delete(Long id);
+    void delete(Long id);
 }
