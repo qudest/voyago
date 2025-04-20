@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AverageRatingRepository extends CrudRepository<AverageRating, String> {
+public interface AverageRatingRepository extends CrudRepository<AverageRating, Long> {
 }
