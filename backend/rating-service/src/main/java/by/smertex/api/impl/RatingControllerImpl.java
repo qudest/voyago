@@ -4,6 +4,7 @@ import by.smertex.api.RatingController;
 import by.smertex.core.dto.AverageRatingDto;
 import by.smertex.core.dto.RatingDto;
 import by.smertex.core.service.RatingService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class RatingControllerImpl implements RatingController {
     }
 
     @PutMapping
+    @Operation(summary = "Invalidate all ratings and recalculate the average rating")
     public void update() {
         ratingService.updateAverageRating();
     }
