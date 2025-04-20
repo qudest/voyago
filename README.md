@@ -39,5 +39,6 @@
 - Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)  
   
 ### **Отчёты PM**   
-- [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)
-- [07.04.2025-13.04.2025](Documentation/07_04_2025_13_04_2025.pdf)
+- [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)  
+- [07.04.2025-13.04.2025](Documentation/07_04_2025_13_04_2025.pdf)  
+- [14.04.2025-20.04.2025](Documentation/14_04_2025_20_04_2025.pdf)  
