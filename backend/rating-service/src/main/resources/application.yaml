@@ -18,5 +18,10 @@ spring:
     enabled: true
     change-log: db/changelog/db.changelog.master.yaml
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
 server:
   port: ${APP_PORT:8090}
