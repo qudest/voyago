@@ -60,7 +60,9 @@ const MyRoutesScreen = () => {
     const handlerBackButton = () => {
         navigation.navigate("ProfileScreen");
     };
-
+    const handleFiltersButton = () => {
+        navigation.navigate("FiltersScreen");
+    };
     const handleEditRoute = (route) => {
         navigation.navigate('EditRouteScreen', { 
             route: {
@@ -69,6 +71,9 @@ const MyRoutesScreen = () => {
         });
     };
 
+    const handlePreviewRoute = () => {
+        navigation.navigate("PreviewRouteScreen");
+    }
 
     const functional = "edit";
 
@@ -90,7 +95,7 @@ const MyRoutesScreen = () => {
                         style={styles.searchIcon}
                     />
                 </View>
-                <TouchableOpacity  style={styles.settingsContainer}>
+                <TouchableOpacity  style={styles.settingsContainer} onPress={handleFiltersButton}>
                     <Image
                             source={require('../../assets/routeCardImages/settings.png')}
                             style={styles.settingsIcon}
@@ -109,6 +114,7 @@ const MyRoutesScreen = () => {
                         cardInformation={route}
                         functional={functional}
                         onEditPress={handleEditRoute}
+                        onPress={handlePreviewRoute}
                     />
                 ))}
                 

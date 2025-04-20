@@ -39,6 +39,9 @@ const DoneRoutesScreen = () => {
     const handlerBackButton = () => {
         navigation.navigate("ProfileScreen");
     };
+    const handleFiltersButton = () => {
+        navigation.navigate("FiltersScreen");
+    };
     const functional = "done";
 
     return (
@@ -59,7 +62,7 @@ const DoneRoutesScreen = () => {
                         style={styles.searchIcon}
                     />
                 </View>
-                <TouchableOpacity  style={styles.settingsContainer}>
+                <TouchableOpacity  style={styles.settingsContainer} onPress={handleFiltersButton}>
                     <Image
                             source={require('../../assets/routeCardImages/settings.png')}
                             style={styles.settingsIcon}
