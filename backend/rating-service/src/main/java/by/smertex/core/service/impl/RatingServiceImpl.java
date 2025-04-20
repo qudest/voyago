@@ -6,11 +6,13 @@ import by.smertex.core.database.repository.AverageRatingRepository;
 import by.smertex.core.database.repository.RatingRepository;
 import by.smertex.core.dto.AverageRatingDto;
 import by.smertex.core.dto.RatingDto;
+import by.smertex.core.exception.impl.CrudException;
 import by.smertex.core.mapper.Mapper;
 import by.smertex.core.service.RatingService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -32,22 +34,33 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public AverageRatingDto getAverageRating(Long routeId) {
-        AverageRating averageRating = averageRatingRepository.findById(routeId.toString()).orElseThrow(RuntimeException::new);
+        AverageRating averageRating = averageRatingRepository.findById(routeId)
+                .orElseThrow(() -> new CrudException("Average rating not found for this route", HttpStatus.NOT_FOUND));
         return averageRatingToDtoMapper.map(averageRating);
     }
 
     @Override
     public RatingDto create(Long userId, RatingDto ratingDto) {
+        boolean hasRated = ratingRepository.findAllByUserId(userId).stream()
+                .anyMatch(rating -> rating.getRouteId().equals(ratingDto.routeId()));
+        if (hasRated) {
+            throw new CrudException("User already rated this route", HttpStatus.BAD_REQUEST);
+        }
         return Optional.of(ratingRepository.save(Rating.builder()
                         .routeId(ratingDto.routeId())
                         .rating(ratingDto.rating())
                         .userId(userId)
                         .build()))
                 .map(ratingToDtoMapper::map)
-                .orElseThrow();
+                .orElseThrow(() -> new CrudException("Failed to add rating", HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "@daily")
+    private void dailyAverageRatingUpdate() {
+        updateAverageRating();
+    }
+
+    @Override
     public void updateAverageRating() {
         Map<Long, List<Rating>> collect = ratingRepository.findAll().stream()
                 .collect(Collectors.groupingBy(Rating::getRouteId));
@@ -61,6 +74,5 @@ public class RatingServiceImpl implements RatingService {
             AverageRating averageRating = new AverageRating(routeId, (float) average);
             averageRatingRepository.save(averageRating);
         }
-        log.info("Update average rating");
     }
 }

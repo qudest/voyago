@@ -24,4 +24,9 @@ public class RatingControllerImpl implements RatingController {
     public RatingDto create(@RequestParam Long userId, @Valid @RequestBody RatingDto ratingDto) {
         return ratingService.create(userId, ratingDto);
     }
+
+    @PutMapping
+    public void update() {
+        ratingService.updateAverageRating();
+    }
 }

@@ -8,4 +8,6 @@ public interface RatingService {
     AverageRatingDto getAverageRating(Long routeId);
 
     RatingDto create(Long userId, RatingDto ratingDto);
+
+    void updateAverageRating();
 }
