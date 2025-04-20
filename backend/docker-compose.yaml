@@ -5,26 +5,52 @@ networks:
     driver: bridge
 
 services:
-  account-service-db:
+  db:
     container_name: "postgres"
     image: postgres
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=account_service_db
+      - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - "./account-service/postgres:/var/lib/postgresql"
+      - "./db/postgres:/var/lib/postgresql"
     expose:
       - "5432"
     networks:
       - app
 
+  redis:
+    container_name: "redis"
+    image: redis
+    expose:
+      - "6379"
+    networks:
+      - app
+
+  rating-service:
+    container_name: "rating-service"
+    build: ./rating-service
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - APP_PORT=8092
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    ports:
+      - "8092:8092"
+    networks:
+      - app
+    depends_on:
+      - db
+      - redis
+
   account-service:
     container_name: "account-service"
     build: ./account-service
     environment:
-      - DB_URL=jdbc:postgresql://postgres:5432/account_service_db
+      - DB_URL=jdbc:postgresql://postgres:5432/db
       - DB_USERNAME=admin
       - DB_PASSWORD=admin
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
@@ -34,7 +60,7 @@ services:
     networks:
       - app
     depends_on:
-      - account-service-db
+      - db
       - kafka-1
       - kafka-2
       - kafka-3
