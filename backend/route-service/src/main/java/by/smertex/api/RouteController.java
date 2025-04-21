@@ -20,8 +20,6 @@ public interface RouteController {
 
     RouteReadDto update(Long id, RouteCreateOrUpdateDto dto);
 
-    void rate(Long userId, Long rating);
-
     void addToFavorites(Long routeId, Long userId);
 
     void delete(Long id);

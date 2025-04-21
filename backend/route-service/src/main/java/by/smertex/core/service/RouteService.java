@@ -1,4 +1,4 @@
-package by.smertex.service;
+package by.smertex.core.service;
 
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.input.RouteFilter;

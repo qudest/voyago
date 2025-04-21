@@ -4,7 +4,7 @@ import by.smertex.api.RouteController;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.input.RouteFilter;
 import by.smertex.core.dto.output.RouteReadDto;
-import by.smertex.service.RouteService;
+import by.smertex.core.service.RouteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -41,11 +41,6 @@ public class RouteControllerImpl implements RouteController {
     @PutMapping("/{id}")
     public RouteReadDto update(@PathVariable Long id, @RequestBody RouteCreateOrUpdateDto dto) {
         return routeService.update(id, dto);
-    }
-
-    @PutMapping("/rate")
-    public void rate(@RequestParam Long userId, @RequestParam Long rating) {
-        routeService.rate(userId, rating);
     }
 
     @PutMapping("/favorites")
