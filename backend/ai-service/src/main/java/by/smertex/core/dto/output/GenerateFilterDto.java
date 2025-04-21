@@ -1,6 +1,6 @@
 package by.smertex.core.dto.output;
 
-import by.smertex.core.database.entity.RouteTags;
+import by.smertex.core.database.model.RouteTags;
 
 import java.time.Duration;
 import java.util.List;
