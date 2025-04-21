@@ -11,7 +11,8 @@ const styles = StyleSheet.create({
     containerEnable: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: 125,
+        width: '48%',
+        aspectRatio: 0.94,
         height: 133,
 
         marginBottom: 20,
@@ -33,7 +34,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
 
-        width: 125,
+        width: '48%',
+        aspectRatio: 0.94,
         height: 133,
 
         marginBottom: 20,

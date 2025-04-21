@@ -7,8 +7,8 @@ const AlertDeleteRoute = ({
   isVisible, 
   onCancel, 
   onConfirm, 
-  title = "Удаление маршрута", 
-  message = "Вы точно хотите удалить маршрут?"
+  title = "Удаление", 
+  message = "Вы точно хотите удалить?"
 }) => {
   return (
     <Modal

@@ -55,6 +55,14 @@ const styles = StyleSheet.create({
   settingsIcon: {
 
   },
+  ratingContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  ratingPrompt: {
+    fontSize: 19,
+    marginBottom: 5,
+  },
   routeText: {
     fontSize: 16,
     color: 'black',
@@ -84,8 +92,8 @@ const styles = StyleSheet.create({
   timeDistanceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 20,
-    top: 15,
+    padding: 10,
+    top: 0,
   },
   timeContainer: {
       flexDirection: 'row',

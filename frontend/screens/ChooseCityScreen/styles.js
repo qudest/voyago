@@ -9,13 +9,11 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
     paddingTop: 20,
   },
   mainImformation: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
     marginTop: 100,
   },
   mainInformationTitle: {
