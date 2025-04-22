@@ -90,8 +90,6 @@ const ChooseCityScreen = () => {
                   city: selectedCity,
                   preferences: []
               }));
-
-              console.log('City updated successfully, checking preferences...');
               await checkPreferencesAndNavigate();
           }
       } catch (error) {
