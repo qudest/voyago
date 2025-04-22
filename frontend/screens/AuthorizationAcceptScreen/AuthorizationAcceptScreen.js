@@ -6,6 +6,7 @@ import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AlertError from '../../components/AlertError/AlertError';
 import { getAccountTockens, sendSecurityCode, getAccountInfo } from '../../services/authApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const AuthorizationAcceptScreen = () => {
@@ -27,10 +28,14 @@ const AuthorizationAcceptScreen = () => {
       try {
         const response = await getAccountTockens(phoneNumber, code);
         if (response.status === 200){
-          const {
+          const { 
             accessToken,
-            refreshToken
-          } = response.data;
+             refreshToken 
+            } = response.data;
+
+          await AsyncStorage.setItem('accessToken', accessToken);
+          await AsyncStorage.setItem('refreshToken', refreshToken);
+
           fetchPhoneNumber();
         }
       } catch (error) {
@@ -52,6 +57,16 @@ const AuthorizationAcceptScreen = () => {
         const response = await getAccountInfo(phoneNumber);
         if (response.status === 200){
           if (response.data.city === null ){
+
+            const { city, preferences, id } = response.data;
+      
+            await AsyncStorage.setItem('userData', JSON.stringify({
+              id,
+              phoneNumber,
+              city,
+              preferences
+            }));
+
             const idAccount = response.data.id;
             navigation.navigate('ChooseCityScreen', {idAccount, phoneNumber})
           } else {
