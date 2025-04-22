@@ -52,8 +52,10 @@ const AuthorizationAcceptScreen = () => {
         const response = await getAccountInfo(phoneNumber);
         if (response.status === 200){
           if (response.data.city === null ){
-            navigation.navigate('ChooseCityScreen')
+            const idAccount = response.data.id;
+            navigation.navigate('ChooseCityScreen', {idAccount, phoneNumber})
           } else {
+            console.log(phoneNumber, response.data.city, "netuda")
             navigation.navigate('MainScreen')
           }
         }

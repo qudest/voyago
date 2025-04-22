@@ -3,6 +3,8 @@ import { View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import PreferenceCard from '../../components/PreferenceCard/PreferenceCard';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import styles from './styles';
+import { putAccountInfo } from '../../services/accountApi';
+import { getAccountInfo } from '../../services/authApi';
 
 const ChoosePreferencesScreen = ({ navigation }) => {
   const [selectedPreferences, setSelectedPreferences] = useState([]);

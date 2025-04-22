@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './styles';
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute} from "@react-navigation/native";
 import { View, Text, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import LocationButton from '../../components/LocationButton/LocationButton';
 import AlertError from '../../components/AlertError/AlertError';
@@ -8,12 +8,21 @@ import BackButton from '../../components/BackButton/BackButton';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import SearchCity from '../../components/SearchCity/SearchCity';
 import { putAccountInfo } from '../../services/accountApi';
+import { getAccountInfo } from '../../services/authApi';
 
 const ChooseCityScreen = () => {
     const [selectedCity, setSelectedCity] = useState('');
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [isErrorModalVisible, setErrorModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const route = useRoute(); 
+
+    const id = route.params.idAccount;
+    const phoneNumber = route.params.phoneNumber;
+
+    console.log(id);
+
+    console.log(phoneNumber);
 
     const citiesData = [
         { id: 1, name: 'Москва' },
@@ -46,11 +55,19 @@ const ChooseCityScreen = () => {
 
     const fetchPhoneNumber = async () => {
         try {
-          const response = await getAccountInfo(cleanedPhoneNumber);
+          const response = await getAccountInfo(phoneNumber);
           if (response.status === 200){
             const {city} = response.data;
+            console.log(city)
+            if (city === null){
+              console.log("yes")
+              await putCity();
+            } else {
+              navigation.navigate('ChoosePreferencesScreen');
+            }
           }
         } catch (error) {
+          console.log(error);
           let message = '';
           if (error.response) {
             message = 'Что-то пошло не так';
@@ -66,10 +83,14 @@ const ChooseCityScreen = () => {
 
     const putCity = async () => {
         try {
-          const response = await putAccountInfo(cleanedPhoneNumber);
+          const response = await putAccountInfo(id, selectedCity);
           if (response.status === 200){
+            console.log(response.data)
+            navigation.navigate('ChoosePreferencesScreen')
           }
         } catch (error) {
+          console.log(response.data)
+          console.log(error);
           let message = '';
           if (error.response) {
             message = 'Что-то пошло не так';
@@ -109,7 +130,7 @@ const ChooseCityScreen = () => {
                     />
                 </View>
                 <View style={styles.fixedButton}>
-                    <ContinueButton onPress={handleContinueButton} condition={buttonEnabled}/>
+                    <ContinueButton onPress={fetchPhoneNumber} condition={buttonEnabled}/>
                 </View>
                 
             </View>
