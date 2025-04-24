@@ -56,19 +56,28 @@ const AuthorizationAcceptScreen = () => {
       try {
         const response = await getAccountInfo(phoneNumber);
         if (response.status === 200){
+          const data = response.data;
+
+          const userData = {
+            id: data.id,
+            phoneNumber: data.phoneNumber,
+            name: data.name,
+            role: data.role,
+            status: data.status,
+            premium: data.premium,
+            endDate: data.endDate,
+            country: data.country,
+            city: data.city,
+            preferences: data.preferences,
+            creditCard: data.creditCard
+          };
+
+          await AsyncStorage.setItem('userData', JSON.stringify(userData));
+
           if (response.data.city === null ){
-
-            const { city, preferences, id } = response.data;
-      
-            await AsyncStorage.setItem('userData', JSON.stringify({
-              id,
-              phoneNumber,
-              city,
-              preferences
-            }));
-
-            const idAccount = response.data.id;
-            navigation.navigate('ChooseCityScreen', {idAccount, phoneNumber})
+            const { id } = response.data;
+            await AsyncStorage.setItem('userData', JSON.stringify(userData));
+            navigation.navigate('ChooseCityScreen', {idAccount: id, phoneNumber})
           } else {
             console.log(phoneNumber, response.data.city, "netuda")
             navigation.navigate('MainScreen')

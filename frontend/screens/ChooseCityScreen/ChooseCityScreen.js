@@ -84,13 +84,17 @@ const ChooseCityScreen = () => {
       try {
           const response = await putAccountInfo(id, selectedCity);
           if (response.status === 204) {
-              await AsyncStorage.setItem('userData', JSON.stringify({
-                  id,
-                  phoneNumber,
-                  city: selectedCity,
-                  preferences: []
-              }));
-              await checkPreferencesAndNavigate();
+            const cachedData = await AsyncStorage.getItem('userData');
+            const parsedData = JSON.parse(cachedData);
+            console.log("до", parsedData)
+            const updatedData = {
+              ...parsedData,
+              city: selectedCity
+            };
+      
+            await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
+            console.log("obnov0", updatedData)
+            await checkPreferencesAndNavigate();
           }
       } catch (error) {
           let message = 'Что-то пошло не так';

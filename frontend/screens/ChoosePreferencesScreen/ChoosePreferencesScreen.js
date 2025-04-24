@@ -22,11 +22,6 @@ const ChoosePreferencesScreen = ({ navigation }) => {
     );
   };
 
-  const handleContinueButton = () => {
-    console.log('Выбранные предпочтения:', selectedPreferences);
-    navigation.navigate('MainScreen');
-  };
-
   const confirmError = () => {
     setErrorModalVisible(false);
   };
@@ -58,16 +53,32 @@ const ChoosePreferencesScreen = ({ navigation }) => {
         null 
       );
         if (response.status === 204) {
-            await AsyncStorage.setItem('userData', JSON.stringify({
-              ...userData,
-              preferences: selectedPreferences
-            }));
-            navigation.navigate("MainScreen")
-        }
+          const fullUserDataResponce = await getAccountInfo(userData.phoneNumber);
+          const fullUserData = fullUserDataResponce.data;
+          const cachedData = {
+            id: fullUserData.id,
+            phoneNumber: fullUserData.phoneNumber,
+            name: fullUserData.name,
+            role: fullUserData.role,
+            status: fullUserData.status,
+            premium: fullUserData.premium,
+            endDate: fullUserData.endDate,
+            country: fullUserData.country,
+            city: fullUserData.city,
+            preferences: fullUserData.preferences,
+            creditCard: fullUserData.creditCard
+          };
+          
+          await AsyncStorage.setItem('userData', JSON.stringify(cachedData));
+          
+          console.log('Обновленные данные:', cachedData); 
+            
+          navigation.navigate("MainScreen");
+          }
     } catch (error) {
         let message = 'Что-то пошло не так';
         if (error.response) {
-            message = error.response.data.message || 'Ошибка сервера';
+            message = 'Ошибка сервера';
         } else if (error.request) {
             message = 'Нет ответа от сервера';
         }
