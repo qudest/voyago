@@ -2,11 +2,15 @@ spring:
   application:
     name: notification-service
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-
-  liquibase:
-    enabled: false
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      group-id: payment-subscription-events
+      properties:
+        spring.json.trusted.packages: "*"
+        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
 server:
-  port: 8090
+  port: ${APP_PORT:8090}

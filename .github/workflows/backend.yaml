@@ -28,6 +28,6 @@ jobs:
       - name: 🏗 Setup Docker
         uses: docker/setup-docker-action@v4
       - name: 🚀 Build
-        run: cd backend && ./gradlew build --no-daemon
+        run: cd backend && ./gradlew build -x test --no-daemon
       - name: ✅ Tests
         run: cd backend && ./gradlew test --no-daemon
