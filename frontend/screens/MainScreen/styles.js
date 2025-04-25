@@ -71,6 +71,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  marker: {
+    width: 40,
+    height: 50,
+  },
   loader: {
     flex: 1,
     justifyContent: 'center',

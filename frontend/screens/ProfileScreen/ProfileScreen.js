@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
     const [userData, setUserData] = useState(null);
 
     const handleBackPress = () => {
-        navigation.goBack(); 
+        navigation.navigate("MainScreen")
     }
     const handleDoneRoutesPress = () => {
         navigation.navigate("DoneRoutesScreen")

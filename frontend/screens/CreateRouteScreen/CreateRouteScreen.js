@@ -6,27 +6,16 @@ import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
+import axios from 'axios';
+
 
 const CreateRouteScreen = () => {
-    const [selectedAddress, setselectedAddress] = useState(['', '']); 
+    const [selectedAddress, setSelectedAddress] = useState(['', '']); 
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
     const navigation = useNavigation();
-
-
-    const addressData = [
-        { id: 1, name: 'ул. Ленина, 10' },
-        { id: 2, name: 'пр. Мира, 25' },
-        { id: 3, name: 'ул. Гагарина, 42' },
-        { id: 4, name: 'ул. Садовая, 7' },
-        { id: 5, name: 'ул. Центральная, 15' },
-        { id: 6, name: 'ул. Школьная, 3' },
-        { id: 7, name: 'ул. Лесная, 18' },
-        { id: 8, name: 'ул. Набережная, 5' },
-        { id: 9, name: 'ул. Парковая, 12' },
-        { id: 10, name: 'ул. Солнечная, 9' }
-    ];
-
+    const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
+    const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
     useEffect(() => {
         const filledCount = selectedAddress.filter(address => address.length > 0).length;
         setButtonEnabled(filledCount >= 2);
@@ -38,26 +27,80 @@ const CreateRouteScreen = () => {
     }
 
     const handleAddPoint = () => {
-        setselectedAddress([...selectedAddress, '']); 
+        setSelectedAddress([...selectedAddress, '']); 
     };
 
     const handleRemovePoint = (index) => {
         const newCities = [...selectedAddress];
         newCities.splice(index, 1);
-        setselectedAddress(newCities);
+        setSelectedAddress(newCities);
     };
 
-    const handleAddressSelect = (index, address) => {
-        const newCities = [...selectedAddress];
-        newCities[index] = address;
-        setselectedAddress(newCities);
+    const handleAddressSelect = (index, point) => {
+        const newPoints = [...selectedPoints];
+        newPoints[index] = point;
+        setSelectedPoints(newPoints);
+    };
+    const formatMetrics = (routeData) => {
+        return {
+            distance: `${(routeData.distance / 1000).toFixed(1)} км`,
+            duration: `${Math.floor(routeData.duration / 3600)} ч ${Math.round((routeData.duration % 3600) / 60)} мин`
+        };
     };
 
-    const handleContinueButton = () => {
-        const hasEmptyFields = selectedAddress.some(address => address.length === 0);
-        if (hasEmptyFields) setShowEmptyFieldsWarning(true); else navigation.navigate('ProfileScreen');
+    const handleContinueButton = async () => {
+        try {
+            const hasEmpty = selectedPoints.some(p => !p.place_id);
+            if (hasEmpty) {
+                setShowEmptyFieldsWarning(true);
+                return;
+            }
+
+            const directions = await fetchRoute(selectedPoints);
+
+            const routeData = {
+                origin: `place_id:${selectedPoints[0].place_id}`,
+                waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
+                destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
+                distance: directions.distance,
+                duration: directions.duration,
+            };
+
+            console.log(routeData)
+            const { distance, duration } = formatMetrics(routeData);
+            console.log( distance, duration )
+
+            navigation.navigate('PreviewRouteScreen', {routeData});
+        } catch (error) {
+            Alert.alert('Ошибка', error.message);
+        }
     };
 
+    const fetchRoute = async (points) => {
+        try {
+            const response = await axios.get(
+                'https://maps.googleapis.com/maps/api/directions/json',
+                {
+                    params: {
+                        origin: `place_id:${points[0].place_id}`,
+                        destination: `place_id:${points[points.length-1].place_id}`,
+                        waypoints: points.slice(1, -1).map(p => `place_id:${p.place_id}`).join('|'),
+                        key: API_KEY,
+                        language: 'ru'
+                    }
+                }
+            );
+    
+            const route = response.data.routes[0];
+            return {
+                polyline: route.overview_polyline.points,
+                distance: route.legs.reduce((sum, leg) => sum + leg.distance.value, 0),
+                duration: route.legs.reduce((sum, leg) => sum + leg.duration.value, 0)
+            };
+        } catch (error) {
+            throw new Error('Ошибка получения данных маршрута');
+        }
+    };
     return (
         <View style={styles.container}>
             <BackButton onPress={handleBackButton}/>
@@ -71,7 +114,6 @@ const CreateRouteScreen = () => {
                 {selectedAddress.map((address, index) => (
                     <PointOfRoute 
                         key={index}
-                        addressData={addressData}
                         selectedAddress={address}
                         onAddressSelect={(selectedAddress) => handleAddressSelect(index, selectedAddress)}
                         onRemove={() => handleRemovePoint(index)}

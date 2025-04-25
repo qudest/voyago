@@ -7,6 +7,7 @@ import styles from './styles';
 import NavRouteButton from '../../components/NavRouteButton/NavRouteButton';
 import Rating from '../../components/Rating/Rating'; 
 import MapView, { Marker, Polyline } from 'react-native-maps';
+import polyline from '@mapbox/polyline';
 
 const { height } = Dimensions.get('window');
 
@@ -22,14 +23,21 @@ const MainScreen = () => {
   const [ratingPrompt, setRatingPrompt] = useState("Оцените маршрут:");
   const [isRatingEnabled, setIsRatingEnabled] = useState(false); 
   const [loading, setLoading] = useState(true);
-  
-  const API_KEY = '';
+  const [markers, setMarkers] = useState([]);
+
+  const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
   const origin = '37.78825,-122.4324';
   const destination = '37.7749,-122.4194'; 
   const waypoints = [
     '37.7857,-122.4011', 
     '37.7699,-122.4667'
   ];
+
+  const markerImages = {
+    start: require('../../assets/markers/default.png'),
+    waypoint: require('../../assets/markers/current.png'),
+    end: require('../../assets/markers/default.png')
+};
 
   useEffect(() => {
     const fetchRoute = async () => {
@@ -40,7 +48,7 @@ const MainScreen = () => {
         );
         
         const data = await response.json();
-        
+        console.log(data.routes);
         if (data.routes.length) {
           const points = polyline.decode(data.routes[0].overview_polyline.points);
           const coords = points.map(point => ({
@@ -49,6 +57,33 @@ const MainScreen = () => {
           }));
           setCoordinates(coords);
         }
+
+        const newMarkers = [
+          {
+            coordinate: { latitude: 37.78825, longitude: -122.4324 },
+            title: "Start",
+            type: 'start',
+            icon: markerImages.start
+          },
+          ...waypoints.map((wp, index) => {
+            const [lat, lng] = wp.split(',');
+            return {
+              coordinate: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+              title: `Waypoint ${index + 1}`,
+              type: 'waypoint',
+              icon: markerImages.waypoint
+            };
+          }),
+          {
+            coordinate: { latitude: 37.7749, longitude: -122.4194 },
+            title: "End",
+            type: 'end',
+            icon: markerImages.end
+          }
+        ];
+
+        setMarkers(newMarkers);
+
       } catch (error) {
         console.error('Error fetching directions:', error);
       } finally {
@@ -144,36 +179,20 @@ const MainScreen = () => {
               longitudeDelta: 0.0421,
             }}
           >
-            {/* Стартовая точка */}
-            <Marker
-              coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
-              title="Start"
-              pinColor="green"
-            />
   
-            {/* Промежуточные точки */}
-            {waypoints.map((wp, index) => {
-              const [lat, lng] = wp.split(',');
-              return (
-                <Marker
-                  key={`waypoint-${index}`}
-                  coordinate={{ latitude: parseFloat(lat), longitude: parseFloat(lng) }}
-                  title={`Waypoint ${index + 1}`}
-                  pinColor="orange"
-                />
-              )
-            })}
-  
-            {/* Конечная точка */}
-            <Marker
-              coordinate={{ latitude: 37.7749, longitude: -122.4194 }}
-              title="End"
-              pinColor="red"
-            />
+            {markers.map((marker, index) => (
+              <Marker
+                style={styles.marker}
+                key={`marker-${index}`}
+                coordinate={marker.coordinate}
+                title={marker.title}
+                image={marker.icon}
+              />
+            ))}
   
             <Polyline
               coordinates={coordinates}
-              strokeColor="#0000FF"
+              strokeColor="#70BCFF"
               strokeWidth={4}
             />
           </MapView>
