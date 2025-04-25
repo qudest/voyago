@@ -35,7 +35,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @GetMapping
-    public ResponseEntity<JwtClaims> validateToken(@RequestParam TokenDto dto) {
+    public ResponseEntity<JwtClaims> validateToken(TokenDto dto) {
         return ResponseEntity.ok(
                 jwtService.validateToken(dto.accessToken())
         );
