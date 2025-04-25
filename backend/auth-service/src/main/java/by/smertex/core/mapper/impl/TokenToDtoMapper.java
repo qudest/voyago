@@ -11,7 +11,7 @@ public class TokenToDtoMapper implements Mapper<Token, TokenDto> {
     public TokenDto map(Token from) {
         return TokenDto.builder()
                 .accessToken(from.getAccessToken())
-                .refreshToken(from.getRefreshToken())
+                //.refreshToken(from.getRefreshToken())
                 .build();
     }
 }

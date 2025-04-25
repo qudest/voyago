@@ -3,7 +3,7 @@ package by.smertex.api.impl;
 import by.smertex.api.AuthController;
 import by.smertex.core.dto.input.PhoneCodeDto;
 import by.smertex.core.dto.input.PhoneDto;
-import by.smertex.core.dto.input.RefreshTokenDto;
+import by.smertex.core.dto.output.JwtClaims;
 import by.smertex.core.dto.output.TokenDto;
 import by.smertex.core.service.JwtService;
 import by.smertex.core.service.SendCodeService;
@@ -34,18 +34,10 @@ public class AuthControllerImpl implements AuthController {
         );
     }
 
-    @PutMapping
-    public ResponseEntity<TokenDto> updateToken(@RequestBody RefreshTokenDto dto) {
+    @GetMapping
+    public ResponseEntity<JwtClaims> validateToken(@RequestParam TokenDto dto) {
         return ResponseEntity.ok(
-                jwtService.updateToken(dto)
+                jwtService.validateToken(dto.accessToken())
         );
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteToken(@RequestParam PhoneDto dto) {
-        jwtService.removeToken(dto.phoneNumber());
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 }
