@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
+    position: 'relative',
+
   },
   topElement: {
     marginTop: 50,
@@ -62,6 +62,19 @@ const styles = StyleSheet.create({
   ratingPrompt: {
     fontSize: 19,
     marginBottom: 5,
+  },
+  containerMap: {
+    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   routeText: {
     fontSize: 16,

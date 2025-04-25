@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Animated, PanResponder, Image, Dimensions } from 'react-native';
+import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions } from 'react-native';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import RoutesButton from '../../components/RoutesButton/RoutesButton';
 import ProfileIconButton from '../../components/ProfileIconButton/ProfileIconButton';
 import styles from './styles';
 import NavRouteButton from '../../components/NavRouteButton/NavRouteButton';
 import Rating from '../../components/Rating/Rating'; 
+import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const { height } = Dimensions.get('window');
 
 const MainScreen = () => {
+  const [coordinates, setCoordinates] = useState([]);
   const navigation = useNavigation();
   const route = useRoute(); 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -19,6 +21,44 @@ const MainScreen = () => {
   const [rating, setRating] = useState(0); 
   const [ratingPrompt, setRatingPrompt] = useState("Оцените маршрут:");
   const [isRatingEnabled, setIsRatingEnabled] = useState(false); 
+  const [loading, setLoading] = useState(true);
+  
+  const API_KEY = '';
+  const origin = '37.78825,-122.4324';
+  const destination = '37.7749,-122.4194'; 
+  const waypoints = [
+    '37.7857,-122.4011', 
+    '37.7699,-122.4667'
+  ];
+
+  useEffect(() => {
+    const fetchRoute = async () => {
+      try {
+        const waypointsParam = waypoints.join('|');
+        const response = await fetch(
+          `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&waypoints=${waypointsParam}&key=${API_KEY}`
+        );
+        
+        const data = await response.json();
+        
+        if (data.routes.length) {
+          const points = polyline.decode(data.routes[0].overview_polyline.points);
+          const coords = points.map(point => ({
+            latitude: point[0],
+            longitude: point[1]
+          }));
+          setCoordinates(coords);
+        }
+      } catch (error) {
+        console.error('Error fetching directions:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoute();
+  }, []);
+
 
   useEffect(() => {
     if (route.params?.selectedRoute) {
@@ -91,6 +131,54 @@ const MainScreen = () => {
 
   return (
     <View style={styles.container}>
+        <View style={styles.containerMap}>
+        {loading ? (
+          <ActivityIndicator size="large" style={styles.loader} />
+        ) : (
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
+            {/* Стартовая точка */}
+            <Marker
+              coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+              title="Start"
+              pinColor="green"
+            />
+  
+            {/* Промежуточные точки */}
+            {waypoints.map((wp, index) => {
+              const [lat, lng] = wp.split(',');
+              return (
+                <Marker
+                  key={`waypoint-${index}`}
+                  coordinate={{ latitude: parseFloat(lat), longitude: parseFloat(lng) }}
+                  title={`Waypoint ${index + 1}`}
+                  pinColor="orange"
+                />
+              )
+            })}
+  
+            {/* Конечная точка */}
+            <Marker
+              coordinate={{ latitude: 37.7749, longitude: -122.4194 }}
+              title="End"
+              pinColor="red"
+            />
+  
+            <Polyline
+              coordinates={coordinates}
+              strokeColor="#0000FF"
+              strokeWidth={4}
+            />
+          </MapView>
+        )}
+    </View>
       <View style={styles.topElement}>
         <RoutesButton onPress={handleRoutesPress} />
         <ProfileIconButton onPress={() => navigation.navigate("ProfileScreen")} />

@@ -69,7 +69,10 @@ const AutorizationScreen = () => {
   const confirmError = () => {
     setErrorModalVisible(false);
   };
-
+  
+  const nav = () => {
+    navigation.navigate("MainScreen")
+  }
   const isButtonDisabled = phoneNumber.length < 12; 
 
   return (
@@ -99,7 +102,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <ContinueButton onPress={() => { fetchPhoneNumber(); }} condition={!isButtonDisabled}/>
+      <ContinueButton onPress={() => { nav(); }} condition={!isButtonDisabled}/>
     </View>
     </TouchableWithoutFeedback>
   );
