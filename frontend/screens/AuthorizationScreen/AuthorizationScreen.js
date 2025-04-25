@@ -14,27 +14,7 @@ const AutorizationScreen = () => {
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchPhoneNumber = async () => {
-    try {
-      const response = await getAccountInfo(cleanedPhoneNumber);
-      if (response.status === 200){
-        fetchCode(cleanedPhoneNumber);
-      }
-    } catch (error) {
-      let message = '';
-      if (error.response) {
-        message = 'Что-то пошло не так';
-      } else if (error.request) {
-        message = 'Нет ответа от сервера. Проверьте подключение к интернету.';
-      } else {
-        message = 'Что-то пошло не так';
-      }
-      setErrorMessage(message);
-      setErrorModalVisible(true);
-    }
-  }
-
-  const fetchCode = async (cleanedPhoneNumber) => {
+  const fetchCode = async () => {
     try {
       const response = await sendSecurityCode(cleanedPhoneNumber);
       if (response.status === 200){
@@ -102,7 +82,7 @@ const AutorizationScreen = () => {
           keyboardType="phone-pad" 
         />
       </View>
-      <ContinueButton onPress={() => { nav(); }} condition={!isButtonDisabled}/>
+      <ContinueButton onPress={() => { fetchCode(); }} condition={!isButtonDisabled}/>
     </View>
     </TouchableWithoutFeedback>
   );

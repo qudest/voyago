@@ -45,12 +45,17 @@ const ChoosePreferencesScreen = ({ navigation }) => {
 
 
   const putPreferences = async () => {
+    const id = userData.id;
+    const userCity = userData.city;
+    const userName = userData.name;
+    const userCountry = userData.country;
     try {   
       const response = await putAccountInfo(
-        userData.id, 
-        userData.city,
-        selectedPreferences, 
-        null 
+        id, 
+        userName,
+        userCountry,
+        userCity,
+        selectedPreferences
       );
         if (response.status === 204) {
           const fullUserDataResponce = await getAccountInfo(userData.phoneNumber);
