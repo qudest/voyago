@@ -45,6 +45,34 @@ services:
     networks:
       - app
 
+  postgres:
+    container_name: "postgres"
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=account_service_db
+      - ALLOW_RUNNING_AS_ROOT=yes
+    volumes:
+      - "./volume/postgres/account-service:/var/lib/postgresql"
+    expose:
+      - "5432"
+    networks:
+      - app
+
+  notification-service:
+    container_name: "notification-service"
+    build: ./notification-service
+    environment:
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8090
+    ports:
+      - "127.0.0.1:8093:8090"
+    depends_on:
+      - auth-service
+    networks:
+      - app
+
   auth-service:
     container_name: "auth-service"
     build: ./auth-service
@@ -84,7 +112,7 @@ services:
     depends_on:
       - postgres
       - redis
-
+      
   account-service:
     container_name: "account-service"
     build: ./account-service

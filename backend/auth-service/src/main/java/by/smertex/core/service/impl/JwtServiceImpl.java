@@ -1,7 +1,6 @@
 package by.smertex.core.service.impl;
 
 import by.smertex.core.database.model.impl.Token;
-import by.smertex.core.database.repository.TokenRepository;
 import by.smertex.core.dto.input.AccountReadDto;
 import by.smertex.core.dto.input.PhoneCodeDto;
 import by.smertex.core.dto.output.JwtClaims;
