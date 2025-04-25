@@ -3,14 +3,6 @@ spring:
     name: auth-service
 
   kafka:
-    consumer:
-      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS}
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
-      group-id: payment-subscription-events
-      properties:
-        spring.json.trusted.packages: "*"
-        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

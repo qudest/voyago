@@ -6,7 +6,8 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record AccountUpdateDto(String country,
+public record AccountUpdateDto(String name,
+                               String country,
                                String city,
                                List<Preference> preferences,
                                String creditCard) {

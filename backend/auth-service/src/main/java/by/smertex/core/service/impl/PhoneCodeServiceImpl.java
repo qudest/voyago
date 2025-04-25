@@ -5,7 +5,9 @@ import by.smertex.core.database.repository.PhoneCodeRepository;
 import by.smertex.core.dto.input.PhoneCodeDto;
 import by.smertex.core.exception.InvalidCodeException;
 import by.smertex.core.service.PhoneCodeService;
+import by.smertex.core.util.jwt.CodeGenerator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,19 @@ public class PhoneCodeServiceImpl implements PhoneCodeService {
 
     private final PhoneCodeRepository phoneCodeRepository;
 
-    public void save(PhoneCode phoneCode) {
-        phoneCodeRepository.save(phoneCode);
+    private final CodeGenerator<Integer> codeGenerator;
+
+    @Value("${code.lifetime}")
+    private Long ttl;
+
+    public PhoneCode generate(String phoneNumber) {
+        return phoneCodeRepository.save(
+                PhoneCode.builder()
+                        .phoneNumber(phoneNumber)
+                        .code(codeGenerator.generate())
+                        .ttl(ttl)
+                        .build()
+        );
     }
 
     public void verifyCode(PhoneCodeDto dto) {

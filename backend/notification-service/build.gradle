@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'by.smertex'
-version = '0.0.1-SNAPSHOT'
+version = '1.0'
 
 java {
 	toolchain {
@@ -24,7 +24,6 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.kafka:spring-kafka'
 	compileOnly 'org.projectlombok:lombok'

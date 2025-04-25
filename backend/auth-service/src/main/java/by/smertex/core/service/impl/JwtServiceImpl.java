@@ -9,14 +9,13 @@ import by.smertex.core.dto.output.TokenDto;
 import by.smertex.core.exception.GenerateJwtException;
 import by.smertex.core.exception.InvalidRefreshException;
 import by.smertex.core.mapper.Mapper;
+import by.smertex.core.service.FindAccountService;
 import by.smertex.core.service.JwtService;
 import by.smertex.core.service.PhoneCodeService;
 import by.smertex.core.util.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -26,9 +25,9 @@ public class JwtServiceImpl implements JwtService {
 
     private final PhoneCodeService phoneCodeService;
 
-    private final TokenRepository tokenRepository;
+    private final FindAccountService findAccountService;
 
-    private final RestTemplate restTemplate;
+    private final TokenRepository tokenRepository;
 
     private final Mapper<Token, TokenDto> tokenDtoMapper;
 
@@ -36,12 +35,9 @@ public class JwtServiceImpl implements JwtService {
 
     private final JwtUtil<String> jwtRefreshUtil;
 
-    @Value("${path.account-service}")
-    private String path;
-
     public TokenDto generateToken(PhoneCodeDto dto) {
         phoneCodeService.verifyCode(dto);
-        return Optional.ofNullable(getAccount(dto.phoneNumber()))
+        return Optional.ofNullable(findAccountService.findAccountByPhoneNumber(dto.phoneNumber()))
                 .map(account ->
                         tokenRepository.save(
                                 Token.builder()
@@ -62,7 +58,7 @@ public class JwtServiceImpl implements JwtService {
                 .map(entity -> {
                     entity.setAccessToken(
                             jwtAccessUtil.generateToken(
-                                    getAccount(username)
+                                    findAccountService.findAccountByPhoneNumber(username)
                             )
                     );
                     return tokenRepository.save(entity);
@@ -74,9 +70,5 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public void removeToken(String phoneNumber) {
         tokenRepository.deleteById(phoneNumber);
-    }
-
-    private AccountReadDto getAccount(String phoneNumber) {
-        return restTemplate.getForObject(path, AccountReadDto.class, phoneNumber);
     }
 }
