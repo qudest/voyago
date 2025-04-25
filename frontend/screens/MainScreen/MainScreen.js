@@ -17,6 +17,7 @@ const MainScreen = () => {
   const route = useRoute(); 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedRoute, setSelectedRoute] = useState(null); 
+  
   const pan = useRef(new Animated.Value(height / 3)).current; 
   const [isDragging, setIsDragging] = useState(false);
   const [rating, setRating] = useState(0); 
