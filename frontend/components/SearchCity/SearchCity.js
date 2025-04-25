@@ -10,6 +10,7 @@ const SearchCity = ({ onCitySelect, selectedCity }) => {
     const [filteredCities, setFilteredCities] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    
     const timerRef = useRef(null);
 
     const extractCityName = (fullAddress) => {

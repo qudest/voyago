@@ -50,9 +50,6 @@ const AutorizationScreen = () => {
     setErrorModalVisible(false);
   };
   
-  const nav = () => {
-    navigation.navigate("MainScreen")
-  }
   const isButtonDisabled = phoneNumber.length < 12; 
 
   return (

@@ -46,7 +46,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
             };
             fetchUserData();
           }, []);
-
           
           const citiesData = [
             { id: 1, name: 'Москва' },

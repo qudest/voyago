@@ -73,7 +73,6 @@ const AuthorizationAcceptScreen = () => {
           };
 
           await AsyncStorage.setItem('userData', JSON.stringify(userData));
-
           if (response.data.city === null ){
             const { id } = response.data;
             await AsyncStorage.setItem('userData', JSON.stringify(userData));
