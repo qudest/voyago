@@ -5,6 +5,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         position: 'absolute',
+
+        width: 310,
         zIndex: 9999,
         top: 50, 
         marginHorizontal: 20,

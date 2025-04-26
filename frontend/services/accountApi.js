@@ -3,7 +3,8 @@ import { API_URL } from '../variables/ip';
 
 export const putAccountInfo = async (id, userName = null, userCountry = "Russia", selectedCity, selectedPreferences = null, creditCard = null, accessToken) => {
   return axios.put(`http://${API_URL}:8091/api/account/${id}`,
-    {   name: userName,
+    {   
+        name: userName,
         country: userCountry,
         city: selectedCity,
         preferences: selectedPreferences,

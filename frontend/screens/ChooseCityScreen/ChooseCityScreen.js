@@ -18,6 +18,7 @@ const ChooseCityScreen = () => {
     const [isErrorModalVisible, setErrorModalVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const [userData, setUserData] = useState(null);
+    const [accessToken, setAccessToken] = useState(null);
     const route = useRoute(); 
     const [citiesData, setCitiesData] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -46,6 +47,8 @@ const ChooseCityScreen = () => {
         const fetchCachedData = async () => {
           try {
             const cachedData = await AsyncStorage.getItem('userData');
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            setAccessToken(accessToken)
             if (cachedData) {
               const parsedData = JSON.parse(cachedData);
               setUserData(parsedData);
@@ -146,21 +149,19 @@ const ChooseCityScreen = () => {
           if (response.status === 204) {
             const cachedData = await AsyncStorage.getItem('userData');
             const parsedData = JSON.parse(cachedData);
-            console.log("до", parsedData)
             const updatedData = {
               ...parsedData,
               city: selectedCity
             };
       
             await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
-            console.log("obnov0", updatedData)
             await checkPreferencesAndNavigate();
           }
       } catch (error) {
         console.log(error)
           let message = 'Что-то пошло не так';
           if (error.response) {
-              message =  'Ошибка сервера';
+              message =  'Попробуйте позже!';
           } else if (error.request) {
               message = 'Нет ответа от сервера';
           }

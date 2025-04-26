@@ -6,101 +6,55 @@ import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
-import axios from 'axios';
-
 
 const CreateRouteScreen = () => {
-    const [selectedAddress, setSelectedAddress] = useState(['', '']); 
+    const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
     const navigation = useNavigation();
-    const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
-    const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
+
     useEffect(() => {
-        const filledCount = selectedAddress.filter(address => address.length > 0).length;
+        const filledCount = selectedPoints.filter(p => p.place_id).length;
         setButtonEnabled(filledCount >= 2);
         setShowEmptyFieldsWarning(false);
-    }, [selectedAddress]);
+    }, [selectedPoints]);
 
     const handleBackButton = () => {
-        navigation.navigate("ProfileScreen")
-    }
+        navigation.navigate("ProfileScreen");
+    };
 
     const handleAddPoint = () => {
-        setSelectedAddress([...selectedAddress, '']); 
+        if (selectedPoints.length < 6) {
+            setSelectedPoints([...selectedPoints, {place_id: '', name: ''}]);
+        }
     };
 
     const handleRemovePoint = (index) => {
-        const newCities = [...selectedAddress];
-        newCities.splice(index, 1);
-        setSelectedAddress(newCities);
+        if (selectedPoints.length > 2) {
+            const newPoints = [...selectedPoints];
+            newPoints.splice(index, 1);
+            setSelectedPoints(newPoints);
+        }
     };
 
-    const handleAddressSelect = (index, point) => {
-        const newPoints = [...selectedPoints];
-        newPoints[index] = point;
-        setSelectedPoints(newPoints);
-    };
-    const formatMetrics = (routeData) => {
-        return {
-            distance: `${(routeData.distance / 1000).toFixed(1)} км`,
-            duration: `${Math.floor(routeData.duration / 3600)} ч ${Math.round((routeData.duration % 3600) / 60)} мин`
+    const handleContinueButton = () => {
+        const hasEmpty = selectedPoints.some(p => !p.place_id);
+        if (hasEmpty) {
+            setShowEmptyFieldsWarning(true);
+            return;
+        }
+
+        const routeData = {
+            points: selectedPoints,
+            origin: `place_id:${selectedPoints[0].place_id}`,
+            waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
+            destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
+            pointNames: selectedPoints.map(p => p.name)
         };
+
+        navigation.navigate('PreviewRouteScreen', {routeData});
     };
 
-    const handleContinueButton = async () => {
-        try {
-            const hasEmpty = selectedPoints.some(p => !p.place_id);
-            if (hasEmpty) {
-                setShowEmptyFieldsWarning(true);
-                return;
-            }
-
-            const directions = await fetchRoute(selectedPoints);
-
-            const routeData = {
-                origin: `place_id:${selectedPoints[0].place_id}`,
-                waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
-                destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
-                distance: directions.distance,
-                duration: directions.duration,
-            };
-
-            console.log(routeData)
-            const { distance, duration } = formatMetrics(routeData);
-            console.log( distance, duration )
-
-            navigation.navigate('PreviewRouteScreen', {routeData});
-        } catch (error) {
-            Alert.alert('Ошибка', error.message);
-        }
-    };
-
-    const fetchRoute = async (points) => {
-        try {
-            const response = await axios.get(
-                'https://maps.googleapis.com/maps/api/directions/json',
-                {
-                    params: {
-                        origin: `place_id:${points[0].place_id}`,
-                        destination: `place_id:${points[points.length-1].place_id}`,
-                        waypoints: points.slice(1, -1).map(p => `place_id:${p.place_id}`).join('|'),
-                        key: API_KEY,
-                        language: 'ru'
-                    }
-                }
-            );
-    
-            const route = response.data.routes[0];
-            return {
-                polyline: route.overview_polyline.points,
-                distance: route.legs.reduce((sum, leg) => sum + leg.distance.value, 0),
-                duration: route.legs.reduce((sum, leg) => sum + leg.duration.value, 0)
-            };
-        } catch (error) {
-            throw new Error('Ошибка получения данных маршрута');
-        }
-    };
     return (
         <View style={styles.container}>
             <BackButton onPress={handleBackButton}/>
@@ -111,13 +65,17 @@ const CreateRouteScreen = () => {
             </View>   
             
             <View style={styles.pointsContainer}>
-                {selectedAddress.map((address, index) => (
+                {selectedPoints.map((point, index) => (
                     <PointOfRoute 
                         key={index}
-                        selectedAddress={address}
-                        onAddressSelect={(selectedAddress) => handleAddressSelect(index, selectedAddress)}
+                        selectedAddress={point.name}
+                        onAddressSelect={(selectedPoint) => {
+                            const newPoints = [...selectedPoints];
+                            newPoints[index] = selectedPoint;
+                            setSelectedPoints(newPoints);
+                        }}
                         onRemove={() => handleRemovePoint(index)}
-                        showRemoveButton={selectedAddress.length > 2}
+                        showRemoveButton={selectedPoints.length > 2}
                     />
                 ))}
             </View>
@@ -128,12 +86,12 @@ const CreateRouteScreen = () => {
             
             <AddPoint 
                 onPress={handleAddPoint} 
-                condition={selectedAddress.length >= 6}
+                condition={selectedPoints.length >= 6}
             />
             
             <CreateRouteButton
                 onPress={handleContinueButton}
-                condition={buttonEnabled}
+                condition={!buttonEnabled}
             />
         </View>
     );

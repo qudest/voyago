@@ -1,27 +1,67 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, TextInput, Text, Image, FlatList, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 
 const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
-const CITY_LOCATION = {
-    lat: 55.7558,
-    lng: 37.6173
-};
 const SEARCH_RADIUS = 50000;
+
 const PointOfRoute = ({ onAddressSelect, selectedAddress, onRemove, showRemoveButton }) => {
     const [searchQuery, setSearchQuery] = useState(selectedAddress || '');
     const [filteredAddress, setFilteredAddress] = useState([]);
     const [isSearchFocused, setIsSearchFocused] = useState(false);
+    const [userLocation, setUserLocation] = useState(null);
     const timerRef = useRef(null);
 
     useEffect(() => {
+        const loadUserCity = async () => {
+            try {
+                const cachedData = await AsyncStorage.getItem('userData');
+                if (cachedData) {
+                    const parsedData = JSON.parse(cachedData);
+                    if (parsedData.city) {
+                        const coords = await getCityCoordinates(parsedData.city);
+                        if (coords) {
+                            setUserLocation(coords);
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error("Ошибка загрузки города пользователя:", e);
+            }
+        };
+
+        loadUserCity();
+
         return () => {
             if (timerRef.current) {
                 clearTimeout(timerRef.current);
             }
         };
     }, []);
+
+    const getCityCoordinates = async (cityName) => {
+        try {
+            const response = await axios.get(
+                'https://maps.googleapis.com/maps/api/geocode/json',
+                {
+                    params: {
+                        address: cityName,
+                        key: API_KEY,
+                        language: 'ru'
+                    }
+                }
+            );
+
+            if (response.data.results.length > 0) {
+                return response.data.results[0].geometry.location;
+            }
+        } catch (error) {
+            console.error('Ошибка получения координат города:', error);
+        }
+        return null;
+    };
 
     const handleAddressSelect = (prediction) => {
         setSearchQuery(prediction.name);
@@ -32,7 +72,6 @@ const PointOfRoute = ({ onAddressSelect, selectedAddress, onRemove, showRemoveBu
             name: prediction.name
         });
     };
-
 
     useEffect(() => {
         setSearchQuery(selectedAddress);
@@ -47,26 +86,28 @@ const PointOfRoute = ({ onAddressSelect, selectedAddress, onRemove, showRemoveBu
             
             timerRef.current = setTimeout(async () => {
                 try {
+                    const params = {
+                        input: text,
+                        key: API_KEY,
+                        language: 'ru',
+                        components: 'country:ru',
+                    };
+
+                    if (userLocation) {
+                        params.location = `${userLocation.lat},${userLocation.lng}`;
+                        params.radius = SEARCH_RADIUS;
+                        params.strictbounds = true;
+                    }
+
                     const response = await axios.get(
                         'https://maps.googleapis.com/maps/api/place/autocomplete/json',
-                        {
-                            params: {
-                                input: text,
-                                key: API_KEY,
-                                language: 'ru',
-                                components: 'country:ru',
-                                location: `${CITY_LOCATION.lat},${CITY_LOCATION.lng}`,
-                                radius: SEARCH_RADIUS,
-                                strictbounds: true
-                            },
-                        }
+                        { params }
                     );
 
                     const predictions = response.data.predictions.map(prediction => ({
                         id: prediction.place_id,
                         name: prediction.description,
                     }));
-                    console.log(response.data)
                     
                     setFilteredAddress(predictions);
                 } catch (error) {

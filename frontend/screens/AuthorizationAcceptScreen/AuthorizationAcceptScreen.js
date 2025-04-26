@@ -33,6 +33,8 @@ const AuthorizationAcceptScreen = () => {
              refreshToken 
             } = response.data;
 
+            console.log(accessToken, refreshToken)
+
           await AsyncStorage.setItem('accessToken', accessToken);
           await AsyncStorage.setItem('refreshToken', refreshToken);
 

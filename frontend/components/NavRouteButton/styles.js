@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     navRouteContainer: {
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around', 
 
         flexDirection: 'row',
         
@@ -29,13 +29,16 @@ const styles = StyleSheet.create({
     },
     routePointText: {
         fontSize: 19,
-        fontWeight: 400,
+        flex: 1, 
+        marginHorizontal: 10, 
     },
     leftNav: {
         marginRight: 20,
+        marginLeft: 10,
     },
     rightNav: {
         marginLeft: 20,
+        marginRight: 10,
     },
 });
 
