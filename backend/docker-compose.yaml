@@ -5,21 +5,6 @@ networks:
     driver: bridge
 
 services:
-  db:
-    container_name: "postgres"
-    image: postgres
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=db
-      - ALLOW_RUNNING_AS_ROOT=yes
-    volumes:
-      - "./db/postgres:/var/lib/postgresql"
-    expose:
-      - "5432"
-    networks:
-      - app
-    
   redis:
     container_name: redis
     image: redis:latest
@@ -38,7 +23,7 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=account_service_db
+      - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
       - "./volume/postgres/account-service:/var/lib/postgresql"
@@ -104,7 +89,7 @@ services:
     container_name: "account-service"
     build: ./account-service
     environment:
-      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_URL=jdbc:postgresql://postgres:5432/postgres
       - DB_USERNAME=admin
       - DB_PASSWORD=admin
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
