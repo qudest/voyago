@@ -34,7 +34,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
         navigation.navigate("AdditionalParametersScreen")
     }
     const handleExitPress = () => {
-        Alert.alert("Выход")
+        navigation.navigate("AuthorizationScreen")
     }
 
     useEffect(() => {

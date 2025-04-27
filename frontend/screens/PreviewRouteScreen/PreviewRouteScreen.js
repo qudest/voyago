@@ -16,6 +16,7 @@ const PreviewRouteScreen = () => {
     const [userData, setUserData] = useState(null);
     const [routeInfo, setRouteInfo] = useState({
         name: "",
+        rating: 0,
         coordinates: [],
         origin: [],
         destination: [],
@@ -101,7 +102,7 @@ const PreviewRouteScreen = () => {
 
             if (response.data.routes.length) {
                 const route = response.data.routes[0];
-                
+                const rating = routeParams.rating || 0;
                 const points = polyline.decode(route.overview_polyline.points);
                 const coordinates = points.map(point => ({
                     latitude: point[0],
@@ -151,6 +152,7 @@ const PreviewRouteScreen = () => {
 
                 return {
                     coordinates,
+                    rating,
                     origin,
                     destination,
                     waypoints,
@@ -205,8 +207,7 @@ const PreviewRouteScreen = () => {
     
 
     const { distance, duration } = formatMetrics(routeInfo.distance, routeInfo.duration);
-
-
+    const rating = routeInfo.rating;
     return (
         <SafeAreaView style={styles.safeContainer}>
             <View style={styles.container}>
@@ -271,7 +272,7 @@ const PreviewRouteScreen = () => {
                                     source={require('../../assets/routeCardImages/rating.png')}
                                     style={styles.ratingImage}
                                 />
-                                <Text style={styles.rating}>4.5</Text>
+                                <Text style={styles.rating}>{rating}</Text>
                             </View>
                         </View>
                     </View>
