@@ -17,8 +17,8 @@ const NavRouteButton = ({ onPressLeft, onPressRight, currentPoint }) => {
       
       <Text
         style={styles.routePointText}
-        numberOfLines={1} // Ограничиваем количество строк до 1
-        ellipsizeMode="tail" // Обрезаем текст с конца, добавляя многоточие
+        numberOfLines={1} 
+        ellipsizeMode="tail" 
       >
         {currentPoint.split(',')[0]}
       </Text>

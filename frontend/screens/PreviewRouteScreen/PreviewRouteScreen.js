@@ -7,12 +7,15 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import polyline from '@mapbox/polyline';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PreviewRouteScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const [loading, setLoading] = useState(true);
+    const [userData, setUserData] = useState(null);
     const [routeInfo, setRouteInfo] = useState({
+        name: "",
         coordinates: [],
         origin: [],
         destination: [],
@@ -32,6 +35,23 @@ const PreviewRouteScreen = () => {
             duration: `${Math.floor(duration / 3600)} ч ${Math.round((duration % 3600) / 60)} мин`
         };
     };
+
+    useEffect(() => {
+        const fetchCachedData = async () => {
+          try {
+            const cachedData = await AsyncStorage.getItem('userData');
+            if (cachedData) {
+              const parsedData = JSON.parse(cachedData);
+              setUserData(parsedData);
+              console.log('Данные из кэша:', parsedData);
+            }
+          } catch (error) {
+            console.error('Ошибка при получении данных из кэша:', error);
+          }
+        };
+        
+        fetchCachedData();
+      }, []);
 
     const getCoordinatesFromPlaceId = async (placeId) => {
         try {
@@ -54,7 +74,7 @@ const PreviewRouteScreen = () => {
 
     const fetchRouteData = async (routeParams) => {
         try {
-            const { origin, destination, waypoints, points } = routeParams;
+            const { origin, destination, waypoints } = routeParams;
             
             const originCoords = await getCoordinatesFromPlaceId(origin);
             const destinationCoords = await getCoordinatesFromPlaceId(destination);
@@ -194,7 +214,7 @@ const PreviewRouteScreen = () => {
                 
                 <View style={styles.headerContainer}>
                     <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-                        Мой маршрут
+                        {route.params.routeData.name}
                     </Text>
                 </View>
 

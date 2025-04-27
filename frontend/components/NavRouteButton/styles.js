@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         elevation: 5, 
     },
     routePointText: {
+        textAlign: 'center',
         fontSize: 19,
         flex: 1, 
         marginHorizontal: 10, 

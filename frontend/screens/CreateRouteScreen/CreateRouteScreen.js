@@ -6,11 +6,13 @@ import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
+import { TextInput } from 'react-native-gesture-handler';
 
 const CreateRouteScreen = () => {
     const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
+    const [nameRoute, setName] = useState();
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -45,6 +47,7 @@ const CreateRouteScreen = () => {
         }
 
         const routeData = {
+            name: nameRoute,
             points: selectedPoints,
             origin: `place_id:${selectedPoints[0].place_id}`,
             waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
@@ -61,7 +64,15 @@ const CreateRouteScreen = () => {
             
             <View style={styles.topContainer}> 
                 <Text style={styles.createTitle}>Создание маршрута</Text>
-                <Text style={styles.createDiscription}>Выберите от 2 до 6 точек</Text>
+                <TextInput
+                  style={styles.inputTitle}
+                  maxLength={40}
+                  placeholder="Название маршрута"
+                  cursorColor="#FCFFFF"
+                  onChangeText={setName}
+                  value={nameRoute} 
+                ></TextInput>
+                <Text style={styles.createDiscription}>Выберите точки маршрута</Text>
             </View>   
             
             <View style={styles.pointsContainer}>
