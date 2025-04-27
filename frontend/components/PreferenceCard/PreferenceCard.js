@@ -4,12 +4,12 @@ import styles from './styles';
 
 const PreferenceCard = ({ onCardPress, selectedPreferences }) => {
   const imageCard = [
-    { id: 'park', path: require("../../assets/preferenceImages/park.png"), title: "Парк" },
-    { id: 'fastfood', path: require("../../assets/preferenceImages/fastfood.png"), title: "Фастфуд" },
-    { id: 'bar', path: require("../../assets/preferenceImages/beer.png"), title: "Бар" },
-    { id: 'shopping', path: require("../../assets/preferenceImages/dress.png"), title: "Шоппинг" },
-    { id: 'architecture', path: require("../../assets/preferenceImages/house.png"), title: "Архитектура" },
-    { id: 'sport', path: require("../../assets/preferenceImages/sport.png"), title: "Спорт" },
+    { id: 'PARK', path: require("../../assets/preferenceImages/park.png"), title: "Парк" },
+    { id: 'CAFE', path: require("../../assets/preferenceImages/fastfood.png"), title: "Кафе" },
+    { id: 'BAR', path: require("../../assets/preferenceImages/beer.png"), title: "Бар" },
+    { id: 'SHOPPING', path: require("../../assets/preferenceImages/dress.png"), title: "Шоппинг" },
+    { id: 'ARCHITECTURE', path: require("../../assets/preferenceImages/house.png"), title: "Архитектура" },
+    { id: 'SPORT', path: require("../../assets/preferenceImages/sport.png"), title: "Спорт" },
   ];
 
   return (

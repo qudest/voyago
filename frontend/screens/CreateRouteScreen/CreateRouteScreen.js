@@ -6,56 +6,56 @@ import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
+import { TextInput } from 'react-native-gesture-handler';
 
 const CreateRouteScreen = () => {
-    const [selectedAddress, setselectedAddress] = useState(['', '']); 
+    const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
+    const [nameRoute, setName] = useState();
     const navigation = useNavigation();
 
-
-    const addressData = [
-        { id: 1, name: 'ул. Ленина, 10' },
-        { id: 2, name: 'пр. Мира, 25' },
-        { id: 3, name: 'ул. Гагарина, 42' },
-        { id: 4, name: 'ул. Садовая, 7' },
-        { id: 5, name: 'ул. Центральная, 15' },
-        { id: 6, name: 'ул. Школьная, 3' },
-        { id: 7, name: 'ул. Лесная, 18' },
-        { id: 8, name: 'ул. Набережная, 5' },
-        { id: 9, name: 'ул. Парковая, 12' },
-        { id: 10, name: 'ул. Солнечная, 9' }
-    ];
-
     useEffect(() => {
-        const filledCount = selectedAddress.filter(address => address.length > 0).length;
+        const filledCount = selectedPoints.filter(p => p.place_id).length;
         setButtonEnabled(filledCount >= 2);
         setShowEmptyFieldsWarning(false);
-    }, [selectedAddress]);
+    }, [selectedPoints]);
 
     const handleBackButton = () => {
-        navigation.navigate("ProfileScreen")
-    }
+        navigation.navigate("ProfileScreen");
+    };
 
     const handleAddPoint = () => {
-        setselectedAddress([...selectedAddress, '']); 
+        if (selectedPoints.length < 6) {
+            setSelectedPoints([...selectedPoints, {place_id: '', name: ''}]);
+        }
     };
 
     const handleRemovePoint = (index) => {
-        const newCities = [...selectedAddress];
-        newCities.splice(index, 1);
-        setselectedAddress(newCities);
-    };
-
-    const handleAddressSelect = (index, address) => {
-        const newCities = [...selectedAddress];
-        newCities[index] = address;
-        setselectedAddress(newCities);
+        if (selectedPoints.length > 2) {
+            const newPoints = [...selectedPoints];
+            newPoints.splice(index, 1);
+            setSelectedPoints(newPoints);
+        }
     };
 
     const handleContinueButton = () => {
-        const hasEmptyFields = selectedAddress.some(address => address.length === 0);
-        if (hasEmptyFields) setShowEmptyFieldsWarning(true); else navigation.navigate('ProfileScreen');
+        const hasEmpty = selectedPoints.some(p => !p.place_id);
+        if (hasEmpty) {
+            setShowEmptyFieldsWarning(true);
+            return;
+        }
+
+        const routeData = {
+            name: nameRoute,
+            points: selectedPoints,
+            origin: `place_id:${selectedPoints[0].place_id}`,
+            waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
+            destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
+            pointNames: selectedPoints.map(p => p.name)
+        };
+
+        navigation.navigate('PreviewRouteScreen', {routeData});
     };
 
     return (
@@ -64,18 +64,29 @@ const CreateRouteScreen = () => {
             
             <View style={styles.topContainer}> 
                 <Text style={styles.createTitle}>Создание маршрута</Text>
-                <Text style={styles.createDiscription}>Выберите от 2 до 6 точек</Text>
+                <TextInput
+                  style={styles.inputTitle}
+                  maxLength={40}
+                  placeholder="Название маршрута"
+                  cursorColor="#FCFFFF"
+                  onChangeText={setName}
+                  value={nameRoute} 
+                ></TextInput>
+                <Text style={styles.createDiscription}>Выберите точки маршрута</Text>
             </View>   
             
             <View style={styles.pointsContainer}>
-                {selectedAddress.map((address, index) => (
+                {selectedPoints.map((point, index) => (
                     <PointOfRoute 
                         key={index}
-                        addressData={addressData}
-                        selectedAddress={address}
-                        onAddressSelect={(selectedAddress) => handleAddressSelect(index, selectedAddress)}
+                        selectedAddress={point.name}
+                        onAddressSelect={(selectedPoint) => {
+                            const newPoints = [...selectedPoints];
+                            newPoints[index] = selectedPoint;
+                            setSelectedPoints(newPoints);
+                        }}
                         onRemove={() => handleRemovePoint(index)}
-                        showRemoveButton={selectedAddress.length > 2}
+                        showRemoveButton={selectedPoints.length > 2}
                     />
                 ))}
             </View>
@@ -86,12 +97,12 @@ const CreateRouteScreen = () => {
             
             <AddPoint 
                 onPress={handleAddPoint} 
-                condition={selectedAddress.length >= 6}
+                condition={selectedPoints.length >= 6}
             />
             
             <CreateRouteButton
                 onPress={handleContinueButton}
-                condition={buttonEnabled}
+                condition={!buttonEnabled}
             />
         </View>
     );
