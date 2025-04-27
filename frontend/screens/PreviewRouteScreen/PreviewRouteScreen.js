@@ -119,8 +119,8 @@ const PreviewRouteScreen = () => {
                     },
                     ...waypointsCoords.map((coord, index) => ({
                         coordinate: {
-                            latitude: waypointsCoords.lat,
-                            longitude: waypointsCoords.lng
+                            latitude: coord.lat,
+                            longitude: coord.lng
                           },
                         title: `Точка ${index + 1}`,
                         icon: require('../../assets/markers/default.png')
@@ -250,7 +250,7 @@ const PreviewRouteScreen = () => {
                     
                     <View style={styles.contentPoints}>
                         {routeInfo.points.map((point, index) => (
-                            <Text key={index} style={styles.pointText}>{point}</Text>
+                            <Text key={index} style={styles.pointText}>{point.split(',').slice(0, 2).join(',')}</Text>
                         ))}
                     </View>
 

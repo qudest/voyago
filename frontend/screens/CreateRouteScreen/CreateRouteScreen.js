@@ -67,12 +67,11 @@ const CreateRouteScreen = () => {
                 <TextInput
                   style={styles.inputTitle}
                   maxLength={40}
-                  placeholder="Название маршрута"
+                  placeholder="Введите название"
                   cursorColor="#FCFFFF"
                   onChangeText={setName}
                   value={nameRoute} 
                 ></TextInput>
-                <Text style={styles.createDiscription}>Выберите точки маршрута</Text>
             </View>   
             
             <View style={styles.pointsContainer}>

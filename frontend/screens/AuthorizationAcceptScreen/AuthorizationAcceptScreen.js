@@ -29,18 +29,22 @@ const AuthorizationAcceptScreen = () => {
         const response = await getAccountTockens(phoneNumber, code);
         if (response.status === 200){
           const { 
-            accessToken,
-             refreshToken 
+            accessToken
             } = response.data;
 
-            console.log(accessToken, refreshToken)
-
           await AsyncStorage.setItem('accessToken', accessToken);
-          await AsyncStorage.setItem('refreshToken', refreshToken);
 
           fetchPhoneNumber();
         }
       } catch (error) {
+        console.error('Error in fetchCodeAccess:', error);
+        console.log('Error details:', {
+          response: error.response,
+          request: error.request,
+          message: error.message,
+          config: error.config
+        });
+        
         let message = '';
         if (error.response) {
           message = `Неверный код подтверждения`;
@@ -59,6 +63,7 @@ const AuthorizationAcceptScreen = () => {
         const response = await getAccountInfo(phoneNumber);
         if (response.status === 200){
           const data = response.data;
+          console.log('Account info received:', data);
 
           const userData = {
             id: data.id,
@@ -80,11 +85,19 @@ const AuthorizationAcceptScreen = () => {
             await AsyncStorage.setItem('userData', JSON.stringify(userData));
             navigation.navigate('ChooseCityScreen', {idAccount: id, phoneNumber})
           } else {
-            console.log(phoneNumber, response.data.city, "netuda")
+            console.log('Navigating to MainScreen with:', phoneNumber, response.data.city);
             navigation.navigate('MainScreen')
           }
         }
       } catch (error) {
+        console.error('Error in fetchPhoneNumber:', error);
+        console.log('Error details:', {
+          response: error.response,
+          request: error.request,
+          message: error.message,
+          config: error.config
+        });
+        
         let message = '';
         if (error.response) {
           message = 'Что-то пошло не так';
@@ -102,16 +115,24 @@ const AuthorizationAcceptScreen = () => {
       try {
         const response = await sendSecurityCode(phoneNumber);
         if (response.status === 200){
-          console.log("Код отправлен")
+          console.log("Код отправлен успешно");
         }
       } catch (error) {
+        console.error('Error in fetchCode:', error);
+        console.log('Error details:', {
+          response: error.response,
+          request: error.request,
+          message: error.message,
+          config: error.config
+        });
+        
         let message = '';
         if (error.response) {
-          message = 'Что-то пошло не так';
+          message = `Ошибка сервера: ${error.response.status}`;
         } else if (error.request) {
-          message = 'Что-то пошло не так';
+          message = 'Не удалось отправить запрос';
         } else {
-          message = 'Что-то пошло не так';
+          message = 'Ошибка при отправке кода';
         }
         setErrorMessage(message);
         setErrorModalVisible(true);

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions } from 'react-native';
+import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import RoutesButton from '../../components/RoutesButton/RoutesButton';
 import ProfileIconButton from '../../components/ProfileIconButton/ProfileIconButton';
@@ -288,13 +288,12 @@ const MainScreen = () => {
 
             <Polyline
               coordinates={coordinates}
-              strokeColor="#70BCFF"
+              strokeColor="#464BDC"
               strokeWidth={4}
             />
           </MapView>
         )}
       </View>
-      
       <View style={styles.topElement}>
         <RoutesButton onPress={handleRoutesPress} />
         <ProfileIconButton onPress={() => navigation.navigate("ProfileScreen")} />
@@ -330,11 +329,12 @@ const MainScreen = () => {
               onPressRight={handleNext} 
               currentPoint={selectedRoute.points[currentIndex]}
             />
+            <ScrollView>
             <View style={styles.routePointsContainer}>
               <View style={styles.routePoints}>
                 {selectedRoute.points.map((point, index) => (
                   <Text key={index} style={[styles.pointText, index === currentIndex && styles.activePoint]}>
-                    {point}
+                    {point.split(',').slice(0, 2).join(',')}
                   </Text>
                 ))}
               </View>
@@ -349,6 +349,7 @@ const MainScreen = () => {
               </View>
               <Text style={styles.distance}>{selectedRoute.distance}</Text>
             </View>
+            </ScrollView>
           </View>
         </Animated.View>
       )}

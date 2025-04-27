@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView  } from 'react-native';
 import PreferenceCard from '../../components/PreferenceCard/PreferenceCard';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import styles from './styles';
@@ -95,26 +95,30 @@ const ChoosePreferencesScreen = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
       <AlertError
                     isVisible={isErrorModalVisible}
                     onConfirm={confirmError}
                     title = "Ошибка!"
                     message = {errorMessage}
         />
-        <View style={styles.containerMain}>
-          <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
+        <View style={styles.header}>
+      <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
+        </View>
+
+        <View style={styles.preferenceContainer}>
           <View style={styles.preference}>
-              <PreferenceCard 
-                onCardPress={handleCardPress}
-                selectedPreferences={selectedPreferences}
-              />
+            <PreferenceCard 
+              onCardPress={handleCardPress}
+              selectedPreferences={selectedPreferences}
+            />
           </View>
         </View>
-        <View style={styles.containerNav}>
+
+        <View style={styles.footer}>
           <ContinueButton onPress={putPreferences} condition={true}/>
         </View>
-      </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };

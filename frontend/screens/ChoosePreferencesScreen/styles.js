@@ -4,32 +4,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FCFCFF',
+    justifyContent: 'space-between', 
+    paddingVertical: 20,
   },
-  containerMain: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 20,
+
+  header: {
+    marginTop: 20,
+    alignItems: 'center', 
   },
+
   chooseTitle: {
     textAlign: 'center',
-    marginVertical: 20,
     fontSize: 23,
     fontWeight: '500',
     color: '#3E3C80',
     maxWidth: 280,
   },
-  preference: {
-    marginTop: 20,
-    marginBottom: 20,
+
+  preferenceContainer: {
+    flex: 1,
+    marginBottom: 50,
+    justifyContent: 'center', 
+    alignItems: 'center', 
   },
-  containerNav: {
-    padding: 20,
-    backgroundColor: '#FCFCFF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+
+  footer: {
+    paddingHorizontal: 20,
   },
 });
 export default styles;
