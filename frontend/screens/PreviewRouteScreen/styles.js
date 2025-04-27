@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
     backgroundColor: '#FCFFFF',
+    position: 'relative',
   },
   container: {
     flex: 1,
@@ -41,10 +42,14 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     height: 200,
-    backgroundColor: '#eee',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+    borderRadius: 10,
+  },
+  map: {
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
   },
   contentPoints: {

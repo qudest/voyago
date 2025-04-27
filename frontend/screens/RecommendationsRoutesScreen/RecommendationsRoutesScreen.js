@@ -32,10 +32,38 @@ const RecommendationsRoutesScreen = () => {
             distance: "5",
             points: ["Точка раз", "Точка двас", "Точка трис"],
         },
+        {
+            id: 4,
+            title: "Грустни маршрут",
+            time: "7:77",
+            distance: "5",
+            points: ["Точка раз", "Точка двас", "Точка трис"],
+        },
+        {
+            id: 5,
+            title: "Грустни маршрут",
+            time: "7:77",
+            distance: "5",
+            points: ["Точка раз", "Точка двас", "Точка трис"],
+        },
+        {
+            id: 6,
+            title: "Грустни маршрут",
+            time: "7:77",
+            distance: "5",
+            points: ["Точка раз", "Точка двас", "Точка трис"],
+        },
+        {
+            id: 7,
+            title: "Грустни маршрут",
+            time: "7:77",
+            distance: "5",
+            points: ["Точка раз", "Точка двас", "Точка трис"],
+        },
     ];
 
     const handlerBackButton = () => {
-        navigation.goBack(); 
+        navigation.navigate("MainScreen"); 
     };
 
     const handleSettingsButton = () => {
