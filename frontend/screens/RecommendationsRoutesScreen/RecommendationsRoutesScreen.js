@@ -55,14 +55,14 @@ const RecommendationsRoutesScreen = () => {
         ];
 
         for (let i = 1; i <= 14; i++) {
-            const pointsCount = 2 + Math.floor(Math.random() * 4); // 2-5 точек
+            const pointsCount = 2 + Math.floor(Math.random() * 4); 
             const points = [];
             for (let j = 0; j < pointsCount; j++) {
                 points.push(pointNames[Math.floor(Math.random() * pointNames.length)]);
             }
 
             const randomTags = [];
-            const tagsCount = Math.floor(Math.random() * 3); // 0-2 тега
+            const tagsCount = Math.floor(Math.random() * 3); 
             for (let k = 0; k < tagsCount; k++) {
                 const tag = tagsOptions[Math.floor(Math.random() * tagsOptions.length)];
                 if (!randomTags.includes(tag)) {
@@ -74,10 +74,9 @@ const RecommendationsRoutesScreen = () => {
                 id: i,
                 name: `Маршрут ${i}${randomTags.length > 0 ? ` (${randomTags.join(', ')})` : ''}`,
                 routePoints: {
-                    origin: `place_id:${Math.floor(Math.random() * 1000)}`,
-                    waypoints: Array.from({length: pointsCount - 2}, () => 
-                        `place_id:${Math.floor(Math.random() * 1000)}`),
-                    destination: `place_id:${Math.floor(Math.random() * 1000)}`
+                    origin: "ChIJybDUc_xKtUYRTM9XV8zWRD0",
+                    waypoints: ["place_id:ChIJr1KsYXpKtUYR9K8RM9BLwMM"],
+                    destination: "ChIJxSgtCq-oykYRlL5zGcPAp0g"
                 },
                 distance: 500 + Math.floor(Math.random() * 10000), 
                 duration: 300 + Math.floor(Math.random() * 7200), 
@@ -85,6 +84,7 @@ const RecommendationsRoutesScreen = () => {
                 pointNames: points
             });
         }
+        console.log(mockRoutes)
         return mockRoutes;
     };
 
@@ -130,7 +130,7 @@ const RecommendationsRoutesScreen = () => {
         id: route.id,
         title: route.name,
         time: formatDuration(route.duration),
-        distance: `${(route.distance / 1000).toFixed(1)} км`,
+        distance: `${(route.distance / 1000).toFixed(1)}`,
         points: [
             route.routePoints.origin.split(':')[1],
             ...route.routePoints.waypoints.map(wp => wp.split(':')[1]),
@@ -142,7 +142,7 @@ const RecommendationsRoutesScreen = () => {
     const formatDuration = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
-        return `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`;
+        return `${hours > 0 ? `${hours} ` : ''}${minutes}`;
     };
 
     return (

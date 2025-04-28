@@ -150,7 +150,20 @@ const PreviewRouteScreen = () => {
                 const distance = route.legs.reduce((sum, leg) => sum + leg.distance.value, 0);
                 const duration = route.legs.reduce((sum, leg) => sum + leg.duration.value, 0);
 
+                console.log( routeParams.name,
+                    coordinates,
+                    rating,
+                    origin,
+                    destination,
+                    waypoints,
+                    markers,
+                    region,
+                    distance,
+                    duration,
+                    routeParams.pointNames || [])
+                    
                 return {
+                    name: routeParams.name || "Без названия",
                     coordinates,
                     rating,
                     origin,

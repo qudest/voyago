@@ -96,6 +96,7 @@ const CreateRouteScreen = () => {
             destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
             pointNames: selectedPoints.map(p => p.name)
         };
+        console.log(routeData);
 
         try {
             const response = await simulateApiCall(routeData);
