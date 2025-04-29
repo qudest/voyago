@@ -72,7 +72,7 @@ const RecommendationsRoutesScreen = () => {
 
             mockRoutes.push({
                 id: i,
-                name: `Маршрут ${i}${randomTags.length > 0 ? ` (${randomTags.join(', ')})` : ''}`,
+                name: `Маршрут`,
                 routePoints: {
                     origin: "ChIJybDUc_xKtUYRTM9XV8zWRD0",
                     waypoints: ["place_id:ChIJr1KsYXpKtUYR9K8RM9BLwMM"],

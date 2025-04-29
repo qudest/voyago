@@ -37,7 +37,6 @@ const AuthorizationAcceptScreen = () => {
           fetchPhoneNumber();
         }
       } catch (error) {
-        console.error('Error in fetchCodeAccess:', error);
         console.log('Error details:', {
           response: error.response,
           request: error.request,
@@ -90,7 +89,6 @@ const AuthorizationAcceptScreen = () => {
           }
         }
       } catch (error) {
-        console.error('Error in fetchPhoneNumber:', error);
         console.log('Error details:', {
           response: error.response,
           request: error.request,

@@ -78,7 +78,7 @@ const ChoosePreferencesScreen = ({ navigation }) => {
           
           console.log('Обновленные данные:', cachedData); 
             
-          navigation.navigate("MainScreen");
+          navigation.navigate("PremiumScreen");
           }
     } catch (error) {
         let message = 'Что-то пошло не так';

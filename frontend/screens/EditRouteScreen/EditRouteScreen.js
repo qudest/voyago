@@ -13,7 +13,6 @@ const EditRouteScreen = () => {
     const navigation = useNavigation();
     const { params } = useRoute();
     
-    // Инициализация состояния с учетом переданного маршрута
     const initialRoute = params?.route || { 
         name: 'Новый маршрут',
         points: [{place_id: '', name: ''}, {place_id: '', name: ''}],
