@@ -16,51 +16,39 @@ const RecommendationsRoutesScreen = () => {
     const [hasMore, setHasMore] = useState(true);
     const [filter, setFilter] = useState(null);
 
-    // const loadRoutes = async (reset = false) => {
-    //     if (loading && !reset) return;
-        
-    //     const currentPage = reset ? 0 : page;
-    //     setLoading(true);
-        
-    //     try {
-    //         const response = await findAll(
-    //             { page: currentPage, size: 10 }, 
-    //             filter 
-    //         );
-            
-    //         setRoutes(prev => reset ? response.data : [...prev, ...response.data]);
-    //         setHasMore(response.data.length > 0);
-    //         if (reset) setPage(0);
-    //         else setPage(currentPage + 1);
-    //     } catch (error) {
-    //         console.error('Ошибка загрузки маршрутов:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
     const generateMockRoutes = () => {
         const mockRoutes = [];
         const tagsOptions = ['PARK', 'CAFE', 'BAR', 'SHOPPING', 'ARCHITECTURE', 'SPORT'];
-        const pointNames = [
-            "Центральный парк", 
-            "Кофейня 'Уют'", 
-            "Торговый центр 'Галерея'",
-            "Площадь Победы",
-            "Музей искусств",
-            "Спортивный комплекс",
-            "Набережная реки",
-            "Пивной ресторан 'Хмель'",
-            "Ботанический сад",
-            "Кинотеатр 'Современник'"
+
+        const moscowAddresses = [
+            "Красная площадь, Москва",
+            "Парк Горького, Крымский Вал, 9, Москва",
+            "ВДНХ, проспект Мира, 119, Москва",
+            "Арбат, Москва",
+            "ГУМ, Красная площадь, 3, Москва",
+            "ЦУМ, Петровка, 2, Москва",
+            "Кофейня Starbucks, Тверская, 10, Москва",
+            "Ресторан White Rabbit, Смоленская площадь, 3, Москва",
+            "Музей изобразительных искусств им. Пушкина, Волхонка, 12, Москва",
+            "Третьяковская галерея, Лаврушинский переулок, 10, Москва",
+            "Зоопарк Москвы, Большая Грузинская, 1, Москва",
+            "Парк Зарядье, Варварка, 6, Москва",
+            "Останкинская телебашня, Академика Королёва, 15, Москва",
+            "Стадион Лужники, Лужники, 24, Москва",
+            "Кремль в Измайлово, Измайловское шоссе, 73Ж, Москва",
+            "Библиотека им. Ленина, Воздвиженка, 3/5, Москва"
         ];
 
         for (let i = 1; i <= 14; i++) {
-            const pointsCount = 2 + Math.floor(Math.random() * 4); 
-            const points = [];
-            for (let j = 0; j < pointsCount; j++) {
-                points.push(pointNames[Math.floor(Math.random() * pointNames.length)]);
-            }
+            const pointsCount = 2 + Math.floor(Math.random() * 4);
+            const shuffled = [...moscowAddresses].sort(() => 0.5 - Math.random());
+            const selectedPoints = shuffled.slice(0, pointsCount);
 
+            const routePoints = {
+                origin: selectedPoints[0].split(',').slice(0, 2).join(','),
+                waypoints: selectedPoints.slice(1, -1),
+                destination: selectedPoints[selectedPoints.length - 1].split(',').slice(0, 2).join(',')
+            };
             const randomTags = [];
             const tagsCount = Math.floor(Math.random() * 3); 
             for (let k = 0; k < tagsCount; k++) {
@@ -69,28 +57,27 @@ const RecommendationsRoutesScreen = () => {
                     randomTags.push(tag);
                 }
             }
+            const routeTypes = [
+                "Исторический тур",
+                "Гастрономическое путешествие",
+                "Архитектурный маршрут",
+                "Парковая прогулка",
+                "Шопинг-тур",
+                "Культурный экспресс"
+            ];
 
             mockRoutes.push({
                 id: i,
-                name: `Маршрут`,
-                routePoints: {
-                    origin: "ChIJybDUc_xKtUYRTM9XV8zWRD0",
-                    waypoints: ["place_id:ChIJr1KsYXpKtUYR9K8RM9BLwMM"],
-                    destination: "ChIJxSgtCq-oykYRlL5zGcPAp0g"
-                },
+                name: routeTypes[Math.floor(Math.random() * routeTypes.length)],
+                routePoints: routePoints,
                 distance: 500 + Math.floor(Math.random() * 10000), 
                 duration: 300 + Math.floor(Math.random() * 7200), 
                 rating: (Math.random() * 5).toFixed(1),
-                pointNames: points
+                pointNames: selectedPoints
             });
         }
-        console.log(mockRoutes)
         return mockRoutes;
     };
-
-    // useEffect(() => {
-    //     loadRoutes(true);
-    // }, [filter]);
 
     useEffect(() => {
         setLoading(true);
@@ -99,7 +86,6 @@ const RecommendationsRoutesScreen = () => {
             setLoading(false);
         }, 500);
     }, []);
-
 
     const handlerBackButton = () => navigation.navigate("MainScreen");
     const handleSettingsButton = () => navigation.navigate("FiltersScreen", {
@@ -132,9 +118,9 @@ const RecommendationsRoutesScreen = () => {
         time: formatDuration(route.duration),
         distance: `${(route.distance / 1000).toFixed(1)}`,
         points: [
-            route.routePoints.origin.split(':')[1],
-            ...route.routePoints.waypoints.map(wp => wp.split(':')[1]),
-            route.routePoints.destination.split(':')[1]
+            route.routePoints.origin,
+            ...route.routePoints.waypoints,
+            route.routePoints.destination
         ],
         rating: route.rating
     });
@@ -142,7 +128,7 @@ const RecommendationsRoutesScreen = () => {
     const formatDuration = (seconds) => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
-        return `${hours > 0 ? `${hours} ` : ''}${minutes}`;
+        return `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`;
     };
 
     return (
