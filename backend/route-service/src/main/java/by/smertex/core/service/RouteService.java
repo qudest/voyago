@@ -1,11 +1,11 @@
-package by.smertex.api;
+package by.smertex.core.service;
 
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.output.RouteReadDto;
 
 import java.util.List;
 
-public interface RouteController {
+public interface RouteService {
 
     RouteReadDto findById(Long id);
 

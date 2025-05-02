@@ -2,11 +2,28 @@ spring:
   application:
     name: route-service
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
+  cloud:
+    openfeign:
+      client:
+        config:
+          rating-service:
+            url: ${RATING_SERVICE_URL:http://localhost:8092}
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      hbm2ddl.auto: validate
+      show_sql: true
 
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: db/changelog/db.changelog.master.yaml
 
 server:
-  port: 8090
+  port: ${APP_PORT:8091}
