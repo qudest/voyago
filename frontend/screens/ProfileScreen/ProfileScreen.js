@@ -1,18 +1,20 @@
 import styles from './styles';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from 'react';
 import { View, Image, TextInput, Text, TouchableOpacity, Alert,  FlatList, TouchableWithoutFeedback} from 'react-native';
 import BackButton from '../../components/BackButton/BackButton';
 import ProfileButton from '../../components/ProfileButton/ProfileButton';
 import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumProfileButton';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
   const ProfileScreen = () => {
     const navigation = useNavigation();
+    const [userData, setUserData] = useState(null);
 
     const handleBackPress = () => {
-        navigation.goBack(); 
+        navigation.navigate("MainScreen")
     }
-
     const handleDoneRoutesPress = () => {
         navigation.navigate("DoneRoutesScreen")
     }
@@ -35,19 +37,27 @@ import PremiumProfileButton from '../../components/PremiumProfileButton/PremiumP
         Alert.alert("Выход")
     }
 
-
-    const profile = {
-        name: ' Uliana',
-        doneRouts: '22',
-        myRouts: '3',
+    useEffect(() => {
+    const fetchUserData = async () => {
+    try {
+      const cachedData = await AsyncStorage.getItem('userData');
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        setUserData(parsedData);
+      }
+        } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        }
     };
-    
+    fetchUserData();
+    }, []);
+
     return (
         <View style={styles.container}>
             <BackButton onPress={handleBackPress}></BackButton>
             <View style={styles.mainInfContainer}>
-                <Text style={styles.mainInfTitle}>Привет, 
-                {profile.name}!</Text>
+                <Text style={styles.mainInfTitle}>Привет,{' '}
+                {userData?.name || ''}!</Text>
                 <Image
                     source={require('../../assets/profileImages/logoprofile.png')}
                     style={styles.imageLogo}

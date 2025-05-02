@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
       },
       nameContainer: {
         width: '100%',
-        marginTop: 30,
+        marginTop: 5,
     },
     searchWrapper: {
         zIndex: 1000,
@@ -43,10 +43,32 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 10,
     },
-    imageSave: {
-        width: 22,
-        height: 22,
-        marginHorizontal: 10,
+    saveButton:{
+      alignSelf: 'center',
+      marginTop: 40,
+      width: 295,
+      height: 44,
+      paddingTop: 10,
+
+      backgroundColor: '#3E3C80',
+      borderRadius: 22,
+
+      shadowColor: '#000BD8', 
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: 4,
+      elevation: 5, 
+    },
+    saveButtonText: {
+      alignSelf: 'center',
+
+      color: '#FFFFFF',
+
+      fontSize: 16,
+      fontWeight: 500,
     },
       buttonsContainer: {
         width: '100%',

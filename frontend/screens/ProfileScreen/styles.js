@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
   },
   mainInfContainer: {
     flexDirection: 'row',
-
     top: 110,
+    marginBottom: 20,
   },
   mainInfTitle:{
     width: 200,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   navigationContainer: {
     justifyContent: 'space-around',
-
+    marginTop: 30,
     bottom: 50,
   },
   navigationRouts: {

@@ -47,13 +47,13 @@ public interface JwtUtil<T> {
             Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
         } catch(SecurityException | MalformedJwtException e) {
-            throw new GenerateJwtException("JWT was expired or incorrect", HttpStatus.BAD_REQUEST.value());
+            throw new GenerateJwtException("JWT was expired or incorrect", HttpStatus.UNAUTHORIZED.value());
         } catch (ExpiredJwtException e) {
-            throw new GenerateJwtException("Expired JWT token", HttpStatus.BAD_REQUEST.value());
+            throw new GenerateJwtException("Expired JWT token", HttpStatus.UNAUTHORIZED.value());
         } catch (UnsupportedJwtException e) {
-            throw new GenerateJwtException("Unsupported JWT token", HttpStatus.BAD_REQUEST.value());
+            throw new GenerateJwtException("Unsupported JWT token", HttpStatus.UNAUTHORIZED.value());
         } catch (IllegalArgumentException e) {
-            throw new GenerateJwtException("JWT token compact of handler are invalid", HttpStatus.BAD_REQUEST.value());
+            throw new GenerateJwtException("JWT token compact of handler are invalid", HttpStatus.UNAUTHORIZED.value());
         }
     }
 }

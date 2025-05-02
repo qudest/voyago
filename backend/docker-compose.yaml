@@ -5,21 +5,6 @@ networks:
     driver: bridge
 
 services:
-  db:
-    container_name: "postgres"
-    image: postgres
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
-      - POSTGRES_DB=db
-      - ALLOW_RUNNING_AS_ROOT=yes
-    volumes:
-      - "./db/postgres:/var/lib/postgresql"
-    ports:
-      - "5432:5432"
-    networks:
-      - app
-    
   redis:
     container_name: redis
     image: redis:latest
@@ -32,12 +17,37 @@ services:
     networks:
       - app
 
+  postgres:
+    container_name: "postgres"
+    image: postgres
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=db
+      - ALLOW_RUNNING_AS_ROOT=yes
+    volumes:
+      - "./volume/postgres:/var/lib/postgresql"
+    expose:
+      - "5432"
+    networks:
+      - app
+
+  notification-service:
+    container_name: "notification-service"
+    build: ./notification-service
+    environment:
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8090
+    ports:
+      - "127.0.0.1:8093:8090"
+    depends_on:
+      - auth-service
+
   auth-service:
     container_name: "auth-service"
     build: ./auth-service
     environment:
-      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
-      - KAFKA_PRODUCER_BOOTSTRAP_SERVER=kafka-1:9090,kafka-2:9090
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=admin
@@ -66,11 +76,11 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=admin
     ports:
-      - "8092:8092"
+      - "127.0.0.1:8094:8092"
     networks:
       - app
     depends_on:
-      - db
+      - postgres
       - redis
 
   route-service:
@@ -83,11 +93,11 @@ services:
       - APP_PORT=8093
       - RATING_SERVICE_URL=http://rating-service:8092
     ports:
-      - "8093:8093"
+      - "127.0.0.1:8095:8090"
     networks:
       - app
     depends_on:
-      - db
+      - postgres
       - redis
       - rating-service
 
@@ -105,7 +115,7 @@ services:
     networks:
       - app
     depends_on:
-      - db
+      - postgres
       - kafka-1
       - kafka-2
       - kafka-3
@@ -115,10 +125,10 @@ services:
     build: ./subscription-service
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
-      - APP_PORT=8091
+      - APP_PORT=8090
       - ALLOW_RUNNING_AS_ROOT=yes
     ports:
-      - "127.0.0.1:8092:8091"
+      - "127.0.0.1:8092:8090"
     networks:
       - app
     depends_on:

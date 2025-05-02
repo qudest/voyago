@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     color: '#3E3C80',
     fontSize: 19,
     fontWeight: 400,
-  }
+  },
 });
 
 export default styles;
