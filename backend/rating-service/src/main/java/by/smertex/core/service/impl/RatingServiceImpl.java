@@ -15,7 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,11 +37,12 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public AverageRatingDto getAverageRating(Long routeId) {
         AverageRating averageRating = averageRatingRepository.findById(routeId)
-                .orElseThrow(() -> new CrudException("Average rating not found for this route", HttpStatus.NOT_FOUND));
+                .orElse(new AverageRating(routeId, 0.0f));
         return averageRatingToDtoMapper.map(averageRating);
     }
 
     @Override
+    @Transactional
     public RatingDto create(Long userId, RatingDto ratingDto) {
         boolean hasRated = ratingRepository.findAllByUserId(userId).stream()
                 .anyMatch(rating -> rating.getRouteId().equals(ratingDto.routeId()));
@@ -56,7 +59,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Scheduled(cron = "@daily")
-    private void dailyAverageRatingUpdate() {
+    protected void dailyAverageRatingUpdate() {
         updateAverageRating();
     }
 
@@ -74,5 +77,14 @@ public class RatingServiceImpl implements RatingService {
             AverageRating averageRating = new AverageRating(routeId, (float) average);
             averageRatingRepository.save(averageRating);
         }
+    }
+
+    @Override
+    public Map<Long, Float> getAverageRatings(List<Long> routeIds) {
+        Map<Long, Float> averageRatings = new HashMap<>();
+        for (Long routeId : routeIds) {
+            averageRatings.put(routeId, getAverageRating(routeId).averageRating());
+        }
+        return averageRatings;
     }
 }
