@@ -1,17 +1,23 @@
 package by.smertex.core.dto.output;
 
-import by.smertex.core.database.model.RouteTags;
+import by.smertex.core.database.model.Tag;
+import by.smertex.core.dto.input.RoutePoints;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.time.Duration;
 import java.util.List;
 
+@Getter
+@Setter
 @Builder
-public record RouteReadDto(String name,
-                           Long createBy,
-                           RouteTags tags,
-                           Float rating,
-                           Duration avgTime,
-                           Long distance,
-                           List<Long> pointIds) {
+public class RouteReadDto {
+    private Long id;
+    private String name;
+    private Long createdBy;
+    private List<Tag> tags;
+    private RoutePoints routePoints;
+    private Long distance;
+    private Long duration;
+    private Float rating;
 }

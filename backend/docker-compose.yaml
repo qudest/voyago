@@ -15,8 +15,8 @@ services:
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
       - "./db/postgres:/var/lib/postgresql"
-    expose:
-      - "5432"
+    ports:
+      - "5432:5432"
     networks:
       - app
     
@@ -72,6 +72,24 @@ services:
     depends_on:
       - db
       - redis
+
+  route-service:
+    container_name: "route-service"
+    build: ./route-service
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_USERNAME=admin
+      - DB_PASSWORD=admin
+      - APP_PORT=8093
+      - RATING_SERVICE_URL=http://rating-service:8092
+    ports:
+      - "8093:8093"
+    networks:
+      - app
+    depends_on:
+      - db
+      - redis
+      - rating-service
 
   account-service:
     container_name: "account-service"

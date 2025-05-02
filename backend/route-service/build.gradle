@@ -26,6 +26,7 @@ repositories {
 
 ext {
 	set('springGrpcVersion', "0.5.0")
+	springCloudVersion = "2024.0.1"
 }
 
 dependencies {
@@ -37,6 +38,9 @@ dependencies {
 	implementation 'org.springframework.grpc:spring-grpc-server-web-spring-boot-starter'
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'io.github.openfeign:feign-httpclient:13.5'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -53,6 +57,7 @@ dependencies {
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.grpc:spring-grpc-dependencies:${springGrpcVersion}"
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
 	}
 }
 
