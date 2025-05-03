@@ -27,10 +27,10 @@ public class RouteControllerImpl implements RouteController {
         return routeService.findAll();
     }
 
-    @GetMapping("/favorites")
-    public List<RouteReadDto> findAllFavorites(@RequestParam Long userId) {
-        return routeService.findAllFavorites(userId);
-    }
+//    @GetMapping("/favorites")
+//    public List<RouteReadDto> findAllFavorites(@RequestParam Long userId) {
+//        return routeService.findAllFavorites(userId);
+//    }
 
     @PostMapping
     public RouteReadDto create(@RequestBody @Valid RouteCreateOrUpdateDto dto) {
@@ -42,10 +42,10 @@ public class RouteControllerImpl implements RouteController {
         routeService.update(id, dto);
     }
 
-    @PutMapping("/favorites")
-    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
-        routeService.addToFavorites(routeId, userId);
-    }
+//    @PutMapping("/favorites")
+//    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
+//        routeService.addToFavorites(routeId, userId);
+//    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {

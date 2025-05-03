@@ -11,13 +11,13 @@ public interface RouteController {
 
     List<RouteReadDto> findAll();
 
-    List<RouteReadDto> findAllFavorites(Long userId);
+//    List<RouteReadDto> findAllFavorites(Long userId);
 
     RouteReadDto create(RouteCreateOrUpdateDto dto);
 
     void update(Long id, RouteCreateOrUpdateDto dto);
 
-    void addToFavorites(Long routeId, Long userId);
+//    void addToFavorites(Long routeId, Long userId);
 
     void delete(Long id);
 }
