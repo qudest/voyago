@@ -14,20 +14,43 @@ permissions:
   pull-requests: write
 
 jobs:
-  build_and_test:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: 🏗 Setup repo
+      - name: Setup repo
         uses: actions/checkout@v4
-      - name: 🏗 Setup Java
+
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '21'
           cache: 'gradle'
-      - name: 🏗 Setup Docker
+
+      - name: Build
+        run: |
+          cd backend
+          ./gradlew build -x test --no-daemon
+
+  test:
+    if: ${{ github.base_ref == 'develop' }}
+    name: Tests
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Setup Docker
         uses: docker/setup-docker-action@v4
-      - name: 🚀 Build
-        run: cd backend && ./gradlew build -x test --no-daemon
-      - name: ✅ Tests
+
+      - name: Execute tests
         run: cd backend && ./gradlew test --no-daemon
