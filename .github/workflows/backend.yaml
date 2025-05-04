@@ -58,7 +58,7 @@ jobs:
           ./gradlew test --no-daemon
 
   build_and_push_images:
-    # if: ${{ github.base_ref == 'main' }}
+    if: ${{ github.base_ref == 'main' }}
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
     needs: build
