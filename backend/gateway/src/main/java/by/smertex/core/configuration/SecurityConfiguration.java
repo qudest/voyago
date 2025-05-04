@@ -1,6 +1,7 @@
 package by.smertex.core.configuration;
 
 import by.smertex.api.filter.JwtFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +33,13 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/subscription/**").authenticated()
                                 .requestMatchers("/api/account/**").authenticated()
                                 .requestMatchers("/api/ratings/**").authenticated()
-                                .requestMatchers("api/routes/**").authenticated()
+                                .requestMatchers("/api/routes/**").authenticated()
+                                .requestMatchers("/**").permitAll()
+                )
+                .exceptionHandling(exceptions -> exceptions
+                        .accessDeniedHandler((request, response, ex) ->
+                                response.sendError(HttpServletResponse.SC_NOT_FOUND)
+                        )
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

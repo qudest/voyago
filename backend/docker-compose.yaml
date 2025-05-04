@@ -60,6 +60,27 @@ services:
     ports:
       - "8090:8090"
 
+  gateway:
+    container_name: "gateway"
+    build: ./gateway
+    environment:
+      - ACCOUNT_SERVICE=http://account-service:8090
+      - AUTH_SERVICE=http://auth-service:8090
+      - RATING_SERVICE=http://rating-service:8090
+      - ROUTE_SERVICE=http://route-service:8090
+      - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - APP_PORT=8090
+    networks:
+      - app
+    depends_on:
+      - auth-service
+      - account-service
+      - rating-service
+      - subscription-service
+      - route-service
+    ports:
+      - "8090:8090"
+
   notification-service:
     image: qudest/voyago:notification-service
     container_name: "notification-service"
@@ -87,8 +108,8 @@ services:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
-    ports:
-      - "8091:8090"
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
