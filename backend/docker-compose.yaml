@@ -1,5 +1,3 @@
-version: "3.5"
-
 networks:
   app:
     driver: bridge
@@ -19,7 +17,8 @@ services:
 
   postgres:
     container_name: "postgres"
-    image: postgres
+    image: postgres:17.2-alpine
+    restart: always
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
@@ -31,10 +30,19 @@ services:
       - "5432"
     networks:
       - app
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
 
   notification-service:
+    image: qudest/voyago:notification-service
     container_name: "notification-service"
     build: ./notification-service
+    restart: always
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
@@ -44,8 +52,10 @@ services:
       - auth-service
 
   auth-service:
+    image: qudest/voyago:auth-service
     container_name: "auth-service"
     build: ./auth-service
+    restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
@@ -65,8 +75,10 @@ services:
       - kafka-3
 
   rating-service:
+    image: qudest/voyago:rating-service
     container_name: "rating-service"
     build: ./rating-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
       - DB_USERNAME=admin
@@ -84,8 +96,10 @@ services:
       - redis
 
   route-service:
+    image: qudest/voyago:route-service
     container_name: "route-service"
     build: ./route-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
       - DB_USERNAME=admin
@@ -102,8 +116,10 @@ services:
       - rating-service
 
   account-service:
+    image: qudest/voyago:account-service
     container_name: "account-service"
     build: ./account-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
       - DB_USERNAME=admin
@@ -121,8 +137,10 @@ services:
       - kafka-3
 
   subscribe-service:
+    image: qudest/voyago:subscribe-service
     container_name: "subscribe-service"
     build: ./subscription-service
+    restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
@@ -138,7 +156,8 @@ services:
 
   kafka-1:
     container_name: kafka-1
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9092
     environment:
@@ -158,7 +177,8 @@ services:
 
   kafka-2:
     container_name: kafka-2
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9094
     environment:
@@ -178,7 +198,8 @@ services:
 
   kafka-3:
     container_name: kafka-3
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9096
     environment:
