@@ -1,0 +1,47 @@
+package by.smertex.api.controller;
+
+import by.smertex.core.client.RatingServiceClient;
+import by.smertex.core.dto.service.rating.AverageRatingDto;
+import by.smertex.core.dto.service.rating.RatingDto;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/ratings")
+@RequiredArgsConstructor
+public class GatewayRatingController {
+
+    private final RatingServiceClient ratingServiceClient;
+
+    @GetMapping("/{routeId}")
+    public ResponseEntity<AverageRatingDto> getRating(@PathVariable("routeId") Long routeId) {
+        return ResponseEntity.ok(
+                ratingServiceClient.getRating(routeId)
+        );
+    }
+
+    @PutMapping
+    public ResponseEntity<Map<Long, Float>> getRatings(@RequestBody List<Long> routeIds) {
+        return ResponseEntity.ok(
+                ratingServiceClient.getRatings(routeIds)
+        );
+    }
+
+    @PostMapping
+    public ResponseEntity<RatingDto> create(@RequestParam Long userId, @RequestBody RatingDto ratingDto) {
+        return ResponseEntity.ok(
+                ratingServiceClient.create(userId, ratingDto)
+        );
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> update() {
+        ratingServiceClient.update();
+        return ResponseEntity.ok()
+                .build();
+    }
+}
