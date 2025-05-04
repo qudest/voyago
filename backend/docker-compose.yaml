@@ -7,11 +7,11 @@ services:
     container_name: redis
     image: redis:latest
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     expose:
       - "6379"
     volumes:
-      - "redis:/data"
+      - redis:/data
     networks:
       - app
 
@@ -20,12 +20,12 @@ services:
     image: postgres:17.2-alpine
     restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - "postgres:/var/lib/postgresql"
+      - postgres:/var/lib/postgresql
     expose:
       - "5432"
     networks:
@@ -38,6 +38,28 @@ services:
       start_period: 30s
       start_interval: 1s
 
+  gateway:
+    image: qudest/voyago:gateway
+    container_name: "gateway"
+    build: ./gateway
+    environment:
+      - ACCOUNT_SERVICE=http://account-service:8090
+      - AUTH_SERVICE=http://auth-service:8090
+      - RATING_SERVICE=http://rating-service:8090
+      - ROUTE_SERVICE=http://route-service:8090
+      - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - APP_PORT=8090
+    networks:
+      - app
+    depends_on:
+      - auth-service
+      - account-service
+      - rating-service
+      - subscription-service
+      - route-service
+    ports:
+      - "8090:8090"
+
   notification-service:
     image: qudest/voyago:notification-service
     container_name: "notification-service"
@@ -46,10 +68,12 @@ services:
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
-    ports:
-      - "8093:8090"
+    expose:
+      - "8090"
     depends_on:
       - auth-service
+    networks:
+      - app
 
   auth-service:
     image: qudest/voyago:auth-service
@@ -60,11 +84,11 @@ services:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=admin
-      - ACCOUNT_SERVICE=http://account-service:8090/api/account/{phone-number}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
     ports:
-      - "8090:8090"
+      - "8091:8090"
     networks:
       - app
     depends_on:
@@ -81,14 +105,14 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - APP_PORT=8090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=admin
-    ports:
-      - "8094:8090"
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
@@ -102,12 +126,12 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - APP_PORT=8090
       - RATING_SERVICE_URL=http://rating-service:8090
-    ports:
-      - "8095:8090"
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
@@ -126,8 +150,8 @@ services:
       - DB_PASSWORD=admin
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
-    ports:
-      - "8091:8090"
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
@@ -136,17 +160,17 @@ services:
       - kafka-2
       - kafka-3
 
-  subscribe-service:
-    image: qudest/voyago:subscribe-service
-    container_name: "subscribe-service"
+  subscription-service:
+    image: qudest/voyago:subscription-service
+    container_name: "subscription-service"
     build: ./subscription-service
     restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
       - ALLOW_RUNNING_AS_ROOT=yes
-    ports:
-      - "8092:8090"
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
@@ -171,7 +195,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "kafka-1:/bitnami/kafka"
+      - kafka-1:/bitnami/kafka
     networks:
       - app
 
@@ -192,7 +216,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "kafka-2:/bitnami/kafka"
+      - kafka-2:/bitnami/kafka
     networks:
       - app
 
@@ -213,7 +237,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "kafka-3:/bitnami/kafka"
+      - kafka-3:/bitnami/kafka
     networks:
       - app
 
