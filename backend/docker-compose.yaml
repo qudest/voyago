@@ -11,7 +11,7 @@ services:
     expose:
       - "6379"
     volumes:
-      - "./volume/redis:/data"
+      - "redis:/data"
     networks:
       - app
 
@@ -25,7 +25,7 @@ services:
       - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - "./volume/postgres:/var/lib/postgresql"
+      - "postgres:/var/lib/postgresql"
     expose:
       - "5432"
     networks:
@@ -171,7 +171,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-1:/bitnami/kafka"
+      - "kafka-1:/bitnami/kafka"
     networks:
       - app
 
@@ -192,7 +192,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-2:/bitnami/kafka"
+      - "kafka-2:/bitnami/kafka"
     networks:
       - app
 
@@ -213,6 +213,13 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-3:/bitnami/kafka"
+      - "kafka-3:/bitnami/kafka"
     networks:
       - app
+
+volumes:
+  redis:
+  postgres:
+  kafka-1:
+  kafka-2:
+  kafka-3:
