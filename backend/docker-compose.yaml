@@ -11,7 +11,7 @@ services:
     expose:
       - "6379"
     volumes:
-      - redis:/data
+      - ./volumes/redis:/data
     networks:
       - app
 
@@ -25,7 +25,7 @@ services:
       - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - postgres:/var/lib/postgresql
+      - ./volumes/postgres:/var/lib/postgresql
     expose:
       - "5432"
     networks:
@@ -146,8 +146,8 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     expose:
@@ -195,7 +195,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - kafka-1:/bitnami/kafka
+      - ./volumes/kafka-1:/bitnami/kafka
     networks:
       - app
 
@@ -216,7 +216,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - kafka-2:/bitnami/kafka
+      - ./volumes/kafka-2:/bitnami/kafka
     networks:
       - app
 
@@ -237,13 +237,6 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - kafka-3:/bitnami/kafka
+      - ./volumes/kafka-3:/bitnami/kafka
     networks:
       - app
-
-volumes:
-  redis:
-  postgres:
-  kafka-1:
-  kafka-2:
-  kafka-3:
