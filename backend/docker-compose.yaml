@@ -76,8 +76,8 @@ services:
       - REDIS_PASSWORD=admin
       - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
-    ports:
-      - "8091:8090"
+    expose:
+      - "8090"
     networks:
       - app
     depends_on:
