@@ -42,6 +42,8 @@ services:
       - "127.0.0.1:8093:8090"
     depends_on:
       - auth-service
+    networks:
+      - app
 
   auth-service:
     container_name: "auth-service"
@@ -51,7 +53,7 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - REDIS_PASSWORD=admin
-      - ACCOUNT_SERVICE=http://account-service:8090/api/account/{phone-number}
+      - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
     ports:
       - "127.0.0.1:8090:8090"
