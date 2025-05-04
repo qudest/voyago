@@ -1,5 +1,3 @@
-version: "3.5"
-
 networks:
   app:
     driver: bridge
@@ -7,30 +5,60 @@ networks:
 services:
   redis:
     container_name: redis
-    image: redis:latest
+    image: redis:7.2.4-alpine
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     expose:
       - "6379"
     volumes:
-      - "./volume/redis:/data"
+      - ./volumes/redis:/data
     networks:
       - app
 
   postgres:
     container_name: "postgres"
-    image: postgres
+    image: postgres:17.2-alpine
+    restart: always
     environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
-      - "./volume/postgres:/var/lib/postgresql"
+      - ./volumes/postgres:/var/lib/postgresql
     expose:
       - "5432"
     networks:
       - app
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+
+  gateway:
+    image: qudest/voyago:gateway
+    container_name: "gateway"
+    build: ./gateway
+    environment:
+      - ACCOUNT_SERVICE=http://account-service:8090
+      - AUTH_SERVICE=http://auth-service:8090
+      - RATING_SERVICE=http://rating-service:8090
+      - ROUTE_SERVICE=http://route-service:8090
+      - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - APP_PORT=8090
+    networks:
+      - app
+    depends_on:
+      - auth-service
+      - account-service
+      - rating-service
+      - subscription-service
+      - route-service
+    ports:
+      - "8090:8090"
 
   gateway:
     container_name: "gateway"
@@ -54,8 +82,10 @@ services:
       - "8090:8090"
 
   notification-service:
+    image: qudest/voyago:notification-service
     container_name: "notification-service"
     build: ./notification-service
+    restart: always
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
@@ -67,13 +97,15 @@ services:
       - app
 
   auth-service:
+    image: qudest/voyago:auth-service
     container_name: "auth-service"
     build: ./auth-service
+    restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=admin
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
     expose:
@@ -88,16 +120,18 @@ services:
       - kafka-3
 
   rating-service:
+    image: qudest/voyago:rating-service
     container_name: "rating-service"
     build: ./rating-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - APP_PORT=8090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=admin
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     expose:
       - "8090"
     networks:
@@ -107,12 +141,14 @@ services:
       - redis
 
   route-service:
+    image: qudest/voyago:route-service
     container_name: "route-service"
     build: ./route-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - APP_PORT=8090
       - RATING_SERVICE_URL=http://rating-service:8090
     expose:
@@ -125,12 +161,14 @@ services:
       - rating-service
 
   account-service:
+    image: qudest/voyago:account-service
     container_name: "account-service"
     build: ./account-service
+    restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=admin
-      - DB_PASSWORD=admin
+      - DB_USERNAME=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     expose:
@@ -144,8 +182,10 @@ services:
       - kafka-3
 
   subscription-service:
+    image: qudest/voyago:subscription-service
     container_name: "subscription-service"
     build: ./subscription-service
+    restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
@@ -161,7 +201,8 @@ services:
 
   kafka-1:
     container_name: kafka-1
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9092
     environment:
@@ -175,13 +216,14 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-1:/bitnami/kafka"
+      - ./volumes/kafka-1:/bitnami/kafka
     networks:
       - app
 
   kafka-2:
     container_name: kafka-2
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9094
     environment:
@@ -195,13 +237,14 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-2:/bitnami/kafka"
+      - ./volumes/kafka-2:/bitnami/kafka
     networks:
       - app
 
   kafka-3:
     container_name: kafka-3
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:3.9.0
+    restart: always
     expose:
       - 9096
     environment:
@@ -215,6 +258,6 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
       - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
     volumes:
-      - "./volume/kafka/server-3:/bitnami/kafka"
+      - ./volumes/kafka-3:/bitnami/kafka
     networks:
       - app
