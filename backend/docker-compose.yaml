@@ -5,7 +5,7 @@ networks:
 services:
   redis:
     container_name: redis
-    image: redis:latest
+    image: redis:7.2.4-alpine
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     expose:
