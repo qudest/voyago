@@ -102,7 +102,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           source: "backend/docker-compose.yaml"
-          target: /${{ secrets.USERNAME }}/backend/docker-compose.yaml
+          target: ~/
 
 #      - name: SSH deploy
 #        uses: appleboy/ssh-action@v1
