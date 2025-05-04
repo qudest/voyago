@@ -16,6 +16,13 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          account-service:
+            url: ${ACCOUNT_SERVICE}
+
 jwt:
   access:
     secret: ${JWT_SECRET:887cc2e79f9044cdf72aa19ba913cd48e4063a3f2129983abcd85b6bd1102eb8}
@@ -25,9 +32,6 @@ jwt:
     lifetime: ${JWT_LIFETIME:4320m}
 
 code.lifetime: 3
-
-path:
-  account-service: ${ACCOUNT_SERVICE:account-service}
 
 server:
   port: ${APP_PORT:8090}
