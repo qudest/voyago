@@ -91,12 +91,25 @@ jobs:
     runs-on: ubuntu-latest
     # needs: build_and_push_images
     steps:
-      - name: SSH deploy
-        uses: appleboy/ssh-action@v1
+      - name: Setup repo
+        uses: actions/checkout@v4
+
+      - name: Copy files via SSH
+        uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
-          script: |
-            docker run hello-world
+          port: ${{ secrets.PORT }}
+          source: "backend/docker-compose.yaml"
+          target: /${{ secrets.USERNAME }}/backend/docker-compose.yaml
+
+#      - name: SSH deploy
+#        uses: appleboy/ssh-action@v1
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          script: |
+#            docker run hello-world
 
