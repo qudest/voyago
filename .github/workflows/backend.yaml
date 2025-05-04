@@ -113,6 +113,6 @@ jobs:
             cd ~/backend
             docker compose down
             docker compose pull
-            docker compose up -d
+            docker compose --env-file ../.env up -d
             docker system prune -f
 
