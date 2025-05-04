@@ -47,7 +47,7 @@ services:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     ports:
-      - "127.0.0.1:8093:8090"
+      - "8093:8090"
     depends_on:
       - auth-service
 
@@ -64,7 +64,7 @@ services:
       - ACCOUNT_SERVICE=http://account-service:8090/api/account/{phone-number}
       - APP_PORT=8090
     ports:
-      - "127.0.0.1:8090:8090"
+      - "8090:8090"
     networks:
       - app
     depends_on:
@@ -88,7 +88,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_PASSWORD=admin
     ports:
-      - "127.0.0.1:8094:8090"
+      - "8094:8090"
     networks:
       - app
     depends_on:
@@ -107,7 +107,7 @@ services:
       - APP_PORT=8090
       - RATING_SERVICE_URL=http://rating-service:8090
     ports:
-      - "127.0.0.1:8095:8090"
+      - "8095:8090"
     networks:
       - app
     depends_on:
@@ -127,7 +127,7 @@ services:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     ports:
-      - "127.0.0.1:8091:8090"
+      - "8091:8090"
     networks:
       - app
     depends_on:
@@ -146,7 +146,7 @@ services:
       - APP_PORT=8090
       - ALLOW_RUNNING_AS_ROOT=yes
     ports:
-      - "127.0.0.1:8092:8090"
+      - "8092:8090"
     networks:
       - app
     depends_on:
