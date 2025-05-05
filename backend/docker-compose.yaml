@@ -7,7 +7,7 @@ services:
     container_name: redis
     image: redis:7.2.4-alpine
     environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
     expose:
       - "6379"
     volumes:
@@ -20,8 +20,8 @@ services:
     image: postgres:17.2-alpine
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       - POSTGRES_DB=db
       - ALLOW_RUNNING_AS_ROOT=yes
     volumes:
@@ -49,6 +49,8 @@ services:
       - ROUTE_SERVICE=http://route-service:8090
       - SUBSCRIPTION-SERVICE=http://subscription-service:8090
       - APP_PORT=8090
+      - IN_MEMORY_USERNAME=${GATEWAY_USERNAME:-username}
+      - IN_MEMORY_PASSWORD=${GATEWAY_PASSWORD:-password}
     networks:
       - app
     depends_on:
@@ -84,7 +86,7 @@ services:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
       - ACCOUNT_SERVICE=http://account-service:8090
       - APP_PORT=8090
     expose:
@@ -105,12 +107,12 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
       - APP_PORT=8090
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
     expose:
       - "8090"
     networks:
@@ -126,8 +128,8 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
       - APP_PORT=8090
       - RATING_SERVICE_URL=http://rating-service:8090
     expose:
@@ -146,8 +148,8 @@ services:
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
-      - DB_USERNAME=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
     expose:
