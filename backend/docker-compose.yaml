@@ -243,3 +243,14 @@ services:
       - ./volumes/kafka-3:/bitnami/kafka
     networks:
       - app
+
+  pgadmin:
+    image: dpage/pgadmin4:9.3
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@mail.ru}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    volumes:
+      - ./volumes/pgadmin:/var/lib/pgadmin
