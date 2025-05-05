@@ -13,8 +13,8 @@ spring:
           subscription-service.url: ${SUBSCRIPTION-SERVICE}
 
 in-memory:
-  username: ${username:swagger}
-  password: ${password:swagger}
+  username: ${IN_MEMORY_USERNAME:swagger}
+  password: ${IN_MEMORY_PASSWORD:swagger}
 
 server:
   port: ${APP_PORT:8090}
