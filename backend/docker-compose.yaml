@@ -254,3 +254,5 @@ services:
       - "5050:80"
     volumes:
       - ./volumes/pgadmin:/var/lib/pgadmin
+    networks:
+      - app
