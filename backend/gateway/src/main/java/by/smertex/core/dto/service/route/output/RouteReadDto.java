@@ -5,13 +5,15 @@ import by.smertex.core.dto.service.route.input.RoutePoints;
 
 import java.util.List;
 
-public class RouteReadDto {
-    private Long id;
-    private String name;
-    private Long createdBy;
-    private List<Tag> tags;
-    private RoutePoints routePoints;
-    private Long distance;
-    private Long duration;
-    private Float rating;
+public record RouteReadDto(
+        Long id,
+        String name,
+        Long createdBy,
+        List<Tag> tags,
+        RoutePoints routePoints,
+        Long distance,
+        Long duration,
+        Float rating
+) {
+
 }
