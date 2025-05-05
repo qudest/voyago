@@ -39,7 +39,7 @@ services:
       start_interval: 1s
 
   gateway:
-    #image: qudest/voyago:gateway
+    image: qudest/voyago:gateway
     container_name: "gateway"
     build: ./gateway
     environment:
@@ -63,7 +63,7 @@ services:
       - "8090:8090"
 
   notification-service:
-    #image: qudest/voyago:notification-service
+    image: qudest/voyago:notification-service
     container_name: "notification-service"
     build: ./notification-service
     restart: always
@@ -78,7 +78,7 @@ services:
       - app
 
   auth-service:
-    #image: qudest/voyago:auth-service
+    image: qudest/voyago:auth-service
     container_name: "auth-service"
     build: ./auth-service
     restart: always
@@ -101,7 +101,7 @@ services:
       - kafka-3
 
   rating-service:
-    #image: qudest/voyago:rating-service
+    image: qudest/voyago:rating-service
     container_name: "rating-service"
     build: ./rating-service
     restart: always
@@ -122,7 +122,7 @@ services:
       - redis
 
   route-service:
-    #image: qudest/voyago:route-service
+    image: qudest/voyago:route-service
     container_name: "route-service"
     build: ./route-service
     restart: always
@@ -142,7 +142,7 @@ services:
       - rating-service
 
   account-service:
-    #image: qudest/voyago:account-service
+    image: qudest/voyago:account-service
     container_name: "account-service"
     build: ./account-service
     restart: always
@@ -163,7 +163,7 @@ services:
       - kafka-3
 
   subscription-service:
-    #image: qudest/voyago:subscription-service
+    image: qudest/voyago:subscription-service
     container_name: "subscription-service"
     build: ./subscription-service
     restart: always
