@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { API_URL } from '../variables/ip';
 
-export const getAccountInfo = async (cleanedPhoneNumber) => {
-  return axios.get(`http://${API_URL}:8091/api/account/${cleanedPhoneNumber}`);
+export const getAccountInfo = async (cleanedPhoneNumber, accessToken) => {
+  return axios.get(`http://${API_URL}:8090/api/account/${cleanedPhoneNumber}`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
 };
 
 export const sendSecurityCode = async (phoneNumber) => {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions } from 'react-native';
+import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import RoutesButton from '../../components/RoutesButton/RoutesButton';
 import ProfileIconButton from '../../components/ProfileIconButton/ProfileIconButton';
@@ -187,6 +187,29 @@ const MainScreen = () => {
     }
   };
 
+  const formatDuration = (seconds) => {
+    if (!seconds) return "0 мин"; 
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    let result = "";
+    if (hours > 0) {
+      result += `${hours} ч `;
+    }
+    result += `${minutes} мин`;
+    
+    return result;
+  };
+
+  const formatDistance = (meters) => {
+    if (!meters || isNaN(meters)) return "0 км";
+    
+    const kilometers = meters / 1000;
+
+    return `${kilometers.toFixed(1)} км`;
+  };
+
   useEffect(() => {
     if (route.params?.selectedRoute) {
       const { origin, destination, waypoints, coordinates, markers, region } = route.params.selectedRoute;
@@ -288,13 +311,12 @@ const MainScreen = () => {
 
             <Polyline
               coordinates={coordinates}
-              strokeColor="#70BCFF"
+              strokeColor="#464BDC"
               strokeWidth={4}
             />
           </MapView>
         )}
       </View>
-      
       <View style={styles.topElement}>
         <RoutesButton onPress={handleRoutesPress} />
         <ProfileIconButton onPress={() => navigation.navigate("ProfileScreen")} />
@@ -330,6 +352,7 @@ const MainScreen = () => {
               onPressRight={handleNext} 
               currentPoint={selectedRoute.points[currentIndex]}
             />
+            <ScrollView>
             <View style={styles.routePointsContainer}>
               <View style={styles.routePoints}>
                 {selectedRoute.points.map((point, index) => (
@@ -345,10 +368,11 @@ const MainScreen = () => {
                   source={require('../../assets/routeCardImages/clock.png')}
                   style={styles.timeImage}
                 />
-                <Text style={styles.time}>{selectedRoute.time}</Text>
+                <Text style={styles.time}>{formatDuration(selectedRoute.duration)}</Text>
               </View>
-              <Text style={styles.distance}>{selectedRoute.distance}</Text>
+              <Text style={styles.distance}>{formatDistance(selectedRoute.distance)}</Text>
             </View>
+            </ScrollView>
           </View>
         </Animated.View>
       )}

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   createTitle: {
     fontSize: 19,
     fontWeight: 500,
-    marginBottom: 4, 
+    marginBottom: 20, 
   },
   createDiscription: {
     fontSize: 19,
@@ -34,6 +34,20 @@ const styles = StyleSheet.create({
     color: '#3E3C80',
     fontSize: 19,
     fontWeight: 400,
+  },
+  inputTitle: {
+    marginBottom: 0,
+
+    width: 256,
+
+    textAlign: 'left',
+    color: '#606265',
+    fontSize: 16,
+
+
+    borderBottomWidth: 1, 
+    borderBottomColor: 'black', 
+    paddingBottom: 8,
   },
 });
 

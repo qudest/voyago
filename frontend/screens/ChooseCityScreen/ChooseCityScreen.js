@@ -28,7 +28,7 @@ const ChooseCityScreen = () => {
     const navigation = useNavigation();
 
     const handleBackButton = () => {
-        navigation.navigate('PremiumScreen')
+        navigation.navigate('AuthorizationAcceptScreen')
     };
 
     const handleLocationButton = () => {
@@ -115,9 +115,9 @@ const ChooseCityScreen = () => {
 
     const checkPreferencesAndNavigate = async () => {
       try {
-          const response = await getAccountInfo(phoneNumber);
+        const response = await getAccountInfo(phoneNumber, accessToken);
           
-          if (response.status === 200) {
+        if (response.status === 200) {
               const { preferences } = response.data;
               console.log('Preferences:', preferences);
 
@@ -142,11 +142,11 @@ const ChooseCityScreen = () => {
   const putCity = async () => {
     const userName = userData.name;
     const userCountry = userData.country;
-
+    const selectedPreferences = [];
+    const creditCard = null;
       try {
-        console.log(selectedCity);
-          const response = await putAccountInfo(id, userName, userCountry, selectedCity);
-          if (response.status === 204) {
+        const response = await putAccountInfo(id, userName, userCountry, selectedCity, selectedPreferences, creditCard, accessToken);
+        if (response.status === 200) {
             const cachedData = await AsyncStorage.getItem('userData');
             const parsedData = JSON.parse(cachedData);
             const updatedData = {
@@ -156,7 +156,7 @@ const ChooseCityScreen = () => {
       
             await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
             await checkPreferencesAndNavigate();
-          }
+        }
       } catch (error) {
         console.log(error)
           let message = 'Что-то пошло не так';

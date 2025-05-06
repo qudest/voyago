@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView  } from 'react-native';
 import PreferenceCard from '../../components/PreferenceCard/PreferenceCard';
 import ContinueButton from '../../components/ContinueButton/ContinueButton';
 import styles from './styles';
@@ -13,6 +13,7 @@ const ChoosePreferencesScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [accessToken, setAccessToken] = useState(null);
 
   const handleCardPress = (cardId) => {
     setSelectedPreferences(prev => 
@@ -30,6 +31,8 @@ const ChoosePreferencesScreen = ({ navigation }) => {
     const fetchCachedData = async () => {
       try {
         const cachedData = await AsyncStorage.getItem('userData');
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        setAccessToken(accessToken)
         if (cachedData) {
           const parsedData = JSON.parse(cachedData);
           setUserData(parsedData);
@@ -46,19 +49,16 @@ const ChoosePreferencesScreen = ({ navigation }) => {
 
   const putPreferences = async () => {
     const id = userData.id;
-    const userCity = userData.city;
+    const selectedCity = userData.city;
     const userName = userData.name;
     const userCountry = userData.country;
+    const creditCard = null;
     try {   
       const response = await putAccountInfo(
-        id, 
-        userName,
-        userCountry,
-        userCity,
-        selectedPreferences
+        id, userName, userCountry, selectedCity, selectedPreferences, creditCard, accessToken
       );
-        if (response.status === 204) {
-          const fullUserDataResponce = await getAccountInfo(userData.phoneNumber);
+        if (response.status === 200) {
+          const fullUserDataResponce = await getAccountInfo(userData.phoneNumber, accessToken);
           const fullUserData = fullUserDataResponce.data;
           const cachedData = {
             id: fullUserData.id,
@@ -78,7 +78,7 @@ const ChoosePreferencesScreen = ({ navigation }) => {
           
           console.log('Обновленные данные:', cachedData); 
             
-          navigation.navigate("MainScreen");
+          navigation.navigate("PremiumScreen");
           }
     } catch (error) {
         let message = 'Что-то пошло не так';
@@ -95,26 +95,30 @@ const ChoosePreferencesScreen = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
       <AlertError
                     isVisible={isErrorModalVisible}
                     onConfirm={confirmError}
                     title = "Ошибка!"
                     message = {errorMessage}
         />
-        <View style={styles.containerMain}>
-          <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
+        <View style={styles.header}>
+      <Text style={styles.chooseTitle}>Выберите интересующие вас темы</Text>
+        </View>
+
+        <View style={styles.preferenceContainer}>
           <View style={styles.preference}>
-              <PreferenceCard 
-                onCardPress={handleCardPress}
-                selectedPreferences={selectedPreferences}
-              />
+            <PreferenceCard 
+              onCardPress={handleCardPress}
+              selectedPreferences={selectedPreferences}
+            />
           </View>
         </View>
-        <View style={styles.containerNav}>
+
+        <View style={styles.footer}>
           <ContinueButton onPress={putPreferences} condition={true}/>
         </View>
-      </View>
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 };

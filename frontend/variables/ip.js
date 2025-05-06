@@ -1,4 +1,4 @@
-export const API_URL = '10.0.2.2';
+export const API_URL = '109.196.99.78';
 
 export const tokens = {
     accessToken: null,

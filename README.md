@@ -20,13 +20,25 @@
 - SWOT и анализ конкурентов [pdf](Documentation/SWOT-and-competitors.pdf) [doc](Documentation/SWOT-and-competitors.docx)  
 - Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)
 - Диаграммы [png](Documentation/uml)
-- План тестирования [pdf](Documentation/Testing-plan.pdf) [docs](Documentation/Testing-plan.docx)  
+- План тестирования [pdf](Documentation/Testing-plan.pdf) [doc](Documentation/Testing-plan.docx)
+- Технические риски [pdf](Documentation/Tech-risks.pdf) [doc](Documentation/Tech-risks.docx)
 - Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)
 - [Описание API](Documentation/api-docs.yaml)
-- [Чек-лист (1 аттестация)](https://docs.google.com/spreadsheets/d/1OioB3z3DnBsB88rAg54IMC_nxb7ORmjc_hf41RPbbbs/edit?usp=sharing)  
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
 ### **Видео**  
-- [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)    
+- [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
 
+### **Чеклист**  
+[Чеклист](Documentation/Check-list.pdf)  
   
+**Нас оценивали**   
+- Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист](https://github.com/Dodger0072/Programming-technologies-project/blob/main/docs/Чек-листы/Чек-лист.pdf)  
+- Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист](https://github.com/TP-Jobsy/jobsy-docs/blob/main/Чеклист%201%20этап.pdf)  
+- Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%201%20этап.pdf)  
+- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)  
+  
+### **Отчёты PM**   
+- [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)  
+- [07.04.2025-13.04.2025](Documentation/07_04_2025_13_04_2025.pdf)  
+- [14.04.2025-20.04.2025](Documentation/14_04_2025_20_04_2025.pdf)  

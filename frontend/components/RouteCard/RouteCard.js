@@ -102,7 +102,7 @@ const RouteCard = ({ cardInformation = {}, functional, onEditPress, onPress }) =
                                 source={require('../../assets/routeCardImages/clock.png')}
                                 style={styles.timeImage}
                             />
-                             <Text style={styles.time}>{time} ч</Text>
+                             <Text style={styles.time}>{time}</Text>
                         </View>
                         <Text style={styles.distance}>{distance} км</Text>
                     </View>
