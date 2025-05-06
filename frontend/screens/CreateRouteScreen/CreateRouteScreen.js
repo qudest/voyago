@@ -8,6 +8,7 @@ import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
 import { TextInput } from 'react-native-gesture-handler';
 import { RouteCreate } from '../../services/routesApi';
+import AlertError from '../../components/AlertError/AlertError';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 const CreateRouteScreen = () => {
@@ -18,6 +19,8 @@ const CreateRouteScreen = () => {
     const [userData, setUserData] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
     const navigation = useNavigation();
+    const [isErrorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
 
     useEffect(() => {
@@ -71,10 +74,12 @@ const CreateRouteScreen = () => {
             const data = await response.json();
             return data.result.geometry.location;
         } catch (error) {
-            console.error('Error fetching coordinates:', error);
             return null;
         }
     };
+    const confirmError = () => {
+        setErrorModalVisible(false);
+      };
     
     const calculateRoute = async (originId, destinationId, waypoints) => {
         try {
@@ -115,17 +120,16 @@ const CreateRouteScreen = () => {
             setShowEmptyFieldsWarning(true);
             return;
         }
-        console.log(nameRoute);
-
+    
         const routeData = {
             name: nameRoute,
             points: selectedPoints,
             origin: `place_id:${selectedPoints[0].place_id}`,
             waypoints: selectedPoints.slice(1, -1).map(p => `place_id:${p.place_id}`),
-            destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
+            destination: `place_id:${selectedPoints[selectedPoints.length - 1].place_id}`,
             pointNames: selectedPoints.map(p => p.name)
         };
-
+    
         const name = nameRoute;
         const createdBy = userData.id;
         const tags = ["PARK"];
@@ -134,22 +138,36 @@ const CreateRouteScreen = () => {
             waypoints: routeData.waypoints,
             destination: routeData.destination
         };
+    
         const { distance, duration } = await calculateRoute(
             routeData.origin,
             routeData.destination,
             routeData.waypoints
-          );
-
-        console.log(name, createdBy, tags, routePoints, distance, duration, accessToken);
+        );
+    
         try {
             const response = await RouteCreate(name, createdBy, tags, routePoints, distance, duration, accessToken);
-            if (response.status === 200){
-                navigation.navigate('PreviewRouteScreen', {routeData});
+            if (response.status === 200) {
+                navigation.navigate('PreviewRouteScreen', {
+                    routeData: {
+                        name,
+                        rating: 0,
+                        distance,
+                        duration,
+                        pointNames: routeData.pointNames,
+                        routePoints,
+                    }
+                });
             }
-        } catch (error) {
-            navigation.navigate('PreviewRouteScreen', {routeData});
-            console.error('Ошибка при создании маршрута:', error.request, error.response);
-            Alert.alert('Ошибка', 'Не удалось создать маршрут');
+        }catch (error) {
+            let message = 'Что-то пошло не так';
+            if (error.response) {
+                message = 'Ошибка сервера';
+            } else if (error.request) {
+                message = 'Такое название уже существует!';
+            }
+            setErrorMessage(message);
+            setErrorModalVisible(true);
         }
     };
 
@@ -197,6 +215,13 @@ const CreateRouteScreen = () => {
             <CreateRouteButton
                 onPress={handleContinueButton}
                 condition={!buttonEnabled}
+            />
+
+            <AlertError
+                    isVisible={isErrorModalVisible}
+                    onConfirm={confirmError}
+                    title = "Ошибка!"
+                    message = {errorMessage}
             />
         </View>
     );
