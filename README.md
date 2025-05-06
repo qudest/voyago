@@ -39,20 +39,21 @@
 - [Видео-пользовательские сценарии MVP](https://drive.google.com/drive/folders/1-1YCB8BvLK7RrUzOSK7EgyFqlsQPBgMK)
 
 ### **Чеклист**  
-- [Чеклист 1 аттестация](Documentation/Check-list.pdf)  
-- [Чеклист 2 аттестация]()  
-  
+- [Чеклист 1 аттестация](Documentation/Check-list.pdf)   
+
 **Нас оценивали 1 аттестация**   
 - Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист](https://github.com/Dodger0072/Programming-technologies-project/blob/main/docs/Чек-листы/Чек-лист.pdf)  
 - Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист](https://github.com/TP-Jobsy/jobsy-docs/blob/main/Чеклист%201%20этап.pdf)  
 - Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%201%20этап.pdf)  
 - Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)
 
+- [Чеклист 2 аттестация](Documentation/check-list-2.pdf)
+  
 **Нас оценивали 2 аттестация**   
 - Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист]()  
 - Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист]()  
-- Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист]()  
-- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист]() 
+- Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%202%20этап.pdf)  
+- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%202%20этап.pdf) 
   
 ### **Отчёты PM**   
 - [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)  
