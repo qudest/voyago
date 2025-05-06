@@ -23,24 +23,42 @@
 - План тестирования [pdf](Documentation/Testing-plan.pdf) [doc](Documentation/Testing-plan.docx)
 - Технические риски [pdf](Documentation/Tech-risks.pdf) [doc](Documentation/Tech-risks.docx)
 - Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)
+- Презентация MVP (2 аттестация) [pdf](Documentation/Voyago-Presentation-2-att.pdf) [pptx](Documentation/Voyago-Presentation-2-att.pptx)
 - [Описание API](Documentation/api-docs.yaml)
+- [Swagger](http://109.196.99.78:8090/swagger-ui/index.html#/)
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
+
+### **Тестирование 2 аттестация**
+- Тест-кейсы [xlsx](Documentation/Test-cases-ALL.xlsx)  
+- Тестирование сервисов [xlsx](Documentation/API-Tests-ALL.xlsx)
+- Отчет о тестировании [pdf]()
 
 ### **Видео**  
 - [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
+- [Видеопрезентация MVP (2 аттестация)](https://drive.google.com/drive/folders/1kUBaYDyEcxG2Cuj-VtBzpF-IAE3xskn2)
+- [Видео-пользовательские сценарии MVP](https://drive.google.com/drive/folders/1-1YCB8BvLK7RrUzOSK7EgyFqlsQPBgMK)
 
 ### **Чеклист**  
-[Чеклист](Documentation/Check-list.pdf)  
+- [Чеклист 1 аттестация](Documentation/Check-list.pdf)  
+- [Чеклист 2 аттестация]()  
   
-**Нас оценивали**   
+**Нас оценивали 1 аттестация**   
 - Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист](https://github.com/Dodger0072/Programming-technologies-project/blob/main/docs/Чек-листы/Чек-лист.pdf)  
 - Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист](https://github.com/TP-Jobsy/jobsy-docs/blob/main/Чеклист%201%20этап.pdf)  
 - Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%201%20этап.pdf)  
-- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)  
+- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%201%20этап.pdf)
+
+**Нас оценивали 2 аттестация**   
+- Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист]()  
+- Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист]()  
+- Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист]()  
+- Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист]() 
   
 ### **Отчёты PM**   
 - [31.03.2025-06.04.2025](Documentation/31_03_2025_06_04_2025.pdf)  
 - [07.04.2025-13.04.2025](Documentation/07_04_2025_13_04_2025.pdf)  
 - [14.04.2025-20.04.2025](Documentation/14_04_2025_20_04_2025.pdf)
-- [21.04.2025-27.04.2025](Documentation/21_04_2025_27_04_2025.pdf)  
+- [21.04.2025-27.04.2025](Documentation/21_04_2025_27_04_2025.pdf)
+- [28.04.2025-04.05.2025](Documentation/28_04_2025_04_05_2025.pdf)
+- [Отчет PM 2 аттестация](Documentation/Otchet-PM-2att.pdf)
 
