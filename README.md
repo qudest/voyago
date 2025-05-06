@@ -12,7 +12,7 @@
   
 ### **Ссылки на сервисы**  
 - [Miro](https://miro.com/app/board/uXjVIe9QVfg=/?share_link_id=9825766657)  
-- [Jira](https://id.atlassian.com/invite/p/jira-software?id=Q91RXAgsTEOltlbEYSE3vA)
+- [Jira](https://id.atlassian.com/invite/p/jira-software?id=qe3coq-XR56xxgWpeUenvg)
 - [Figma](https://www.figma.com/design/EqIQmygpggXKefPpovrrsU/Project-Tourist-Guide?node-id=0-1&t=ZUOqSJMtTMUjJAl5-1)   
 
 ### **Документация**  
@@ -31,7 +31,7 @@
 ### **Тестирование 2 аттестация**
 - Тест-кейсы [xlsx](Documentation/Test-cases-ALL.xlsx)  
 - Тестирование сервисов [xlsx](Documentation/API-Tests-ALL.xlsx)
-- Отчет о тестировании [pdf]()
+- Отчет о тестировании [pdf](Documentation/Otchet-testiorovaniya.pdf)
 
 ### **Видео**  
 - [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
