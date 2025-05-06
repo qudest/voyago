@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { API_URL } from '../variables/ip';
 
-export const putAccountInfo = async (id, userName = null, userCountry = "Russia", selectedCity, selectedPreferences = null, creditCard = null, accessToken) => {
-  return axios.put(`http://${API_URL}:8091/api/account/${id}`,
+export const putAccountInfo = async (id, userName = null, userCountry = "Russia", selectedCity, selectedPreferences = [], creditCard = null, accessToken) => {
+  console.log(id, userName, userCountry, selectedCity, accessToken, selectedPreferences, creditCard)
+  return axios.put(`http://${API_URL}:8090/api/account/${id}`,
     {   
         name: userName,
         country: userCountry,
@@ -10,11 +11,16 @@ export const putAccountInfo = async (id, userName = null, userCountry = "Russia"
         preferences: selectedPreferences,
         creditCard: creditCard
       },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+    }
   );
 };
 
 export const putAccountCityAndName = async (id, cityToSend, nameToSend, preferences) => {
-  return axios.put(`http://${API_URL}:8091/api/account/${id}`,
+  return axios.put(`http://${API_URL}:8090/api/account/${id}`,
     {
       city: cityToSend,
       name: nameToSend,
@@ -24,5 +30,5 @@ export const putAccountCityAndName = async (id, cityToSend, nameToSend, preferen
 };
 
 export const deleteAccount = async (id) => {
-  return axios.delete(`http://${API_URL}:8091/api/account/${id}`);
+  return axios.delete(`http://${API_URL}:8090/api/account/${id}`);
 };

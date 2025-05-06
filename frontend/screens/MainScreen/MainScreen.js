@@ -187,6 +187,29 @@ const MainScreen = () => {
     }
   };
 
+  const formatDuration = (seconds) => {
+    if (!seconds) return "0 мин"; 
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    let result = "";
+    if (hours > 0) {
+      result += `${hours} ч `;
+    }
+    result += `${minutes} мин`;
+    
+    return result;
+  };
+
+  const formatDistance = (meters) => {
+    if (!meters || isNaN(meters)) return "0 км";
+    
+    const kilometers = meters / 1000;
+
+    return `${kilometers.toFixed(1)} км`;
+  };
+
   useEffect(() => {
     if (route.params?.selectedRoute) {
       const { origin, destination, waypoints, coordinates, markers, region } = route.params.selectedRoute;
@@ -334,7 +357,7 @@ const MainScreen = () => {
               <View style={styles.routePoints}>
                 {selectedRoute.points.map((point, index) => (
                   <Text key={index} style={[styles.pointText, index === currentIndex && styles.activePoint]}>
-                    {point.split(',').slice(0, 2).join(',')}
+                    {point}
                   </Text>
                 ))}
               </View>
@@ -345,9 +368,9 @@ const MainScreen = () => {
                   source={require('../../assets/routeCardImages/clock.png')}
                   style={styles.timeImage}
                 />
-                <Text style={styles.time}>{selectedRoute.time}</Text>
+                <Text style={styles.time}>{formatDuration(selectedRoute.duration)}</Text>
               </View>
-              <Text style={styles.distance}>{selectedRoute.distance}</Text>
+              <Text style={styles.distance}>{formatDistance(selectedRoute.distance)}</Text>
             </View>
             </ScrollView>
           </View>

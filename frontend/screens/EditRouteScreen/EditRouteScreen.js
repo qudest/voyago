@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import styles from './styles';
 import BackButton from '../../components/BackButton/BackButton';
@@ -8,12 +8,15 @@ import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
 import DeleteRouteButton from '../../components/DeleteRouteButton/DeleteRouteButton';
 import AlertDelete from '../../components/AlertDelete/AlertDelete';
+import { RouteUpdate, RouteDelete, RouteCreate } from '../../services/routesApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditRouteScreen = () => {
     const navigation = useNavigation();
     const { params } = useRoute();
     
     const initialRoute = params?.route || { 
+        id: null,
         name: 'Новый маршрут',
         points: [{place_id: '', name: ''}, {place_id: '', name: ''}],
         pointNames: ['', ''],
@@ -22,15 +25,32 @@ const EditRouteScreen = () => {
         waypoints: [],
         distance: 0,
         duration: 0,
-        rating: 0
+        rating: 0,
+        tags: []
     };
     
-    const [selectedPoints, setSelectedPoints] = useState(initialRoute.points || 
-        [{place_id: '', name: ''}, {place_id: '', name: ''}]);
+    const [selectedPoints, setSelectedPoints] = useState(initialRoute.points || [{place_id: '', name: ''}, {place_id: '', name: ''}]);
     const [routeName, setRouteName] = useState(initialRoute.name);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
     const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const cachedData = await AsyncStorage.getItem('userData');
+                if (cachedData) {
+                    const parsedData = JSON.parse(cachedData);
+                    setUserId(parsedData.id);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+        fetchUserData();
+    }, []);
 
     useEffect(() => {
         const filledCount = selectedPoints.filter(p => p.place_id && p.name).length;
@@ -51,51 +71,113 @@ const EditRouteScreen = () => {
         }
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!buttonEnabled) {
             setShowEmptyFieldsWarning(true);
             return;
         }
 
-        const routeData = {
-            name: routeName,
-            points: selectedPoints,
-            pointNames: selectedPoints.map(p => p.name),
-            origin: selectedPoints[0].place_id ? `place_id:${selectedPoints[0].place_id}` : '',
-            destination: selectedPoints[selectedPoints.length-1].place_id ? 
-                `place_id:${selectedPoints[selectedPoints.length-1].place_id}` : '',
-            waypoints: selectedPoints.slice(1, -1)
-                .filter(p => p.place_id)
-                .map(p => `place_id:${p.place_id}`),
-            distance: initialRoute.distance || 0,
-            duration: initialRoute.duration || 0,
-            rating: initialRoute.rating || 0
-        };
+        if (!userId) {
+            Alert.alert('Ошибка', 'Не удалось определить пользователя');
+            return;
+        }
 
-        navigation.navigate('PreviewRouteScreen', { 
-            routeData 
-        });
+        setIsLoading(true);
+        try {
+            const routeData = {
+                name: routeName,
+                createdBy: userId,
+                pointNames: selectedPoints.map(p => p.name),
+                routePoints: {
+                    origin: selectedPoints[0].place_id ? `place_id:${selectedPoints[0].place_id}` : '',
+                    destination: selectedPoints[selectedPoints.length-1].place_id ? 
+                        `place_id:${selectedPoints[selectedPoints.length-1].place_id}` : '',
+                    waypoints: selectedPoints.slice(1, -1)
+                        .filter(p => p.place_id)
+                        .map(p => `place_id:${p.place_id}`)
+                },
+                distance: initialRoute.distance || 0,
+                duration: initialRoute.duration || 0,
+                rating: initialRoute.rating || 0,
+                tags: initialRoute.tags || []
+            };
+
+            if (initialRoute.id) {
+                await RouteUpdate(
+                    initialRoute.id,
+                    routeData.name,
+                    userId,
+                    routeData.tags,
+                    routeData.routePoints,
+                    routeData.distance,
+                    routeData.duration
+                );
+            } else {
+                await RouteCreate(
+                    routeData.name,
+                    userId,
+                    routeData.tags,
+                    routeData.routePoints,
+                    routeData.distance,
+                    routeData.duration
+                );
+            }
+
+            navigation.navigate('PreviewRouteScreen', { 
+                routeData 
+            });
+        } catch (error) {
+            console.error('Error saving route:', error);
+            Alert.alert('Ошибка', 'Не удалось сохранить маршрут');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDelete = () => {
         setDeleteModalVisible(true);
     };
 
-    const confirmDelete = () => {
-        setDeleteModalVisible(false);
-        navigation.navigate('MyRoutesScreen');
+    const confirmDelete = async () => {
+        if (!initialRoute.id) {
+            navigation.navigate('MyRoutesScreen');
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            await RouteDelete(initialRoute.id);
+            navigation.navigate('MyRoutesScreen');
+        } catch (error) {
+            console.error('Error deleting route:', error);
+            Alert.alert('Ошибка', 'Не удалось удалить маршрут');
+        } finally {
+            setIsLoading(false);
+            setDeleteModalVisible(false);
+        }
     };
 
     const cancelDelete = () => {
         setDeleteModalVisible(false);
     };
 
+    if (isLoading) {
+        return (
+            <View style={styles.container}>
+                <BackButton onPress={() => navigation.goBack()} />
+                <ActivityIndicator size="large" style={styles.loader} />
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <BackButton onPress={() => navigation.goBack()} />
             
             <View style={styles.topContainer}>
-                <Text style={styles.createTitle}>Редактирование маршрута</Text>
+                <Text style={styles.createTitle}>
+                    {initialRoute.id ? 'Редактирование маршрута' : 'Создание маршрута'}
+                </Text>
                 <TextInput
                     style={styles.inputTitle}
                     value={routeName}
@@ -137,9 +219,9 @@ const EditRouteScreen = () => {
                 <CreateRouteButton
                     onPress={handleSave}
                     disabled={!buttonEnabled}
-                    title="Сохранить изменения"
+                    title={initialRoute.id ? "Сохранить изменения" : "Создать маршрут"}
                 />
-                <DeleteRouteButton onPress={handleDelete} />
+                {initialRoute.id && <DeleteRouteButton onPress={handleDelete} />}
             </View>
 
             <AlertDelete

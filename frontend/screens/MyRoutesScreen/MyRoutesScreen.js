@@ -5,100 +5,138 @@ import { View, ScrollView, Text, TextInput, Image, TouchableOpacity, ActivityInd
 import BackButton from '../../components/BackButton/BackButton';
 import RouteCard from '../../components/RouteCard/RouteCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { findRoutesByUser } from '../../services/routesApi';
-
+import { findAll } from '../../services/routesApi';
+const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 const MyRoutesScreen = () => {
     const navigation = useNavigation();
     const [searchQuery, setSearchQuery] = useState('');
     const [userData, setUserData] = useState(null);
     const [routes, setRoutes] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false); 
     const [error, setError] = useState(null);
-
-    const mockFindRoutesByUser = async (userId) => {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({
-                    data: [
-                        {
-                            id: 1,
-                            name: "Весёлый маршрут",
-                            createdBy: userId,
-                            distance: 5000,
-                            duration: 7200,
-                            rating: 4.5,
-                            routePoints: {
-                                origin: "place_id:ChIJN1t_tDeuEmsRUsoyG83frY4",
-                                destination: "place_id:ChIJ7cv00DwsDogRAMDACa2m4K8",
-                                waypoints: ["place_id:ChIJW-T2Wt7Gt4kRKl2I1CJFUsI"]
-                            },
-                            pointNames: ["Точка раз", "Точка двас", "Точка трис"],
-                            tags: ["PARK", "CAFE"]
-                        },
-                        {
-                            id: 2,
-                            name: "Культурный тур",
-                            createdBy: userId,
-                            distance: 4000,
-                            duration: 5400,
-                            rating: 4.2,
-                            routePoints: {
-                                origin: "place_id:ChIJW-T2Wt7Gt4kRKl2I1CJFUsI",
-                                destination: "place_id:ChIJN1t_tDeuEmsRUsoyG83frY4",
-                                waypoints: []
-                            },
-                            pointNames: ["Музей искусств", "Театр драмы", "Концертный зал"],
-                            tags: ["ARCHITECTURE"]
-                        }
-                    ]
-                });
-            }, 800);
-        });
-    };
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [accessToken, setAccessToken] = useState(null);
+    const [cityNamesCache, setCityNamesCache] = useState({});
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchCachedData = async () => {
             try {
                 const cachedData = await AsyncStorage.getItem('userData');
+                const accessToken = await AsyncStorage.getItem('accessToken');
+                setAccessToken(accessToken);
                 if (cachedData) {
                     const parsedData = JSON.parse(cachedData);
                     setUserData(parsedData);
-                    return parsedData.id;
                 }
-                return null;
             } catch (error) {
                 console.error('Ошибка при получении данных из кэша:', error);
-                return null;
             }
         };
 
-        const fetchRoutes = async () => {
-            setLoading(true);
-            try {
-                const userId = await fetchUserData();
-                if (!userId) {
-                    throw new Error('User ID not found');
-                }
-
-                const response = await mockFindRoutesByUser(userId);
-                // const response = await findRoutesByUser(userId);
-                
-                setRoutes(response.data);
-            } catch (err) {
-                setError(err.message);
-                console.error('Ошибка загрузки маршрутов:', err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchRoutes();
+        fetchCachedData();
     }, []);
 
+    const getCityName = async (placeId) => {
+        const extractCleanPlaceId = (rawId) => {
+            if (!rawId) return null;
+            if (typeof rawId === 'object') return rawId.place_id || rawId.id || null;
+            return String(rawId).replace(/^place_id:/i, '').trim();
+        };
+    
+        const cleanPlaceId = extractCleanPlaceId(placeId);
+    
+        if (!cleanPlaceId || !cleanPlaceId.startsWith('ChIJ')) {
+            return 'Место не указано';
+        }
+    
+        if (cityNamesCache[cleanPlaceId]) {
+            return cityNamesCache[cleanPlaceId];
+        }
+    
+        try {
+            const response = await fetch(
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${cleanPlaceId}&fields=name,formatted_address&language=ru&key=${API_KEY}`
+            );
+            
+            const data = await response.json();
+            
+            if (data.status !== 'OK') {
+                return 'Место не найдено';
+            }
+            
+            const name = data.result?.name || 
+                         data.result?.formatted_address || 
+                         'Название недоступно';
+            
+            setCityNamesCache(prev => ({ ...prev, [cleanPlaceId]: name }));
+            return name;
+        } catch (error) {
+            return 'Ошибка загрузки';
+        }
+    };
+
+    const fetchRoutes = async () => {
+        if (loading || !hasMore) return; 
+
+        setLoading(true);
+        try {
+            const response = await findAll(accessToken);
+                        
+                        const routesWithCityNames = await Promise.all(
+                            response.data.map(async (route) => {
+                                if (!route.routePoints) return route;
+                                
+                                const processPoint = async (point) => {
+                                    if (!point) return 'Точка не указана';
+                                    return await getCityName(point);
+                                };
+                                
+                                const [originName, ...waypointNames] = await Promise.all([
+                                    processPoint(route.routePoints.origin),
+                                    ...(route.routePoints.waypoints || []).map(processPoint)
+                                ]);
+                                
+                                const destinationName = await processPoint(route.routePoints.destination);
+                                
+                                return {
+                                    ...route,
+                                    pointNames: [originName, ...waypointNames, destinationName]
+                                };
+                            })
+                        );
+                        
+                        setRoutes(routesWithCityNames);
+        } catch (err) {
+            setError(err.message);
+            console.error('Ошибка загрузки маршрутов:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (accessToken && userData && page === 0) { 
+            fetchRoutes();
+        }
+    }, [accessToken, userData, page]); 
+
+    const handleScroll = (event) => {
+        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+        const paddingToBottom = 20;
+        if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+            if (hasMore && !loading) {
+                setPage(prevPage => prevPage + 1);
+            }
+        }
+    };
+
     const formatMetrics = (distance, duration) => {
+        const hours = Math.floor(duration / 3600);
+        const minutes = Math.floor((duration % 3600) / 60);
         return {
             distance: `${(distance / 1000).toFixed(1)}`,
-            duration: `${Math.floor(duration / 3600)} ${Math.round((duration % 3600) / 60)}`
+            duration: `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`
         };
     };
 
@@ -110,7 +148,7 @@ const MyRoutesScreen = () => {
         
         const titleMatch = route.name.toLowerCase().includes(searchLower);
         
-        const pointsMatch = route.pointNames.some(point => {
+        const pointsMatch = route.pointNames?.some(point => {
             const pointLower = point.toLowerCase();
             return !ignoreWords.some(word => pointLower.includes(word)) && 
                    pointLower.includes(searchLower);
@@ -139,10 +177,13 @@ const MyRoutesScreen = () => {
 
     const handlePreviewRoute = (route) => {
         navigation.navigate("PreviewRouteScreen", { 
-            route: {
-                ...route,
-                title: route.name,
-                points: route.pointNames
+            routeData: {
+                name: route.name,
+                rating: parseFloat(route.rating),
+                distance: route.distance,
+                duration: route.duration,
+                pointNames: route.pointNames,
+                routePoints: route.routePoints
             }
         });
     };
@@ -154,12 +195,12 @@ const MyRoutesScreen = () => {
             title: route.name,
             time: metrics.duration,
             distance: metrics.distance,
-            points: route.pointNames,
+            points: route.pointNames || [],
             rating: route.rating
         };
     };
 
-    if (loading) {
+    if (loading && page === 0) {
         return (
             <View style={styles.container}>
                 <BackButton onPress={handlerBackButton} />
@@ -206,7 +247,9 @@ const MyRoutesScreen = () => {
             <ScrollView 
                 style={styles.buttonContainer}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 70 }} 
+                contentContainerStyle={{ paddingBottom: 70 }}
+                onScroll={handleScroll}
+                scrollEventThrottle={400}
             >
                 {filteredRoutes.map((route) => (
                     <RouteCard 
@@ -217,6 +260,10 @@ const MyRoutesScreen = () => {
                         onPress={() => handlePreviewRoute(route)}
                     />
                 ))}
+                
+                {loading && page > 0 && (
+                    <ActivityIndicator size="small" style={styles.loader} />
+                )}
                 
                 {!loading && filteredRoutes.length === 0 && (
                     <Text style={styles.noResults}>

@@ -7,7 +7,8 @@ import RouteCard from '../../components/RouteCard/RouteCard';
 import SettingsButton from '../../components/SettingsButton/SettingsButton';
 import PremiunRoutesButton from '../../components/PremiumRoutesButton/PremiumRoutesButton';
 import { findAll } from '../../services/routesApi';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 const RecommendationsRoutesScreen = () => {
     const navigation = useNavigation();
     const [routes, setRoutes] = useState([]);
@@ -15,77 +16,116 @@ const RecommendationsRoutesScreen = () => {
     const [page, setPage] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [filter, setFilter] = useState(null);
+    const [accessToken, setAccessToken] = useState(null);
+    const [userData, setUserData] = useState(null);
+    const [tokenLoaded, setTokenLoaded] = useState(false);
+    const [cityNamesCache, setCityNamesCache] = useState({});
 
-    const generateMockRoutes = () => {
-        const mockRoutes = [];
-        const tagsOptions = ['PARK', 'CAFE', 'BAR', 'SHOPPING', 'ARCHITECTURE', 'SPORT'];
-
-        const moscowAddresses = [
-            "Красная площадь, Москва",
-            "Парк Горького, Крымский Вал, 9, Москва",
-            "ВДНХ, проспект Мира, 119, Москва",
-            "Арбат, Москва",
-            "ГУМ, Красная площадь, 3, Москва",
-            "ЦУМ, Петровка, 2, Москва",
-            "Кофейня Starbucks, Тверская, 10, Москва",
-            "Ресторан White Rabbit, Смоленская площадь, 3, Москва",
-            "Музей изобразительных искусств им. Пушкина, Волхонка, 12, Москва",
-            "Третьяковская галерея, Лаврушинский переулок, 10, Москва",
-            "Зоопарк Москвы, Большая Грузинская, 1, Москва",
-            "Парк Зарядье, Варварка, 6, Москва",
-            "Останкинская телебашня, Академика Королёва, 15, Москва",
-            "Стадион Лужники, Лужники, 24, Москва",
-            "Кремль в Измайлово, Измайловское шоссе, 73Ж, Москва",
-            "Библиотека им. Ленина, Воздвиженка, 3/5, Москва"
-        ];
-
-        for (let i = 1; i <= 14; i++) {
-            const pointsCount = 2 + Math.floor(Math.random() * 4);
-            const shuffled = [...moscowAddresses].sort(() => 0.5 - Math.random());
-            const selectedPoints = shuffled.slice(0, pointsCount);
-
-            const routePoints = {
-                origin: selectedPoints[0].split(',').slice(0, 2).join(','),
-                waypoints: selectedPoints.slice(1, -1),
-                destination: selectedPoints[selectedPoints.length - 1].split(',').slice(0, 2).join(',')
-            };
-            const randomTags = [];
-            const tagsCount = Math.floor(Math.random() * 3); 
-            for (let k = 0; k < tagsCount; k++) {
-                const tag = tagsOptions[Math.floor(Math.random() * tagsOptions.length)];
-                if (!randomTags.includes(tag)) {
-                    randomTags.push(tag);
-                }
+    useEffect(() => {
+        const fetchCachedData = async () => {
+          try {
+            const cachedData = await AsyncStorage.getItem('userData');
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            setAccessToken(accessToken)
+            setTokenLoaded(true);
+            if (cachedData) {
+              const parsedData = JSON.parse(cachedData);
+              setUserData(parsedData);
+              console.log('Данные из кэша:', parsedData);
             }
-            const routeTypes = [
-                "Исторический тур",
-                "Гастрономическое путешествие",
-                "Архитектурный маршрут",
-                "Парковая прогулка",
-                "Шопинг-тур",
-                "Культурный экспресс"
-            ];
+          } catch (error) {
+            console.error('Ошибка при получении данных из кэша:', error);
+            setTokenLoaded(true);
+          }
+        };
+        
+        fetchCachedData();
+      }, []);
 
-            mockRoutes.push({
-                id: i,
-                name: routeTypes[Math.floor(Math.random() * routeTypes.length)],
-                routePoints: routePoints,
-                distance: 500 + Math.floor(Math.random() * 10000), 
-                duration: 300 + Math.floor(Math.random() * 7200), 
-                rating: (Math.random() * 5).toFixed(1),
-                pointNames: selectedPoints
-            });
+      const getCityName = async (placeId) => {
+        const extractCleanPlaceId = (rawId) => {
+            if (!rawId) return null;
+            if (typeof rawId === 'object') return rawId.place_id || rawId.id || null;
+            return String(rawId).replace(/^place_id:/i, '').trim();
+        };
+    
+        const cleanPlaceId = extractCleanPlaceId(placeId);
+    
+        if (!cleanPlaceId || !cleanPlaceId.startsWith('ChIJ')) {
+            return 'Место не указано';
         }
-        return mockRoutes;
+    
+        if (cityNamesCache[cleanPlaceId]) {
+            return cityNamesCache[cleanPlaceId];
+        }
+    
+        try {
+            const response = await fetch(
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${cleanPlaceId}&fields=name,formatted_address&language=ru&key=${API_KEY}`
+            );
+            
+            const data = await response.json();
+            
+            if (data.status !== 'OK') {
+                return 'Место не найдено';
+            }
+            
+            const name = data.result?.name || 
+                         data.result?.formatted_address || 
+                         'Название недоступно';
+            
+            setCityNamesCache(prev => ({ ...prev, [cleanPlaceId]: name }));
+            return name;
+        } catch (error) {
+            return 'Ошибка загрузки';
+        }
+    };
+    
+
+    const loadRoutes = async (reset = false) => {
+        if (!tokenLoaded || (loading && !reset)) return;
+        if (!accessToken) return;
+        
+        setLoading(true);
+        try {
+            const response = await findAll(accessToken);
+            
+            const routesWithCityNames = await Promise.all(
+                response.data.map(async (route) => {
+                    if (!route.routePoints) return route;
+                    
+                    const processPoint = async (point) => {
+                        if (!point) return 'Точка не указана';
+                        return await getCityName(point);
+                    };
+                    
+                    const [originName, ...waypointNames] = await Promise.all([
+                        processPoint(route.routePoints.origin),
+                        ...(route.routePoints.waypoints || []).map(processPoint)
+                    ]);
+                    
+                    const destinationName = await processPoint(route.routePoints.destination);
+                    
+                    return {
+                        ...route,
+                        pointNames: [originName, ...waypointNames, destinationName]
+                    };
+                })
+            );
+            
+            setRoutes(routesWithCityNames);
+        } catch (error) {
+            console.error('Ошибка загрузки маршрутов:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
-        setLoading(true);
-        setTimeout(() => {
-            setRoutes(generateMockRoutes());
-            setLoading(false);
-        }, 500);
-    }, []);
+        if (tokenLoaded) {
+            loadRoutes(true);
+        }
+    }, [filter, tokenLoaded]); 
 
     const handlerBackButton = () => navigation.navigate("MainScreen");
     const handleSettingsButton = () => navigation.navigate("FiltersScreen", {
@@ -99,10 +139,17 @@ const RecommendationsRoutesScreen = () => {
                 distance: route.distance,
                 duration: route.duration,
                 pointNames: route.pointNames,
-                routePoints: route.routePoints
+                routePoints: {
+                    origin: route.routePoints.origin,
+                    destination: route.routePoints.destination,
+                    waypoints: route.routePoints.waypoints || []
+                },
+                coordinates: route.coordinates 
             }
         });
     };
+
+    
 
     const handleScroll = (event) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
@@ -112,18 +159,25 @@ const RecommendationsRoutesScreen = () => {
         }
     };
 
-    const mapRouteToCard = (route) => ({
-        id: route.id,
-        title: route.name,
-        time: formatDuration(route.duration),
-        distance: `${(route.distance / 1000).toFixed(1)}`,
-        points: [
-            route.routePoints.origin,
-            ...route.routePoints.waypoints,
-            route.routePoints.destination
-        ],
-        rating: route.rating
-    });
+    const mapRouteToCard = (route) => {
+        if (!route.routePoints) {
+            console.error('Отсутствуют routePoints в маршруте:', route);
+            return null;
+        }
+    
+        return {
+            id: route.id,
+            title: route.name || 'Без названия',
+            time: formatDuration(route.duration || 0),
+            distance: `${((route.distance || 0) / 1000).toFixed(1)}`,
+            points: route.pointNames || [
+                'Загрузка...',
+                ...(route.routePoints.waypoints || []).map(() => 'Загрузка...'),
+                'Загрузка...'
+            ],
+            rating: route.rating || 0
+        };
+    };
 
     const formatDuration = (seconds) => {
         const hours = Math.floor(seconds / 3600);
@@ -147,8 +201,7 @@ const RecommendationsRoutesScreen = () => {
                 onScroll={handleScroll}
                 scrollEventThrottle={400}
             >
-                
-                {loading ? (
+                {loading && page === 0 ? (
                     <ActivityIndicator size="large" style={styles.loader} />
                 ) : (
                     routes.map(route => (
@@ -163,6 +216,10 @@ const RecommendationsRoutesScreen = () => {
                 
                 {!loading && routes.length === 0 && (
                     <Text style={styles.noResults}>Маршруты не найдены</Text>
+                )}
+
+                {loading && page > 0 && (
+                    <ActivityIndicator size="small" style={styles.loader} />
                 )}
             </ScrollView>
         </View>

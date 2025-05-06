@@ -2,18 +2,20 @@ import axios from 'axios';
 import { API_URL } from '../variables/ip';
 
 
-export const findAll = async (pageable, filter=null) => {
-    return axios.get('http://${API_URL}:8090/api/routes',{
-        params: {
-            pageable: pageable.page,
-        },
-        data: filter,
-    },
+export const findAll = async (accessToken) => {
+    return axios.get(`http://${API_URL}:8090/api/routes`,
+    {
+      headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/yaml' 
+      }
+  }
     );
   };
 
-export const RouteCreate = async (name, createdBy, tags, routePoints, distance, duration) => {
-    return axios.post('http://${API_URL}:8090/api/routes',
+export const RouteCreate = async (name, createdBy, tags, routePoints, distance, duration, accessToken) => {
+    return axios.post(`http://${API_URL}:8090/api/routes`,
       {   
           name: name,
           createdBy: createdBy,
@@ -25,11 +27,18 @@ export const RouteCreate = async (name, createdBy, tags, routePoints, distance, 
           },
           distance: distance,
           duration: duration
-        }
+        },
+        {
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json, application/yaml' 
+          }
+      }
     );
   };
   
-export const RouteUpdate = async (id, name, createdBy, tags, routePoints, distance, duration) => {
+export const RouteUpdate = async (id, name, createdBy, tags, routePoints, distance, duration, accessToken) => {
     return axios.put(`http://${API_URL}:8090/api/routes/${id}`,
       {   
           name: name,
@@ -42,37 +51,76 @@ export const RouteUpdate = async (id, name, createdBy, tags, routePoints, distan
           },
           distance: distance,
           duration: duration
-        }
-    );
-  };
-
-export const RouteReadDto = async (id) => {
-    return axios.get(`http://${API_URL}:8090/api/routes/${id}`);
-  };
-
-export const RouteDelete = async (id) => {
-    return axios.delete(`http://${API_URL}:8090/api/routes/${id}`);
-};
-
-
-export const findAllFavorites = async (userId) => {
-    return axios.get(`http://${API_URL}:8090/api/routes/favorites`,
-         {userId}
-    );
-};
-
-export const addToFavorites = async (routeId, userId) => {
-    return axios.put(`http://${API_URL}:8090/api/routes/favorites`),
-    {routeId, userId}
-};
-
-export const findRoutesByUser = async (userId, pageable = 0, size = 10) => {
-    return axios.get(`http://localhost:8090/api/routes`, {
-      params: {
-        pageable: JSON.stringify({ pageable, size }) 
-      },
-      data: {
-        createdBy: userId 
+        },
+        {
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json, application/yaml' 
+          }
       }
-    });
+    );
+  };
+
+export const RouteReadDto = async (id, accessToken) => {
+    return axios.get(`http://${API_URL}:8090/api/routes/${id}`,
+      {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, application/yaml' 
+        }
+    }
+    );
+  };
+
+export const RouteDelete = async (id, accessToken) => {
+    return axios.delete(`http://${API_URL}:8090/api/routes/${id}`,
+      {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json, application/yaml' 
+        }
+    }
+    );
+};
+
+
+export const findAllFavorites = async (userId, accessToken) => {
+    return axios.get(`http://${API_URL}:8090/api/routes/favorites`,
+         {userId},
+         {
+          headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json, application/yaml' 
+          }
+      }
+    );
+};
+
+export const addToFavorites = async (routeId, userId, accessToken) => {
+    return axios.put(`http://${API_URL}:8090/api/routes/favorites`,
+    {routeId, userId},
+    {
+      headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/yaml' 
+      }
+  }
+);
+};
+
+export const findRoutesByUser = async (accessToken) => {
+    return axios.get(`http://${API_URL}:8090/api/routes`,
+      
+    {
+      headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, application/yaml' 
+      }
+  });
   };

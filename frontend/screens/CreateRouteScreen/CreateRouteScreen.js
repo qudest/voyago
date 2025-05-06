@@ -5,22 +5,39 @@ import styles from './styles';
 import BackButton from '../../components/BackButton/BackButton';
 import AddPoint from '../../components/AddPoint/AddPoint';
 import PointOfRoute from '../../components/PointOfRoute/PointOfRoute';
-import AlertError from '../../components/AlertError/AlertError';
 import CreateRouteButton from '../../components/CreateRouteButton/CreateRouteButton';
-import AlertChange from '../../components/AlertChange/AlertChange';
 import { TextInput } from 'react-native-gesture-handler';
 import { RouteCreate } from '../../services/routesApi';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 const CreateRouteScreen = () => {
     const [selectedPoints, setSelectedPoints] = useState([{place_id: '', name: ''}, {place_id: '', name: ''}]);
     const [buttonEnabled, setButtonEnabled] = useState(false);
     const [showEmptyFieldsWarning, setShowEmptyFieldsWarning] = useState(false);
-    const [nameRoute, setName] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [nameRoute, setName] = useState();
+    const [userData, setUserData] = useState(null);
+    const [accessToken, setAccessToken] = useState(null);
     const navigation = useNavigation();
-    const [isErrorModalVisible, setErrorModalVisible] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    
+
+
+    useEffect(() => {
+        const fetchCachedData = async () => {
+          try {
+            const cachedData = await AsyncStorage.getItem('userData');
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            setAccessToken(accessToken)
+            if (cachedData) {
+              const parsedData = JSON.parse(cachedData);
+              setUserData(parsedData);
+              console.log('Данные из кэша:', parsedData);
+            }
+          } catch (error) {
+            console.error('Ошибка при получении данных из кэша:', error);
+          }
+        };
+        
+        fetchCachedData();
+      }, []);
 
     useEffect(() => {
         const filledCount = selectedPoints.filter(p => p.place_id).length;
@@ -30,14 +47,6 @@ const CreateRouteScreen = () => {
 
     const handleBackButton = () => {
         navigation.navigate("ProfileScreen");
-    };
-
-    const handlePreview = (routeData) => {
-        navigation.navigate("PreviewRouteScreen", { routeData });
-    };
-
-    const confirmError = () => {
-        setErrorModalVisible(false);
     };
 
     const handleAddPoint = () => {
@@ -54,40 +63,60 @@ const CreateRouteScreen = () => {
         }
     };
 
-    const simulateApiCall = async (routeData) => {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // return RouteCreate(
-        //     routeData.name,
-        //     1, // createdBy 
-        //     [], // tags 
-        //     {
-        //         origin: routeData.origin,
-        //         waypoints: routeData.waypoints,
-        //         destination: routeData.destination
-        //     },
-        //     1000, 
-        //     3600 
-        // );
-        
-        return Promise.resolve({
-            data: {
-                id: Math.floor(Math.random() * 1000),
-                ...routeData,
-                rating: 5,
-                createdBy: 1
+    const getCoordinatesFromPlaceId = async (placeId) => {
+        try {
+            const response = await fetch(
+                `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId.replace('place_id:', '')}&fields=geometry&key=${API_KEY}`
+            );
+            const data = await response.json();
+            return data.result.geometry.location;
+        } catch (error) {
+            console.error('Error fetching coordinates:', error);
+            return null;
+        }
+    };
+    
+    const calculateRoute = async (originId, destinationId, waypoints) => {
+        try {
+            const originCoords = await getCoordinatesFromPlaceId(originId);
+            const destinationCoords = await getCoordinatesFromPlaceId(destinationId);
+            const waypointsCoords = await Promise.all(
+                waypoints.map(wp => getCoordinatesFromPlaceId(wp))
+            );
+
+            const waypointsParam = waypointsCoords
+                .map(coord => `${coord.lat},${coord.lng}`)
+                .join('|');
+    
+            const response = await fetch(
+                `https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.lat},${destinationCoords.lng}&waypoints=optimize:true|${waypointsParam}&key=${API_KEY}`
+            );
+            
+            const data = await response.json();
+            
+            if (data.routes.length > 0) {
+                const route = data.routes[0];
+                
+
+                const distance = route.legs.reduce((sum, leg) => sum + leg.distance.value, 0);
+                const duration = route.legs.reduce((sum, leg) => sum + leg.duration.value, 0);
+                
+                return { distance, duration };
             }
-        });
+        } catch (error) {
+            console.error('Error calculating route:', error);
+        }
+        return { distance: 0, duration: 0 };
     };
 
     const handleContinueButton = async () => {
-        const hasEmpty = selectedPoints.some(p => !p.place_id) || !nameRoute;
+        const hasEmpty = selectedPoints.some(p => !p.place_id);
         if (hasEmpty) {
             setShowEmptyFieldsWarning(true);
             return;
         }
+        console.log(nameRoute);
 
-        setIsSubmitting(true);
-        
         const routeData = {
             name: nameRoute,
             points: selectedPoints,
@@ -96,30 +125,31 @@ const CreateRouteScreen = () => {
             destination: `place_id:${selectedPoints[selectedPoints.length-1].place_id}`,
             pointNames: selectedPoints.map(p => p.name)
         };
-        console.log(routeData);
 
+        const name = nameRoute;
+        const createdBy = userData.id;
+        const tags = ["PARK"];
+        const routePoints = {
+            origin: routeData.origin,
+            waypoints: routeData.waypoints,
+            destination: routeData.destination
+        };
+        const { distance, duration } = await calculateRoute(
+            routeData.origin,
+            routeData.destination,
+            routeData.waypoints
+          );
+
+        console.log(name, createdBy, tags, routePoints, distance, duration, accessToken);
         try {
-            const response = await simulateApiCall(routeData);
-            // const response = await RouteCreate(
-            //     nameRoute,
-            //     1, // createdBy 
-            //     [], // tags
-            //     {
-            //         origin: routeData.origin,
-            //         waypoints: routeData.waypoints,
-            //         destination: routeData.destination
-            //     },
-            //     1000, // distance 
-            //     3600 // duration 
-            // );
-
-            handlePreview(response.data);
+            const response = await RouteCreate(name, createdBy, tags, routePoints, distance, duration, accessToken);
+            if (response.status === 200){
+                navigation.navigate('PreviewRouteScreen', {routeData});
+            }
         } catch (error) {
-            let message = 'Не удалось создать маршрут.';
-            setErrorMessage(message);
-            setErrorModalVisible(true);
-        } finally {
-            setIsSubmitting(false);
+            navigation.navigate('PreviewRouteScreen', {routeData});
+            console.error('Ошибка при создании маршрута:', error.request, error.response);
+            Alert.alert('Ошибка', 'Не удалось создать маршрут');
         }
     };
 
@@ -130,22 +160,15 @@ const CreateRouteScreen = () => {
             <View style={styles.topContainer}> 
                 <Text style={styles.createTitle}>Создание маршрута</Text>
                 <TextInput
-                    style={styles.inputTitle}
-                    maxLength={40}
-                    placeholder="Введите название"
-                    placeholderTextColor="#999"
-                    cursorColor="#FCFFFF"
-                    onChangeText={setName}
-                    value={nameRoute}
-                />
+                  style={styles.inputTitle}
+                  maxLength={40}
+                  placeholder="Название маршрута"
+                  cursorColor="#FCFFFF"
+                  onChangeText={setName}
+                  value={nameRoute} 
+                ></TextInput>
             </View>   
-            <AlertError
-                    isVisible={isErrorModalVisible}
-                    onConfirm={confirmError}
-                    title="Ошибка!"
-                    message={errorMessage}
-            />
-
+            
             <View style={styles.pointsContainer}>
                 {selectedPoints.map((point, index) => (
                     <PointOfRoute 
@@ -163,9 +186,7 @@ const CreateRouteScreen = () => {
             </View>
             
             {showEmptyFieldsWarning && (
-                <Text style={styles.warningText}>
-                    {!nameRoute ? "Введите название маршрута!" : "Не все точки заполнены!"}
-                </Text>
+                <Text style={styles.warningText}>Не все точки заполнены!</Text>
             )}
             
             <AddPoint 
@@ -175,8 +196,7 @@ const CreateRouteScreen = () => {
             
             <CreateRouteButton
                 onPress={handleContinueButton}
-                condition={!buttonEnabled || !nameRoute || isSubmitting}
-                isLoading={isSubmitting}
+                condition={!buttonEnabled}
             />
         </View>
     );

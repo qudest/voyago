@@ -27,6 +27,7 @@ const AuthorizationAcceptScreen = () => {
     const fetchCodeAccess = async () => {
       try {
         const response = await getAccountTockens(phoneNumber, code);
+
         if (response.status === 200){
           const { 
             accessToken
@@ -59,7 +60,8 @@ const AuthorizationAcceptScreen = () => {
 
     const fetchPhoneNumber = async () => {
       try {
-        const response = await getAccountInfo(phoneNumber);
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        const response = await getAccountInfo(phoneNumber, accessToken);
         if (response.status === 200){
           const data = response.data;
           console.log('Account info received:', data);
@@ -178,7 +180,7 @@ const AuthorizationAcceptScreen = () => {
             style={styles.imageLogoName}
             />
             <Text style={styles.textNumberTitle} >Код из смс</Text>
-            <Text style={styles.textNumber} >Отправили на {phoneNumber}</Text>
+            <Text style={styles.textNumber} >Отправили на +{phoneNumber}</Text>
             <TextInput style={styles.inputNumber}
                 maxLength={6}
                 placeholder="000000"
