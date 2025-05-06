@@ -1,5 +1,6 @@
-package by.smertex.api.controller;
+package by.smertex.api.controller.impl;
 
+import by.smertex.api.controller.GatewaySubscriptionController;
 import by.smertex.core.client.SubscriptionServiceClient;
 import by.smertex.core.dto.service.subscription.input.SubscriptionDataDto;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/subscription")
 @RequiredArgsConstructor
-public class GatewaySubscriptionService {
+public class GatewaySubscriptionControllerImpl implements GatewaySubscriptionController {
 
     private final SubscriptionServiceClient subscriptionServiceClient;
 

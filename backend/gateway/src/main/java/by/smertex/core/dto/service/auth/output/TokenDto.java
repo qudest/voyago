@@ -1,9 +1,10 @@
 package by.smertex.core.dto.service.auth.output;
 
-import lombok.Builder;
+import io.swagger.v3.oas.annotations.media.Schema;
 
-@Builder
-public record TokenDto(String accessToken
-                       //String refreshToken
+@Schema(description = "Сущность токена")
+public record TokenDto(
+        @Schema(description = "Access токен")
+        String accessToken
 ) {
 }
