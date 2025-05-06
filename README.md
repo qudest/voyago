@@ -29,8 +29,8 @@
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
 ### **Тестирование 2 аттестация**
-- Тест-кейсы [xlsx]()  
-- Тестирование сервисов [xlsx]()
+- Тест-кейсы [xlsx](Documentation/Test-cases-ALL.xlsx)  
+- Тестирование сервисов [xlsx](Documentation/API-Tests-ALL.xlsx)
 - Отчет о тестировании [pdf]()
 
 ### **Видео**  
