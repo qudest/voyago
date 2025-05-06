@@ -31,7 +31,7 @@
 ### **Тестирование 2 аттестация**
 - Тест-кейсы [xlsx](Documentation/Test-cases-ALL.xlsx)  
 - Тестирование сервисов [xlsx](Documentation/API-Tests-ALL.xlsx)
-- Отчет о тестировании [pdf]()
+- Отчет о тестировании [pdf](Documentation/Otchet-testiorovaniya.pdf)
 
 ### **Видео**  
 - [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
