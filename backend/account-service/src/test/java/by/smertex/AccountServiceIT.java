@@ -141,6 +141,7 @@ public class AccountServiceIT extends AbstractTest {
                 .city("Moscow")
                 .preferences(preferences)
                 .creditCard("123456789123:123:12/33")
+                .name("profile125456888")
                 .build();
 
         accountService.update(account.getId(), accountUpdateDto);

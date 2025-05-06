@@ -5,8 +5,6 @@ import by.smertex.core.database.model.impl.Token;
 import by.smertex.core.database.repository.TokenRepository;
 import by.smertex.core.dto.input.AccountReadDto;
 import by.smertex.core.dto.input.PhoneCodeDto;
-import by.smertex.core.dto.input.RefreshTokenDto;
-import by.smertex.core.dto.output.TokenDto;
 import by.smertex.core.exception.InvalidCodeException;
 import by.smertex.core.service.JwtService;
 import by.smertex.core.service.PhoneCodeService;
@@ -16,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -48,9 +45,6 @@ public class JwtServiceTest extends AbstractTest {
 
     @MockitoBean
     private PhoneCodeService phoneCodeService;
-
-    @Value("${path.account-service}")
-    private String restTemplatePath;
 
     @Container
     @ServiceConnection
@@ -89,9 +83,6 @@ public class JwtServiceTest extends AbstractTest {
         Mockito.doNothing()
                 .when(phoneCodeService)
                 .verifyCode(phoneCodeDto);
-        Mockito
-                .when(restTemplate.getForObject(restTemplatePath, AccountReadDto.class, phoneCodeDto.phoneNumber()))
-                .thenReturn(returnedAccount);
     }
 
     @AfterEach
