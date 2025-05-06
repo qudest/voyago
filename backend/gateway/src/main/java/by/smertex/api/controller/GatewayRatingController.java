@@ -1,47 +1,37 @@
 package by.smertex.api.controller;
 
-import by.smertex.core.client.RatingServiceClient;
 import by.smertex.core.dto.service.rating.AverageRatingDto;
 import by.smertex.core.dto.service.rating.RatingDto;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/ratings")
-@RequiredArgsConstructor
-public class GatewayRatingController {
+@Tag(name = "Контроллер оценок", description = "Контроллер для работы с оценками")
+public interface GatewayRatingController {
 
-    private final RatingServiceClient ratingServiceClient;
+    @Operation(summary = "Получить рейтинг маршрута по id")
+    ResponseEntity<AverageRatingDto> getRating(
+            @Parameter(description = "Id маршрута", required = true) Long routeId
+    );
 
-    @GetMapping("/{routeId}")
-    public ResponseEntity<AverageRatingDto> getRating(@PathVariable("routeId") Long routeId) {
-        return ResponseEntity.ok(
-                ratingServiceClient.getRating(routeId)
-        );
-    }
+    @Operation(summary = "Получить рейтинги для списка маршрутов")
+    ResponseEntity<Map<Long, Float>> getRatings(
+            @Parameter(description = "Список c id маршрутов", required = true)
+            List<Long> routeIds
+    );
 
-    @PutMapping
-    public ResponseEntity<Map<Long, Float>> getRatings(@RequestBody List<Long> routeIds) {
-        return ResponseEntity.ok(
-                ratingServiceClient.getRatings(routeIds)
-        );
-    }
+    @Operation(summary = "Оставить оценку")
+    ResponseEntity<RatingDto> create(
+            @Parameter(description = "Id пользователя", required = true)
+            Long userId,
+            @Parameter(description = "Оценка", required = true)
+            RatingDto ratingDto
+    );
 
-    @PostMapping
-    public ResponseEntity<RatingDto> create(@RequestParam Long userId, @RequestBody RatingDto ratingDto) {
-        return ResponseEntity.ok(
-                ratingServiceClient.create(userId, ratingDto)
-        );
-    }
-
-    @PatchMapping
-    public ResponseEntity<Void> update() {
-        ratingServiceClient.update();
-        return ResponseEntity.ok()
-                .build();
-    }
+    @Operation(summary = "Инвалидация и пересчет рейтинга")
+    ResponseEntity<Void> update();
 }

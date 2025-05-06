@@ -1,38 +1,41 @@
 package by.smertex.api.controller;
 
-import by.smertex.core.client.AccountServiceClient;
 import by.smertex.core.dto.service.account.input.AccountUpdateDto;
 import by.smertex.core.dto.service.account.output.AccountReadDto;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/account")
-@RequiredArgsConstructor
-public class GatewayAccountController {
+@Tag(name = "Контроллер аккаунтов", description = "Контроллер для работы с аккаунтами")
+public interface GatewayAccountController {
 
-    private final AccountServiceClient accountServiceClient;
+    @Operation(
+            summary = "Получить аккаунт по номеру телефона",
+            description = "Отправляет запрос на получение аккаунта, в случае его отсутствия - делает запись в базе данных"
+    )
+    ResponseEntity<AccountReadDto> findAccountByPhoneNumber(
+            @Parameter(description = "Номер телефона", example = "78005553535", required = true)
+            String phone
+    );
 
-    @GetMapping("/{phone}")
-    ResponseEntity<AccountReadDto> findAccountByPhoneNumber(@PathVariable String phone){
-        return ResponseEntity.ok(
-                accountServiceClient.findAccountByPhoneNumber(phone)
-        );
-    }
+    @Operation(
+            summary = "Обновить данные аккаунта",
+            description = "Обновляет данные пользователя, исходя из его id"
+    )
+    ResponseEntity<Void> update(
+            @Parameter(description = "Пользовательский id", required = true)
+            Long id,
+            @Parameter(description = "Данные", required = true)
+            AccountUpdateDto dto
+    );
 
-    @PutMapping("/{id}")
-    ResponseEntity<Void> update(@PathVariable Long id,
-                @RequestBody AccountUpdateDto dto){
-        return ResponseEntity.ok(
-                accountServiceClient.update(id, dto)
-        );
-    }
-
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                accountServiceClient.delete(id)
-        );
-    }
+    @Operation(
+            summary = "Удалить аккаунт",
+            description = "Удаляет аккаунт, исходя из его id"
+    )
+    ResponseEntity<Void> delete(
+            @Parameter(description = "Пользовательский id", required = true)
+            Long id
+    );
 }

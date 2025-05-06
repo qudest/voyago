@@ -1,5 +1,6 @@
-package by.smertex.api.controller;
+package by.smertex.api.controller.impl;
 
+import by.smertex.api.controller.GatewayAuthController;
 import by.smertex.core.client.AuthServiceClient;
 import by.smertex.core.dto.service.auth.input.PhoneCodeDto;
 import by.smertex.core.dto.service.auth.input.PhoneDto;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/security")
 @RequiredArgsConstructor
-public class GatewayAuthService {
+public class GatewayAuthControllerImpl implements GatewayAuthController {
 
     private final AuthServiceClient authServiceClient;
 
