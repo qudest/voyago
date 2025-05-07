@@ -50,7 +50,7 @@
 [Чеклист 2 аттестация](Documentation/check-list-2.pdf)
   
 **Нас оценивали 2 аттестация**   
-- Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист]()  
+- Команда 1.4 [Git](https://github.com/Dodger0072/Programming-technologies-project) [чек-лист](https://github.com/Dodger0072/Programming-technologies-project/blob/main/docs/Чек-листы/Чеклист%201.4_2атт.pdf)  
 - Команда 5.4 [Git](https://github.com/TP-Jobsy) [чек-лист](https://github.com/TP-Jobsy/jobsy-docs/blob/main/checklist/Чеклист%202%20этап.pdf)  
 - Команда 6.2 [Git](https://github.com/AlexanderLaptev/Taskbench) [чек-лист](https://github.com/AlexanderLaptev/Taskbench/blob/main/docs/Чеклист%202%20этап.pdf)  
 - Команда 7.1 [Git](https://github.com/TP-RENTPLACE	) [чек-лист](https://github.com/TP-RENTPLACE/RENTPLACE/blob/main/Документация/Чек-лист%202%20этап.pdf) 
