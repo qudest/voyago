@@ -10,6 +10,7 @@ import ChooseButton from "../../components/ChooseButton/ChooseButton";
 const PreviewRouteScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [routeInfo, setRouteInfo] = useState({
+        id: 1,
         name: "",
         coordinates: [],
         markers: [],
@@ -52,7 +53,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
 
     const fetchRouteData = async (routeParams) => {
         try {
-            const { routePoints, distance, duration, pointNames, name } = routeParams;
+            const { id, routePoints, distance, duration, pointNames, name } = routeParams;
             
             const [originCoords, ...waypointsCoords] = await Promise.all([
                 getCoordinatesFromPlaceId(routePoints.origin),
@@ -131,6 +132,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
                 };
 
                 return {
+                    id,
                     name,
                     coordinates,
                     markers,

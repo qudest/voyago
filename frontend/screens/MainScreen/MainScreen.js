@@ -10,6 +10,7 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 import polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { postRating } from '../../services/ratingApi';
 
 const { height } = Dimensions.get('window');
 
@@ -29,6 +30,7 @@ const MainScreen = () => {
   const [loading, setLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [region, setRegion] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
   const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 
@@ -36,6 +38,8 @@ const MainScreen = () => {
     const fetchUserData = async () => {
       try {
         const cachedData = await AsyncStorage.getItem('userData');
+        const accessToken = await AsyncStorage.getItem('accessToken');
+        setAccessToken(accessToken)
         if (cachedData) {
           const parsedData = JSON.parse(cachedData);
           setUserData(parsedData);
@@ -238,6 +242,13 @@ const MainScreen = () => {
     }
   };
 
+  useEffect(() => {
+    if (route.params?.selectedRoute) {
+      console.log("Получен маршрут:", route.params.selectedRoute);
+    }
+  }, [route.params]);
+
+  
   const handleNext = () => {
     if (selectedRoute && currentIndex < selectedRoute.points.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -248,9 +259,16 @@ const MainScreen = () => {
     }
   };
 
-  const handleRatingSelected = (newRating) => {
+  const handleRatingSelected = async (newRating) => {
     setRating(newRating); 
     setRatingPrompt("Ваша оценка:"); 
+    if (selectedRoute && accessToken) {
+      try {
+        await handleRate(selectedRoute.id, newRating);
+      } catch (error) {
+        console.error("Ошибка отправки рейтинга:", error);
+      }
+    }
     console.log('Selected rating:', newRating);
   };
 
@@ -287,6 +305,16 @@ const MainScreen = () => {
       },
     })
   ).current;
+
+  const handleRate = async (routeId, rating) => {
+      try {
+          const response = await postRating(routeId, rating, accessToken);
+          console.log('Оценка отправлена:', response.data);
+      } catch (error) {
+        console.log(routeId, rating)
+        console.log('Ошибка при отправке оценки:', error.response?.data || error.message);
+      }
+  };
 
   return (
     <View style={styles.container}>

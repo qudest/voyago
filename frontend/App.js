@@ -24,7 +24,10 @@ import FiltersScreen from './screens/FiltersScreen/FiltersScreen';
 import PreviewRouteScreen from './screens/PreviewRouteScreen/PreviewRouteScreen';
 import AdditionalParametersScreen from './screens/AdditionalParametersScreen/AdditionalParametersScreen';
 import { TextEncoder } from 'text-encoding';
-
+import PremiumCreateRouteScreen from './screens/PremiumCreateRouteScreen/PremiumCreateRouteScreen';
+import AdminUsersScreen from './screens/AdminUsersScreen/AdminUsersScreen';
+import AdminScreen from './screens/AdminScreen/AdminScreen';
+import AdminRoutesScreen from './screens/AdminRoutesScreen/AdminRoutesScreen';
 
 global.TextEncoder = TextEncoder;
 
@@ -55,6 +58,10 @@ export default function App() {
           <Stack.Screen name="FiltersScreen" component={FiltersScreen}/>
           <Stack.Screen name="PreviewRouteScreen" component={PreviewRouteScreen}/>
           <Stack.Screen name="AdditionalParametersScreen" component={AdditionalParametersScreen}/>
+          <Stack.Screen name="PremiumCreateRouteScreen" component={PremiumCreateRouteScreen}/>
+          <Stack.Screen name="AdminUsersScreen" component={AdminUsersScreen}/>
+          <Stack.Screen name="AdminScreen" component={AdminScreen}/>
+          <Stack.Screen name="AdminRoutesScreen" component={AdminRoutesScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

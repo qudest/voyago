@@ -81,13 +81,17 @@ const AuthorizationAcceptScreen = () => {
           };
 
           await AsyncStorage.setItem('userData', JSON.stringify(userData));
-          if (response.data.city === null ){
-            const { id } = response.data;
-            await AsyncStorage.setItem('userData', JSON.stringify(userData));
-            navigation.navigate('ChooseCityScreen', {idAccount: id, phoneNumber})
+          if (userData.role === 'ADMIN') {
+              navigation.navigate('AdminScreen');
           } else {
-            console.log('Navigating to MainScreen with:', phoneNumber, response.data.city);
-            navigation.navigate('MainScreen')
+            if (response.data.city === null) {
+                const { id } = response.data;
+                await AsyncStorage.setItem('userData', JSON.stringify(userData));
+                navigation.navigate('ChooseCityScreen', { idAccount: id, phoneNumber });
+            } else {
+                console.log('Navigating to MainScreen with:', phoneNumber, response.data.city);
+                navigation.navigate('MainScreen');
+            }
           }
         }
       } catch (error) {

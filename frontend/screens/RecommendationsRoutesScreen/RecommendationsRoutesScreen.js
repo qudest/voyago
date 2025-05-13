@@ -7,8 +7,11 @@ import RouteCard from '../../components/RouteCard/RouteCard';
 import SettingsButton from '../../components/SettingsButton/SettingsButton';
 import PremiunRoutesButton from '../../components/PremiumRoutesButton/PremiumRoutesButton';
 import { findAll } from '../../services/routesApi';
+import { postRating } from '../../services/ratingApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
+
 const RecommendationsRoutesScreen = () => {
     const navigation = useNavigation();
     const [routes, setRoutes] = useState([]);
@@ -134,6 +137,7 @@ const RecommendationsRoutesScreen = () => {
     const handleRoutePress = (route) => {
         navigation.navigate("PreviewRouteScreen", { 
             routeData: {
+                id: route.id,
                 name: route.name,
                 rating: parseFloat(route.rating),
                 distance: route.distance,
@@ -147,6 +151,7 @@ const RecommendationsRoutesScreen = () => {
                 coordinates: route.coordinates 
             }
         });
+        console.log(route.id)
     };
 
     
@@ -185,6 +190,15 @@ const RecommendationsRoutesScreen = () => {
         return `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`;
     };
 
+    const handleRate = async (routeId, rating) => {
+        try {
+            const response = await postRating(routeId, rating, accessToken);
+            console.log('Оценка отправлена:', response.data);
+        } catch (error) {
+            console.error('Ошибка при отправке оценки:', error.response?.data || error.message);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <BackButton onPress={handlerBackButton} />
@@ -210,6 +224,7 @@ const RecommendationsRoutesScreen = () => {
                             cardInformation={mapRouteToCard(route)}
                             functional="like"
                             onPress={() => handleRoutePress(route)}
+                            onRate={(value) => handleRate(route.id, value)}
                         />
                     ))
                 )}
