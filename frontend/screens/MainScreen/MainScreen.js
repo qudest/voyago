@@ -31,6 +31,7 @@ const MainScreen = () => {
   const [markers, setMarkers] = useState([]);
   const [region, setRegion] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [nearbyCafes, setNearbyCafes] = useState([]);
 
   const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
 
@@ -60,6 +61,58 @@ const MainScreen = () => {
 
     fetchUserData();
   }, []);
+
+  const fetchNearbyCafes = async (routeCoords) => {
+  try {
+    if (!routeCoords || routeCoords.length === 0) return;
+
+    const searchPoints = [
+      routeCoords[0], 
+      routeCoords[Math.floor(routeCoords.length / 2)],
+      routeCoords[routeCoords.length - 1]
+    ];
+
+    const allCafes = [];
+    
+    for (const point of searchPoints) {
+      const response = await axios.get(
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json',
+        {
+          params: {
+            location: `${point.latitude},${point.longitude}`,
+            radius: 2000, 
+            type: 'cafe',
+            key: API_KEY,
+            language: 'ru'
+          }
+        }
+      );
+      
+      if (response.data.results.length > 0) {
+        response.data.results.forEach(cafe => {
+          if (!allCafes.some(c => c.id === cafe.place_id)) {
+            allCafes.push({
+              id: cafe.place_id,
+              name: cafe.name,
+              coordinate: {
+                latitude: cafe.geometry.location.lat,
+                longitude: cafe.geometry.location.lng
+              },
+              rating: cafe.rating,
+              icon: require('../../assets/markers/current.png') 
+            });
+          }
+        });
+      }
+      
+      if (allCafes.length >= 6) break;
+    }
+    
+    setNearbyCafes(allCafes.slice(0, 6)); 
+  } catch (error) {
+    console.error('Ошибка при поиске кафе:', error);
+  }
+};
 
   const fetchCityCoordinates = async (cityName) => {
     try {
@@ -248,6 +301,12 @@ const MainScreen = () => {
     }
   }, [route.params]);
 
+  useEffect(() => {
+  if (coordinates.length > 0) {
+    fetchNearbyCafes(coordinates);
+  }
+}, [coordinates]);
+
   
   const handleNext = () => {
     if (selectedRoute && currentIndex < selectedRoute.points.length - 1) {
@@ -331,6 +390,17 @@ const MainScreen = () => {
                 coordinate={marker.coordinate}
                 title={marker.title}
                 image={marker.icon}
+              />
+            ))}
+
+             {/* Маркеры кафе */}
+            {nearbyCafes.map((cafe, index) => (
+              <Marker
+                key={`cafe-${index}`}
+                coordinate={cafe.coordinate}
+                title={cafe.name}
+                description={`Рейтинг: ${cafe.rating}`}
+                image={cafe.icon}
               />
             ))}
 
