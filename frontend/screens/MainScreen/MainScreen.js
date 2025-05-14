@@ -11,7 +11,7 @@ import polyline from '@mapbox/polyline';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { postRating } from '../../services/ratingApi';
-
+import { getRating } from '../../services/ratingApi';
 const { height } = Dimensions.get('window');
 
 const MainScreen = () => {
@@ -263,11 +263,7 @@ const MainScreen = () => {
     setRating(newRating); 
     setRatingPrompt("Ваша оценка:"); 
     if (selectedRoute && accessToken) {
-      try {
-        await handleRate(selectedRoute.id, newRating);
-      } catch (error) {
-        console.error("Ошибка отправки рейтинга:", error);
-      }
+       handleRate(selectedRoute.id, parseInt(newRating));
     }
     console.log('Selected rating:', newRating);
   };
@@ -307,11 +303,12 @@ const MainScreen = () => {
   ).current;
 
   const handleRate = async (routeId, rating) => {
+      const userId = userData.id;
       try {
-          const response = await postRating(routeId, rating, accessToken);
+          const response = await postRating(routeId, rating, userId, accessToken);
           console.log('Оценка отправлена:', response.data);
       } catch (error) {
-        console.log(routeId, rating)
+        console.log(routeId, rating, accessToken)
         console.log('Ошибка при отправке оценки:', error.response?.data || error.message);
       }
   };

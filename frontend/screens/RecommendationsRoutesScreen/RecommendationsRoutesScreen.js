@@ -155,7 +155,6 @@ const RecommendationsRoutesScreen = () => {
                 coordinates: route.coordinates 
             }
         });
-        console.log(route.id)
     };
 
     
@@ -186,6 +185,7 @@ const RecommendationsRoutesScreen = () => {
             ],
             rating: route.rating || 0
         };
+        
     };
 
     const formatDuration = (seconds) => {
@@ -194,14 +194,6 @@ const RecommendationsRoutesScreen = () => {
         return `${hours > 0 ? `${hours} ч ` : ''}${minutes} мин`;
     };
 
-    const handleRate = async (routeId, rating) => {
-        try {
-            const response = await postRating(routeId, rating, accessToken);
-            console.log('Оценка отправлена:', response.data);
-        } catch (error) {
-            console.error('Ошибка при отправке оценки:', error.response?.data || error.message);
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -227,7 +219,6 @@ const RecommendationsRoutesScreen = () => {
                             cardInformation={mapRouteToCard(route)}
                             functional="like"
                             onPress={() => handleRoutePress(route)}
-                            onRate={(value) => handleRate(route.id, value)}
                         />
                     ))
                 )}

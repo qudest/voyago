@@ -6,6 +6,8 @@ import axios from 'axios';
 import styles from "./styles";
 import BackButton from "../../components/BackButton/BackButton";
 import ChooseButton from "../../components/ChooseButton/ChooseButton";
+import { getRating } from '../../services/ratingApi';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PreviewRouteScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
@@ -19,8 +21,25 @@ const PreviewRouteScreen = ({ navigation, route }) => {
         duration: 0,
         points: []
     });
+    const [accessToken, setAccessToken] = useState(null);
+    const [rating, setRating] = useState(null);
+    
+    console.log(rating);
     
     const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+        try {
+            const accessToken = await AsyncStorage.getItem('accessToken');
+            setAccessToken(accessToken)
+        } catch (error) {
+            console.log('Ошибка загрузки данных:', error);
+        }
+        };
+
+        fetchUserData();
+    }, []);
 
     const formatMetrics = (distance, duration) => {
         const hours = Math.floor(duration / 3600);
@@ -154,6 +173,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             fetchRouteData(route.params.routeData)
                 .then(data => {
                     setRouteInfo(data);
+                    fetchRouteRating(data.id);
                     setLoading(false);
                 })
                 .catch(error => {
@@ -164,6 +184,18 @@ const PreviewRouteScreen = ({ navigation, route }) => {
 
     const { distance, duration } = formatMetrics(routeInfo.distance, routeInfo.duration);
 
+    const fetchRouteRating = async (routeId) => {
+          try {
+                const response = await getRating(routeId, accessToken);
+                setRating(response.data.averageRating);
+                 console.log('отправилось',response.data.averageRating );
+          } catch (error) {
+                console.log(routeId,response.data.averageRating )
+                console.log('Ошибка при отправке оценки:', error.response?.data || error.message);
+                setRating(null);
+          }
+      };
+    
     return (
         <SafeAreaView style={styles.safeContainer}>
             <View style={styles.container}>
@@ -231,7 +263,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
                                     style={styles.ratingImage}
                                 />
                                 <Text style={styles.rating}>
-                                    {route.params?.routeData?.rating?.toFixed(1) || '4.5'}
+                                    {rating || '0.0'}
                                 </Text>
                             </View>
                         </View>
