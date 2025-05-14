@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './styles';
 import { useNavigation } from "@react-navigation/native";
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, ActivityIndicator, TouchableOpacity} from 'react-native';
 import BackButton from '../../components/BackButton/BackButton';
 import RouteCard from '../../components/RouteCard/RouteCard';
 import SettingsButton from '../../components/SettingsButton/SettingsButton';
@@ -23,6 +23,10 @@ const RecommendationsRoutesScreen = () => {
     const [userData, setUserData] = useState(null);
     const [tokenLoaded, setTokenLoaded] = useState(false);
     const [cityNamesCache, setCityNamesCache] = useState({});
+
+    const handlePremiumCreateRoutesButton = () => {
+        navigation.navigate("PremiumCreateRouteScreen")
+    }
 
     useEffect(() => {
         const fetchCachedData = async () => {
@@ -118,7 +122,7 @@ const RecommendationsRoutesScreen = () => {
             
             setRoutes(routesWithCityNames);
         } catch (error) {
-            console.error('Ошибка загрузки маршрутов:', error);
+            console.log('Ошибка загрузки маршрутов:', error);
         } finally {
             setLoading(false);
         }
@@ -202,9 +206,8 @@ const RecommendationsRoutesScreen = () => {
     return (
         <View style={styles.container}>
             <BackButton onPress={handlerBackButton} />
-            
             <View style={styles.header}>
-                <PremiunRoutesButton/>
+                <PremiunRoutesButton onPress={handlePremiumCreateRoutesButton}/>
                 <SettingsButton onPress={handleSettingsButton}/>
             </View>
 

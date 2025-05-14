@@ -3,9 +3,10 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: '100%',
         backgroundColor: '#FCFFFF',
         justifyContent: 'space-around', 
-        alignItems: 'center', 
+         alignItems: 'stretch',
       },
       filtersContainer: {
         flex: 1,
@@ -113,12 +114,14 @@ const styles = StyleSheet.create({
         flex: 1,
       },
       scrollContent: {
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingTop: 50,
         paddingBottom: 50,
       },
       mapContainer: {
         height: 200,
-        justifyContent: 'center',
-        alignItems: 'center',
         marginBottom: 20,
         borderRadius: 10,
       },
@@ -127,15 +130,24 @@ const styles = StyleSheet.create({
         height: '100%',
         borderRadius: 10,
       },
-      contentPoints: {
+      infoContainer: {
         borderRadius: 22,
         padding: 15,
+        width: 310,
+        marginTop: 30,
+        backgroundColor: '#FFFFFF',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 6,
         elevation: 5,
         marginBottom: 20,
+      },
+      contentPoints: {
+        borderRadius: 22,
+        padding: 15,
+        fontSize: 16,
+        fontWeight: 500,
       },
       pointText: {
         marginVertical: 7,
@@ -187,8 +199,7 @@ const styles = StyleSheet.create({
         zIndex: 10,
       },
       chooseButton: {
-        width: '100%',
-        height: 50, 
+        marginBottom: 40,
         justifyContent: 'center',
       },
 

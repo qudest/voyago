@@ -109,7 +109,7 @@ const MyRoutesScreen = () => {
                         setRoutes(routesWithCityNames);
         } catch (err) {
             setError(err.message);
-            console.error('Ошибка загрузки маршрутов:', err);
+            console.log('Ошибка загрузки маршрутов:', err);
         } finally {
             setLoading(false);
         }
@@ -213,7 +213,7 @@ const MyRoutesScreen = () => {
         return (
             <View style={styles.container}>
                 <BackButton onPress={handlerBackButton} />
-                <Text style={styles.errorText}>{error}</Text>
+                <Text style={styles.errorText}>Что-то пошло не так. Попробуйте позже.</Text>
             </View>
         );
     }
