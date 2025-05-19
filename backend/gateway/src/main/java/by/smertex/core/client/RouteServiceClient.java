@@ -3,6 +3,8 @@ package by.smertex.core.client;
 import by.smertex.core.configuration.FeignConfig;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
+import feign.Param;
+import feign.RequestLine;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,15 +33,15 @@ public interface RouteServiceClient {
     @GetMapping("/api/routes/passed")
     List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId);
 
-    @PutMapping(value = "/api/routes/favorites")
-    void addToFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
+    @RequestLine("PUT /api/routes/favorites")
+    void addToFavorites(@Param("routeId") Long routeId, @Param("userId") Long userId);
 
-    @DeleteMapping(value = "/api/routes/favorites")
-    void removeFromFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
+    @RequestLine("DELETE /api/routes/favorites")
+    void removeFromFavorites(@Param("routeId") Long routeId, @Param("userId") Long userId);
 
-    @PutMapping(value = "/api/routes/passed")
-    void addToPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
+    @RequestLine("PUT /api/routes/passed")
+    void addToPassed(@Param("routeId") Long routeId, @Param("userId") Long userId);
 
-    @DeleteMapping(value = "/api/routes/passed")
-    void removeFromPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
+    @RequestLine("DELETE /api/routes/passed")
+    void removeFromPassed(@Param("routeId") Long routeId, @Param("userId") Long userId);
 }
