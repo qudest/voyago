@@ -59,7 +59,7 @@ public class UserRouteInfoServiceImpl implements UserRouteInfoService {
             UserRouteInfo userRouteInfo = UserRouteInfo.builder()
                     .routeId(routeId)
                     .userId(userId)
-                    .isFavorite(true)
+                    .isPassed(true)
                     .build();
             userRouteInfoRepository.save(userRouteInfo);
         }
