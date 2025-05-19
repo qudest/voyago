@@ -2,8 +2,10 @@ package by.smertex.api.impl;
 
 import by.smertex.api.RouteController;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteUserDto;
 import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.service.RouteService;
+import by.smertex.core.service.UserRouteInfoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import java.util.List;
 public class RouteControllerImpl implements RouteController {
 
     private final RouteService routeService;
+    private final UserRouteInfoService userRouteInfoService;
 
     @GetMapping("/{id}")
     public RouteReadDto findById(@PathVariable Long id) {
@@ -27,10 +30,15 @@ public class RouteControllerImpl implements RouteController {
         return routeService.findAll();
     }
 
-//    @GetMapping("/favorites")
-//    public List<RouteReadDto> findAllFavorites(@RequestParam Long userId) {
-//        return routeService.findAllFavorites(userId);
-//    }
+    @GetMapping("/favorites")
+    public List<RouteReadDto> findAllFavorites(@RequestParam("userId") Long userId) {
+        return routeService.findAllFavorites(userId);
+    }
+
+    @GetMapping("/passed")
+    public List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId) {
+        return routeService.findAllPassed(userId);
+    }
 
     @PostMapping
     public RouteReadDto create(@RequestBody @Valid RouteCreateOrUpdateDto dto) {
@@ -38,17 +46,32 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody @Valid RouteCreateOrUpdateDto dto) {
+    public void update(@PathVariable("id") Long id, @RequestBody @Valid RouteCreateOrUpdateDto dto) {
         routeService.update(id, dto);
     }
 
-//    @PutMapping("/favorites")
-//    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
-//        routeService.addToFavorites(routeId, userId);
-//    }
+    @PutMapping("/favorites")
+    public void addToFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToFavorites(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @DeleteMapping("/favorites")
+    public void removeFromFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromFavorites(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @PutMapping("/passed")
+    public void addToPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToPassed(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @DeleteMapping("/passed")
+    public void removeFromPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromPassed(routeUserDto.routeId(), routeUserDto.userId());
+    }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         routeService.delete(id);
     }
 }

@@ -13,6 +13,8 @@ public interface RouteService {
 
     List<RouteReadDto> findAllFavorites(Long userId);
 
+    List<RouteReadDto> findAllPassed(Long userId);
+
     RouteReadDto create(RouteCreateOrUpdateDto dto);
 
     void update(Long id, RouteCreateOrUpdateDto dto);

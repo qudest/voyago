@@ -43,6 +43,7 @@ services:
     image: qudest/voyago:gateway
     container_name: "gateway"
     build: ./gateway
+    platform: linux/amd64
     environment:
       - ACCOUNT_SERVICE=http://account-service:8090
       - AUTH_SERVICE=http://auth-service:8090
@@ -67,6 +68,7 @@ services:
     image: qudest/voyago:notification-service
     container_name: "notification-service"
     build: ./notification-service
+    platform: linux/amd64
     restart: always
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
@@ -82,6 +84,7 @@ services:
     image: qudest/voyago:auth-service
     container_name: "auth-service"
     build: ./auth-service
+    platform: linux/amd64
     restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
@@ -105,6 +108,7 @@ services:
     image: qudest/voyago:rating-service
     container_name: "rating-service"
     build: ./rating-service
+    platform: linux/amd64
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
@@ -126,6 +130,7 @@ services:
     image: qudest/voyago:route-service
     container_name: "route-service"
     build: ./route-service
+    platform: linux/amd64
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
@@ -146,6 +151,7 @@ services:
     image: qudest/voyago:account-service
     container_name: "account-service"
     build: ./account-service
+    platform: linux/amd64
     restart: always
     environment:
       - DB_URL=jdbc:postgresql://postgres:5432/db
@@ -167,6 +173,7 @@ services:
     image: qudest/voyago:subscription-service
     container_name: "subscription-service"
     build: ./subscription-service
+    platform: linux/amd64
     restart: always
     environment:
       - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
