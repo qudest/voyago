@@ -4,7 +4,6 @@ import by.smertex.api.controller.GatewayRouteController;
 import by.smertex.core.client.RouteServiceClient;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,22 +42,22 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
     }
 
     @PutMapping("/favorites")
-    public void addToFavorites(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
         routeServiceClient.addToFavorites(routeId, userId);
     }
 
     @DeleteMapping("/favorites")
-    public void removeFromFavorites(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void removeFromFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
         routeServiceClient.removeFromFavorites(routeId, userId);
     }
 
     @PutMapping("/passed")
-    public void addToPassed(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void addToPassed(@RequestParam Long routeId, @RequestParam Long userId) {
         routeServiceClient.addToPassed(routeId, userId);
     }
 
     @DeleteMapping("/passed")
-    public void removeFromPassed(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void removeFromPassed(@RequestParam Long routeId, @RequestParam Long userId) {
         routeServiceClient.removeFromPassed(routeId, userId);
     }
 

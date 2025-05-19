@@ -2,7 +2,6 @@ package by.smertex.core.client;
 
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,20 +25,20 @@ public interface RouteServiceClient {
     void delete(@PathVariable Long id);
 
     @GetMapping("/api/routes/favorites")
-    List<RouteReadDto> findAllFavorites(Long userId);
+    List<RouteReadDto> findAllFavorites(@RequestParam Long userId);
 
     @GetMapping("/api/routes/passed")
-    List<RouteReadDto> findAllPassed(Long userId);
+    List<RouteReadDto> findAllPassed(@RequestParam Long userId);
 
     @PutMapping("/api/routes/favorites")
-    void addToFavorites(@NotNull Long routeId, @NotNull Long userId);
+    void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId);
 
     @DeleteMapping("/api/routes/favorites")
-    void removeFromFavorites(@NotNull Long routeId, @NotNull Long userId);
+    void removeFromFavorites(@RequestParam Long routeId, @RequestParam Long userId);
 
     @PutMapping("/api/routes/passed")
-    void addToPassed(@NotNull Long routeId, @NotNull Long userId);
+    void addToPassed(@RequestParam Long routeId, @RequestParam Long userId);
 
     @DeleteMapping("/api/routes/passed")
-    void removeFromPassed(@NotNull Long routeId, @NotNull Long userId);
+    void removeFromPassed(@RequestParam Long routeId, @RequestParam Long userId);
 }
