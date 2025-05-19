@@ -1,5 +1,6 @@
 package by.smertex.core.client;
 
+import by.smertex.core.configuration.FeignConfig;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -7,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "route-service")
+@FeignClient(value = "route-service", configuration = FeignConfig.class)
 public interface RouteServiceClient {
     @GetMapping("/api/routes/{id}")
     RouteReadDto findById(@PathVariable Long id);
