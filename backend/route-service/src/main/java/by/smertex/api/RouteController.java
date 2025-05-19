@@ -1,6 +1,7 @@
 package by.smertex.api;
 
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteUserDto;
 import by.smertex.core.dto.output.RouteReadDto;
 
 import java.util.List;
@@ -19,13 +20,13 @@ public interface RouteController {
 
     void update(Long id, RouteCreateOrUpdateDto dto);
 
-    void addToFavorites(Long routeId, Long userId);
+    void addToFavorites(RouteUserDto routeUserDto);
 
-    void removeFromFavorites(Long routeId, Long userId);
+    void removeFromFavorites(RouteUserDto routeUserDto);
 
-    void addToPassed(Long routeId, Long userId);
+    void addToPassed(RouteUserDto routeUserDto);
 
-    void removeFromPassed(Long routeId, Long userId);
+    void removeFromPassed(RouteUserDto routeUserDto);
 
     void delete(Long id);
 }

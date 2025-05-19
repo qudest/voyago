@@ -2,6 +2,7 @@ package by.smertex.api.impl;
 
 import by.smertex.api.RouteController;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteUserDto;
 import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.service.RouteService;
 import by.smertex.core.service.UserRouteInfoService;
@@ -50,23 +51,23 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @PutMapping("/favorites")
-    public void addToFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
-        userRouteInfoService.addToFavorites(routeId, userId);
+    public void addToFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToFavorites(routeUserDto.routeId(), routeUserDto.userId());
     }
 
     @DeleteMapping("/favorites")
-    public void removeFromFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
-        userRouteInfoService.removeFromFavorites(routeId, userId);
+    public void removeFromFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromFavorites(routeUserDto.routeId(), routeUserDto.userId());
     }
 
     @PutMapping("/passed")
-    public void addToPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
-        userRouteInfoService.addToPassed(routeId, userId);
+    public void addToPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToPassed(routeUserDto.routeId(), routeUserDto.userId());
     }
 
     @DeleteMapping("/passed")
-    public void removeFromPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
-        userRouteInfoService.removeFromPassed(routeId, userId);
+    public void removeFromPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromPassed(routeUserDto.routeId(), routeUserDto.userId());
     }
 
     @DeleteMapping("/{id}")

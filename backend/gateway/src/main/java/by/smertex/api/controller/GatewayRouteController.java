@@ -1,10 +1,12 @@
 package by.smertex.api.controller;
 
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.service.route.input.RouteUserDto;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -29,18 +31,12 @@ public interface GatewayRouteController {
 
     @Operation(summary = "Добавление маршрута в избранное")
     void addToFavorites(
-            @Parameter(description = "Id маршрута", required = true)
-            Long routeId,
-            @Parameter(description = "Id пользователя", required = true)
-            Long userId
+            @Parameter(description = "Dto c id маршрута и id пользователя") RouteUserDto routeUserDto
     );
 
     @Operation(summary = "Удаление маршрута из избранного")
     void removeFromFavorites(
-            @Parameter(description = "Id маршрута", required = true)
-            Long routeId,
-            @Parameter(description = "Id пользователя", required = true)
-            Long userId
+            @Parameter(description = "Dto c id маршрута и id пользователя") RouteUserDto routeUserDto
     );
 
     @Operation(summary = "Вывести все пройденные маршруты пользователя")
@@ -48,18 +44,12 @@ public interface GatewayRouteController {
 
     @Operation(summary = "Добавление маршрута в пройденные")
     void addToPassed(
-            @Parameter(description = "Id маршрута", required = true)
-            Long routeId,
-            @Parameter(description = "Id пользователя", required = true)
-            Long userId
+            @Parameter(description = "Dto c id маршрута и id пользователя") RouteUserDto routeUserDto
     );
 
     @Operation(summary = "Удаление маршрута из пройденных")
     void removeFromPassed(
-            @Parameter(description = "Id маршрута", required = true)
-            Long routeId,
-            @Parameter(description = "Id пользователя", required = true)
-            Long userId
+            @Parameter(description = "Dto c id маршрута и id пользователя") RouteUserDto routeUserDto
     );
 
 
