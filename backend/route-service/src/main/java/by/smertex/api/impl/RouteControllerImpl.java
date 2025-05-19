@@ -6,7 +6,6 @@ import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.service.RouteService;
 import by.smertex.core.service.UserRouteInfoService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +20,7 @@ public class RouteControllerImpl implements RouteController {
     private final UserRouteInfoService userRouteInfoService;
 
     @GetMapping("/{id}")
-    public RouteReadDto findById(@PathVariable @NotNull Long id) {
+    public RouteReadDto findById(@PathVariable Long id) {
         return routeService.findById(id);
     }
 
@@ -51,27 +50,27 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @PutMapping("/favorites")
-    public void addToFavorites(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
         userRouteInfoService.addToFavorites(routeId, userId);
     }
 
     @DeleteMapping("/favorites")
-    public void removeFromFavorites(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void removeFromFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
         userRouteInfoService.removeFromFavorites(routeId, userId);
     }
 
     @PutMapping("/passed")
-    public void addToPassed(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void addToPassed(@RequestParam Long routeId, @RequestParam Long userId) {
         userRouteInfoService.addToPassed(routeId, userId);
     }
 
     @DeleteMapping("/passed")
-    public void removeFromPassed(@RequestParam @NotNull Long routeId, @RequestParam @NotNull Long userId) {
+    public void removeFromPassed(@RequestParam Long routeId, @RequestParam Long userId) {
         userRouteInfoService.removeFromPassed(routeId, userId);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable @NotNull Long id) {
+    public void delete(@PathVariable Long id) {
         routeService.delete(id);
     }
 }
