@@ -30,15 +30,15 @@ public interface RouteServiceClient {
     @GetMapping("/api/routes/passed")
     List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId);
 
-    @PutMapping("/api/routes/favorites")
+    @PutMapping(value = "/api/routes/favorites", params = {"routeId", "userId"})
     void addToFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
-    @DeleteMapping("/api/routes/favorites")
+    @DeleteMapping(value = "/api/routes/favorites", params = {"routeId", "userId"})
     void removeFromFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
-    @PutMapping("/api/routes/passed")
+    @PutMapping(value = "/api/routes/passed", params = {"routeId", "userId"})
     void addToPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
-    @DeleteMapping("/api/routes/passed")
+    @DeleteMapping(value = "/api/routes/passed", params = {"routeId", "userId"})
     void removeFromPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 }
