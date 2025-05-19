@@ -25,20 +25,20 @@ public interface RouteServiceClient {
     void delete(@PathVariable Long id);
 
     @GetMapping("/api/routes/favorites")
-    List<RouteReadDto> findAllFavorites(@RequestParam Long userId);
+    List<RouteReadDto> findAllFavorites(@RequestParam("userId") Long userId);
 
     @GetMapping("/api/routes/passed")
-    List<RouteReadDto> findAllPassed(@RequestParam Long userId);
+    List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId);
 
     @PutMapping("/api/routes/favorites")
-    void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId);
+    void addToFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
     @DeleteMapping("/api/routes/favorites")
-    void removeFromFavorites(@RequestParam Long routeId, @RequestParam Long userId);
+    void removeFromFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
     @PutMapping("/api/routes/passed")
-    void addToPassed(@RequestParam Long routeId, @RequestParam Long userId);
+    void addToPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 
     @DeleteMapping("/api/routes/passed")
-    void removeFromPassed(@RequestParam Long routeId, @RequestParam Long userId);
+    void removeFromPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId);
 }
