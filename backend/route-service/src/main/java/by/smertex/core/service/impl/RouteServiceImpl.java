@@ -2,6 +2,7 @@ package by.smertex.core.service.impl;
 
 import by.smertex.core.client.RatingServiceClient;
 import by.smertex.core.database.model.Route;
+import by.smertex.core.database.model.UserRouteInfo;
 import by.smertex.core.database.repository.RouteRepository;
 import by.smertex.core.dto.external.AverageRatingDto;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
@@ -9,6 +10,7 @@ import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.exception.impl.CrudException;
 import by.smertex.core.mapper.Mapper;
 import by.smertex.core.service.RouteService;
+import by.smertex.core.service.UserRouteInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,6 +29,7 @@ public class RouteServiceImpl implements RouteService {
     private final Mapper<RouteCreateOrUpdateDto, Route> dtoRouteMapper;
     private final Mapper<Route, RouteReadDto> routeDtoMapper;
     private final RatingServiceClient ratingServiceClient;
+    private final UserRouteInfoService userRouteInfoService;
 
     @Override
     public RouteReadDto findById(Long id) {
@@ -50,7 +54,44 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     public List<RouteReadDto> findAllFavorites(Long userId) {
-        return List.of();
+        return Optional.ofNullable(userRouteInfoService.findAllByUserId(userId))
+                .orElse(List.of())
+                .stream()
+                .filter(userRouteInfo -> userRouteInfo != null && userRouteInfo.getIsFavorite())
+                .map(UserRouteInfo::getRouteId)
+                .map(routeId -> routeRepository.findById(routeId).orElse(null))
+                .filter(Objects::nonNull)
+                .map(routeDtoMapper::map)
+                .peek(routeReadDto -> {
+                    if (routeReadDto != null) {
+                        AverageRatingDto rating = ratingServiceClient.getRating(routeReadDto.getId());
+                        if (rating != null) {
+                            routeReadDto.setRating(rating.averageRating());
+                        }
+                    }
+                })
+                .toList();
+    }
+
+    @Override
+    public List<RouteReadDto> findAllPassed(Long userId) {
+        return Optional.ofNullable(userRouteInfoService.findAllByUserId(userId))
+                .orElse(List.of())
+                .stream()
+                .filter(userRouteInfo -> userRouteInfo != null && userRouteInfo.getIsPassed())
+                .map(UserRouteInfo::getRouteId)
+                .map(routeId -> routeRepository.findById(routeId).orElse(null))
+                .filter(Objects::nonNull)
+                .map(routeDtoMapper::map)
+                .peek(routeReadDto -> {
+                    if (routeReadDto != null) {
+                        AverageRatingDto rating = ratingServiceClient.getRating(routeReadDto.getId());
+                        if (rating != null) {
+                            routeReadDto.setRating(rating.averageRating());
+                        }
+                    }
+                })
+                .toList();
     }
 
     @Override
