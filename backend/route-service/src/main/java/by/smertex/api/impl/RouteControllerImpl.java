@@ -30,12 +30,12 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @GetMapping("/favorites")
-    public List<RouteReadDto> findAllFavorites(@RequestParam Long userId) {
+    public List<RouteReadDto> findAllFavorites(@RequestParam("userId") Long userId) {
         return routeService.findAllFavorites(userId);
     }
 
     @GetMapping("/passed")
-    public List<RouteReadDto> findAllPassed(@RequestParam Long userId) {
+    public List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId) {
         return routeService.findAllPassed(userId);
     }
 
@@ -45,32 +45,32 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable Long id, @RequestBody @Valid RouteCreateOrUpdateDto dto) {
+    public void update(@PathVariable("id") Long id, @RequestBody @Valid RouteCreateOrUpdateDto dto) {
         routeService.update(id, dto);
     }
 
     @PutMapping("/favorites")
-    public void addToFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
+    public void addToFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
         userRouteInfoService.addToFavorites(routeId, userId);
     }
 
     @DeleteMapping("/favorites")
-    public void removeFromFavorites(@RequestParam Long routeId, @RequestParam Long userId) {
+    public void removeFromFavorites(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
         userRouteInfoService.removeFromFavorites(routeId, userId);
     }
 
     @PutMapping("/passed")
-    public void addToPassed(@RequestParam Long routeId, @RequestParam Long userId) {
+    public void addToPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
         userRouteInfoService.addToPassed(routeId, userId);
     }
 
     @DeleteMapping("/passed")
-    public void removeFromPassed(@RequestParam Long routeId, @RequestParam Long userId) {
+    public void removeFromPassed(@RequestParam("routeId") Long routeId, @RequestParam("userId") Long userId) {
         userRouteInfoService.removeFromPassed(routeId, userId);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable("id") Long id) {
         routeService.delete(id);
     }
 }
