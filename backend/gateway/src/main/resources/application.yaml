@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          account-service.url: ${ACCOUNT_SERVICE}
+          auth-service.url: ${AUTH_SERVICE}
+          rating-service.url: ${RATING_SERVICE}
+          route-service.url: ${ROUTE_SERVICE}
+          subscription-service.url: ${SUBSCRIPTION-SERVICE}
+
+in-memory:
+  username: ${IN_MEMORY_USERNAME:swagger}
+  password: ${IN_MEMORY_PASSWORD:swagger}
+
+server:
+  port: ${APP_PORT:8090}

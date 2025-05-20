@@ -2,56 +2,76 @@ package by.smertex.api.impl;
 
 import by.smertex.api.RouteController;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
-import by.smertex.core.dto.input.RouteFilter;
+import by.smertex.core.dto.input.RouteUserDto;
 import by.smertex.core.dto.output.RouteReadDto;
+import by.smertex.core.service.RouteService;
+import by.smertex.core.service.UserRouteInfoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/route")
+@RequestMapping("/api/routes")
 @RequiredArgsConstructor
 public class RouteControllerImpl implements RouteController {
 
+    private final RouteService routeService;
+    private final UserRouteInfoService userRouteInfoService;
+
     @GetMapping("/{id}")
-    public ResponseEntity<RouteReadDto> findById(Long id) {
-        return null;
+    public RouteReadDto findById(@PathVariable Long id) {
+        return routeService.findById(id);
     }
 
     @GetMapping
-    public ResponseEntity<List<RouteReadDto>> findAll(RouteFilter filter, Pageable pageable) {
-        return null;
+    public List<RouteReadDto> findAll() {
+        return routeService.findAll();
     }
 
-    @GetMapping("/favorites/{user-id}")
-    public ResponseEntity<List<RouteReadDto>> findAllFavorites(Long userId) {
-        return null;
+    @GetMapping("/favorites")
+    public List<RouteReadDto> findAllFavorites(@RequestParam("userId") Long userId) {
+        return routeService.findAllFavorites(userId);
+    }
+
+    @GetMapping("/passed")
+    public List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId) {
+        return routeService.findAllPassed(userId);
     }
 
     @PostMapping
-    public ResponseEntity<RouteReadDto> create(RouteCreateOrUpdateDto dto) {
-        return null;
+    public RouteReadDto create(@RequestBody @Valid RouteCreateOrUpdateDto dto) {
+        return routeService.create(dto);
     }
 
-    @PutMapping
-    public ResponseEntity<RouteReadDto> update(Long id, RouteCreateOrUpdateDto dto) {
-        return null;
-    }
-
-    @PutMapping("/rate")
-    public ResponseEntity<Void> rate(Long userId, Long rating) {
-        return null;
+    @PutMapping("/{id}")
+    public void update(@PathVariable("id") Long id, @RequestBody @Valid RouteCreateOrUpdateDto dto) {
+        routeService.update(id, dto);
     }
 
     @PutMapping("/favorites")
-    public ResponseEntity<Void> addToFavorites(Long routeId, Long userId) {
-        return null;
+    public void addToFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToFavorites(routeUserDto.routeId(), routeUserDto.userId());
     }
 
-    public ResponseEntity<Void> delete(Long id) {
-        return null;
+    @DeleteMapping("/favorites")
+    public void removeFromFavorites(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromFavorites(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @PutMapping("/passed")
+    public void addToPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.addToPassed(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @DeleteMapping("/passed")
+    public void removeFromPassed(@RequestBody @Valid RouteUserDto routeUserDto) {
+        userRouteInfoService.removeFromPassed(routeUserDto.routeId(), routeUserDto.userId());
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        routeService.delete(id);
     }
 }
