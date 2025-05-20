@@ -10,7 +10,7 @@ const FiltersScreen = () => {
     const [selectedDuration, setSelectedDuration] = useState(null);
 
     const handleBackButton = () => {
-        navigation.navigate("RecommendationsRoutesScreen");
+        navigation.goBack();
     };
 
     const mockPlace = [

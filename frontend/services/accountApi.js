@@ -1,34 +1,58 @@
-import axios from 'axios';
-import { API_URL } from '../variables/ip';
+import axios from "axios";
+import { API_URL } from "../variables/ip";
 
-export const putAccountInfo = async (id, userName = null, userCountry = "Russia", selectedCity, selectedPreferences = [], creditCard = null, accessToken) => {
-  console.log(id, userName, userCountry, selectedCity, accessToken, selectedPreferences, creditCard)
-  return axios.put(`http://${API_URL}:8090/api/account/${id}`,
-    {   
-        name: userName,
-        country: userCountry,
-        city: selectedCity,
-        preferences: selectedPreferences,
-        creditCard: creditCard
+export const putAccountInfo = async (
+  id,
+  userName = null,
+  userCountry = "Russia",
+  selectedCity,
+  selectedPreferences = [],
+  creditCard = null,
+  accessToken
+) => {
+  console.log(
+    id,
+    userName,
+    userCountry,
+    selectedCity,
+    accessToken,
+    selectedPreferences,
+    creditCard
+  );
+  return axios.put(
+    `http://${API_URL}:8090/api/account/${id}`,
+    {
+      name: userName,
+      country: userCountry,
+      city: selectedCity,
+      preferences: selectedPreferences,
+      creditCard: creditCard,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
     }
   );
 };
 
-export const putAccountCityAndName = async (id, cityToSend, nameToSend, preferences) => {
-  return axios.put(`http://${API_URL}:8090/api/account/${id}`,
-    {
-      city: cityToSend,
-      name: nameToSend,
-      preferences: preferences
-    },
-  );
+export const putAccountCityAndName = async (
+  id,
+  cityToSend,
+  nameToSend,
+  preferences
+) => {
+  return axios.put(`http://${API_URL}:8090/api/account/${id}`, {
+    city: cityToSend,
+    name: nameToSend,
+    preferences: preferences,
+  });
 };
 
-export const deleteAccount = async (id) => {
-  return axios.delete(`http://${API_URL}:8090/api/account/${id}`);
+export const deleteAccount = async (id, accessToken) => {
+  return axios.delete(`http://${API_URL}:8090/api/account/${id}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 };

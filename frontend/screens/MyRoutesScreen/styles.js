@@ -89,6 +89,12 @@ const styles = StyleSheet.create({
         fontWeight: 500,
         color: '#3E3C80',
     },
+    errorText: {
+        color: '#3E3C80',
+        fontSize: 23,
+        fontWeight: 500,
+        textAlign: 'center',
+    }
 });
 
 export default styles;

@@ -15,9 +15,9 @@ const GradientBackground = ({ children }) => (
     </LinearGradient>
   );
 
-const PremiumRoutesButton = () => {
+const PremiumRoutesButton = ({onPress}) => {
   return (
-        <TouchableOpacity  style={styles.settingsContainer}>
+        <TouchableOpacity  style={styles.settingsContainer} onPress={onPress}>
             <GradientBackground >
                 <Image
                         source={require('../../assets/routeCardImages/sparkle.png')}

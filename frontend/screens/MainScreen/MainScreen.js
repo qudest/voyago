@@ -1,45 +1,60 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, ActivityIndicator, Text, Animated, PanResponder, Image, Dimensions, ScrollView } from 'react-native';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  Animated,
+  PanResponder,
+  Image,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import RoutesButton from '../../components/RoutesButton/RoutesButton';
-import ProfileIconButton from '../../components/ProfileIconButton/ProfileIconButton';
-import styles from './styles';
-import NavRouteButton from '../../components/NavRouteButton/NavRouteButton';
-import Rating from '../../components/Rating/Rating'; 
-import MapView, { Marker, Polyline } from 'react-native-maps';
-import polyline from '@mapbox/polyline';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-
-const { height } = Dimensions.get('window');
+import RoutesButton from "../../components/RoutesButton/RoutesButton";
+import ProfileIconButton from "../../components/ProfileIconButton/ProfileIconButton";
+import styles from "./styles";
+import NavRouteButton from "../../components/NavRouteButton/NavRouteButton";
+import Rating from "../../components/Rating/Rating";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import polyline from "@mapbox/polyline";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { postRating } from "../../services/ratingApi";
+import { getRating } from "../../services/ratingApi";
+import AppMetrica from "@appmetrica/react-native-analytics";
+const { height } = Dimensions.get("window");
 
 const MainScreen = () => {
   const [coordinates, setCoordinates] = useState([]);
   const navigation = useNavigation();
-  const route = useRoute(); 
+  const route = useRoute();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedRoute, setSelectedRoute] = useState(null); 
+  const [selectedRoute, setSelectedRoute] = useState(null);
   const [userData, setUserData] = useState(null);
   const [cityCoordinates, setCityCoordinates] = useState(null);
-  const pan = useRef(new Animated.Value(height / 3)).current; 
+  const pan = useRef(new Animated.Value(height / 3)).current;
   const [isDragging, setIsDragging] = useState(false);
-  const [rating, setRating] = useState(0); 
+  const [rating, setRating] = useState(0);
   const [ratingPrompt, setRatingPrompt] = useState("Оцените маршрут:");
-  const [isRatingEnabled, setIsRatingEnabled] = useState(false); 
+  const [isRatingEnabled, setIsRatingEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [markers, setMarkers] = useState([]);
   const [region, setRegion] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const [nearbyCafes, setNearbyCafes] = useState([]);
 
-  const API_KEY = 'AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0';
+  const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const cachedData = await AsyncStorage.getItem('userData');
+        const cachedData = await AsyncStorage.getItem("userData");
+        const accessToken = await AsyncStorage.getItem("accessToken");
+        setAccessToken(accessToken);
         if (cachedData) {
           const parsedData = JSON.parse(cachedData);
           setUserData(parsedData);
-          
+
           if (parsedData.city) {
             fetchCityCoordinates(parsedData.city);
           } else {
@@ -49,7 +64,7 @@ const MainScreen = () => {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Ошибка загрузки данных:', error);
+        console.error("Ошибка загрузки данных:", error);
         setLoading(false);
       }
     };
@@ -57,16 +72,68 @@ const MainScreen = () => {
     fetchUserData();
   }, []);
 
+  const fetchNearbyCafes = async (routeCoords) => {
+    try {
+      if (!routeCoords || routeCoords.length === 0) return;
+
+      const searchPoints = [
+        routeCoords[0],
+        routeCoords[Math.floor(routeCoords.length / 2)],
+        routeCoords[routeCoords.length - 1],
+      ];
+
+      const allCafes = [];
+
+      for (const point of searchPoints) {
+        const response = await axios.get(
+          "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
+          {
+            params: {
+              location: `${point.latitude},${point.longitude}`,
+              radius: 2000,
+              type: "cafe",
+              key: API_KEY,
+              language: "ru",
+            },
+          }
+        );
+
+        if (response.data.results.length > 0) {
+          response.data.results.forEach((cafe) => {
+            if (!allCafes.some((c) => c.id === cafe.place_id)) {
+              allCafes.push({
+                id: cafe.place_id,
+                name: cafe.name,
+                coordinate: {
+                  latitude: cafe.geometry.location.lat,
+                  longitude: cafe.geometry.location.lng,
+                },
+                rating: cafe.rating,
+                icon: require("../../assets/markers/current.png"),
+              });
+            }
+          });
+        }
+
+        if (allCafes.length >= 6) break;
+      }
+
+      setNearbyCafes(allCafes.slice(0, 6));
+    } catch (error) {
+      console.error("Ошибка при поиске кафе:", error);
+    }
+  };
+
   const fetchCityCoordinates = async (cityName) => {
     try {
       const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/geocode/json',
+        "https://maps.googleapis.com/maps/api/geocode/json",
         {
           params: {
             address: cityName,
             key: API_KEY,
-            language: 'ru'
-          }
+            language: "ru",
+          },
         }
       );
 
@@ -76,11 +143,11 @@ const MainScreen = () => {
           latitude: location.lat,
           longitude: location.lng,
           latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          longitudeDelta: 0.0421,
         });
       }
     } catch (error) {
-      console.error('Ошибка получения координат:', error);
+      console.error("Ошибка получения координат:", error);
     } finally {
       setLoading(false);
     }
@@ -89,18 +156,18 @@ const MainScreen = () => {
   const getCoordinatesFromPlaceId = async (placeId) => {
     try {
       const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/place/details/json',
+        "https://maps.googleapis.com/maps/api/place/details/json",
         {
           params: {
-            place_id: placeId.replace('place_id:', ''),
-            fields: 'geometry',
-            key: API_KEY
-          }
+            place_id: placeId.replace("place_id:", ""),
+            fields: "geometry",
+            key: API_KEY,
+          },
         }
       );
       return response.data.result.geometry.location;
     } catch (error) {
-      console.error('Error fetching coordinates:', error);
+      console.error("Error fetching coordinates:", error);
       return null;
     }
   };
@@ -111,100 +178,102 @@ const MainScreen = () => {
       const originCoords = await getCoordinatesFromPlaceId(originId);
       const destinationCoords = await getCoordinatesFromPlaceId(destinationId);
       const waypointsCoords = await Promise.all(
-        waypointIds.map(wp => getCoordinatesFromPlaceId(wp))
+        waypointIds.map((wp) => getCoordinatesFromPlaceId(wp))
       );
 
       const waypointsParam = waypointsCoords
-        .map(coord => `${coord.lat},${coord.lng}`)
-        .join('|');
+        .map((coord) => `${coord.lat},${coord.lng}`)
+        .join("|");
 
       const response = await axios.get(
-        'https://maps.googleapis.com/maps/api/directions/json',
+        "https://maps.googleapis.com/maps/api/directions/json",
         {
           params: {
             origin: `${originCoords.lat},${originCoords.lng}`,
             destination: `${destinationCoords.lat},${destinationCoords.lng}`,
             waypoints: `optimize:true|${waypointsParam}`,
             key: API_KEY,
-            language: 'ru'
-          }
+            language: "ru",
+          },
         }
       );
 
       if (response.data.routes.length) {
         const route = response.data.routes[0];
         const points = polyline.decode(route.overview_polyline.points);
-        const coords = points.map(point => ({
+        const coords = points.map((point) => ({
           latitude: point[0],
-          longitude: point[1]
+          longitude: point[1],
         }));
         setCoordinates(coords);
         const newMarkers = [
           {
             coordinate: {
               latitude: originCoords.lat,
-              longitude: originCoords.lng
+              longitude: originCoords.lng,
             },
             title: "Старт",
-            type: 'start',
-            icon: require('../../assets/markers/default.png')
+            type: "start",
+            icon: require("../../assets/markers/default.png"),
           },
           ...waypointsCoords.map((coord, index) => ({
             coordinate: {
               latitude: coord.lat,
-              longitude: coord.lng
+              longitude: coord.lng,
             },
             title: `Точка ${index + 1}`,
-            type: 'waypoint',
-            icon: require('../../assets/markers/default.png')
+            type: "waypoint",
+            icon: require("../../assets/markers/default.png"),
           })),
           {
             coordinate: {
               latitude: destinationCoords.lat,
-              longitude: destinationCoords.lng
+              longitude: destinationCoords.lng,
             },
             title: "Финиш",
-            type: 'end',
-            icon: require('../../assets/markers/default.png')
-          }
+            type: "end",
+            icon: require("../../assets/markers/default.png"),
+          },
         ];
         setMarkers(newMarkers);
 
-        const latitudes = coords.map(c => c.latitude);
-        const longitudes = coords.map(c => c.longitude);
+        const latitudes = coords.map((c) => c.latitude);
+        const longitudes = coords.map((c) => c.longitude);
         const newRegion = {
           latitude: (Math.min(...latitudes) + Math.max(...latitudes)) / 2,
           longitude: (Math.min(...longitudes) + Math.max(...longitudes)) / 2,
-          latitudeDelta: Math.abs(Math.max(...latitudes) - Math.min(...latitudes)) * 1.5,
-          longitudeDelta: Math.abs(Math.max(...longitudes) - Math.min(...longitudes)) * 1.5
+          latitudeDelta:
+            Math.abs(Math.max(...latitudes) - Math.min(...latitudes)) * 1.5,
+          longitudeDelta:
+            Math.abs(Math.max(...longitudes) - Math.min(...longitudes)) * 1.5,
         };
         setRegion(newRegion);
       }
     } catch (error) {
-      console.error('Error fetching directions:', error);
+      console.error("Error fetching directions:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const formatDuration = (seconds) => {
-    if (!seconds) return "0 мин"; 
-    
+    if (!seconds) return "0 мин";
+
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    
+
     let result = "";
     if (hours > 0) {
       result += `${hours} ч `;
     }
     result += `${minutes} мин`;
-    
+
     return result;
   };
 
   const formatDistance = (meters) => {
     if (!meters || isNaN(meters)) return "0 км";
-    
+
     const kilometers = meters / 1000;
 
     return `${kilometers.toFixed(1)} км`;
@@ -212,8 +281,9 @@ const MainScreen = () => {
 
   useEffect(() => {
     if (route.params?.selectedRoute) {
-      const { origin, destination, waypoints, coordinates, markers, region } = route.params.selectedRoute;
-      
+      const { origin, destination, waypoints, coordinates, markers, region } =
+        route.params.selectedRoute;
+
       if (coordinates && markers) {
         setSelectedRoute(route.params.selectedRoute);
         setCoordinates(coordinates);
@@ -223,10 +293,10 @@ const MainScreen = () => {
         fetchRoute(origin, destination, waypoints || []);
         setSelectedRoute(route.params.selectedRoute);
       }
-      
-      setCurrentIndex(0); 
+
+      setCurrentIndex(0);
       Animated.spring(pan, {
-        toValue: 0, 
+        toValue: 0,
         useNativeDriver: true,
       }).start();
     }
@@ -234,24 +304,39 @@ const MainScreen = () => {
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1);
+      setCurrentIndex((prev) => prev - 1);
     }
   };
+
+  useEffect(() => {
+    if (route.params?.selectedRoute) {
+      console.log("Получен маршрут:", route.params.selectedRoute);
+    }
+  }, [route.params]);
+
+  useEffect(() => {
+    if (coordinates.length > 0) {
+      fetchNearbyCafes(coordinates);
+    }
+  }, [coordinates]);
 
   const handleNext = () => {
     if (selectedRoute && currentIndex < selectedRoute.points.length - 1) {
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex((prev) => prev + 1);
     }
 
     if (selectedRoute && currentIndex === selectedRoute.points.length - 2) {
-      setIsRatingEnabled(true); 
+      setIsRatingEnabled(true);
     }
   };
 
-  const handleRatingSelected = (newRating) => {
-    setRating(newRating); 
-    setRatingPrompt("Ваша оценка:"); 
-    console.log('Selected rating:', newRating);
+  const handleRatingSelected = async (newRating) => {
+    setRating(newRating);
+    setRatingPrompt("Ваша оценка:");
+    if (selectedRoute && accessToken) {
+      handleRate(selectedRoute.id, parseInt(newRating));
+    }
+    console.log("Selected rating:", newRating);
   };
 
   const handleRoutesPress = () => {
@@ -261,14 +346,14 @@ const MainScreen = () => {
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return gestureState.dy !== 0; 
+        return gestureState.dy !== 0;
       },
       onPanResponderGrant: () => {
-        setIsDragging(true); 
+        setIsDragging(true);
       },
       onPanResponderMove: (evt, gestureState) => {
         if (gestureState.dy > 0 && gestureState.dy < height / 3) {
-          pan.setValue(gestureState.dy); 
+          pan.setValue(gestureState.dy);
         }
       },
       onPanResponderRelease: (evt, gestureState) => {
@@ -283,10 +368,29 @@ const MainScreen = () => {
             useNativeDriver: true,
           }).start();
         }
-        setIsDragging(false); 
+        setIsDragging(false);
       },
     })
   ).current;
+
+  const handleRate = async (routeId, rating) => {
+    const userId = userData.id;
+    try {
+      const response = await postRating(routeId, rating, userId, accessToken);
+      AppMetrica.reportEvent("Прохождение маршрута", {
+        action_type: "Оценивание пройденного маршрута",
+        button_name: "Оценить",
+        screen: "Экран просмотра маршрута",
+      });
+      console.log("Оценка отправлена:", response.data);
+    } catch (error) {
+      console.log(routeId, rating, accessToken);
+      console.log(
+        "Ошибка при отправке оценки:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -309,6 +413,17 @@ const MainScreen = () => {
               />
             ))}
 
+            {/* Маркеры кафе */}
+            {nearbyCafes.map((cafe, index) => (
+              <Marker
+                key={`cafe-${index}`}
+                coordinate={cafe.coordinate}
+                title={cafe.name}
+                description={`Рейтинг: ${cafe.rating}`}
+                image={cafe.icon}
+              />
+            ))}
+
             <Polyline
               coordinates={coordinates}
               strokeColor="#464BDC"
@@ -319,7 +434,9 @@ const MainScreen = () => {
       </View>
       <View style={styles.topElement}>
         <RoutesButton onPress={handleRoutesPress} />
-        <ProfileIconButton onPress={() => navigation.navigate("ProfileScreen")} />
+        <ProfileIconButton
+          onPress={() => navigation.navigate("ProfileScreen")}
+        />
       </View>
 
       {selectedRoute && (
@@ -329,49 +446,64 @@ const MainScreen = () => {
         >
           <View style={styles.routeInfo}>
             <View style={styles.topInfo}>
-              <Text style={styles.counterText}>{currentIndex + 1}/{selectedRoute.points.length}</Text>
+              <Text style={styles.counterText}>
+                {currentIndex + 1}/{selectedRoute.points.length}
+              </Text>
               <View style={styles.settingsIconContainer}>
                 <Image
-                  source={require('../../assets/mainImages/line.png')}
+                  source={require("../../assets/mainImages/line.png")}
                   style={styles.settingsIcon}
                 />
               </View>
-              <View style={{ flex: 1 }} /> 
+              <View style={{ flex: 1 }} />
             </View>
             <View style={styles.ratingContainer}>
-                {isRatingEnabled && (
-                  <>
-                    <Text style={styles.ratingPrompt}>{ratingPrompt}</Text>
-                    <Rating rating={rating} onRatingSelected={handleRatingSelected} /> 
-                  </>
-                )}
+              {isRatingEnabled && (
+                <>
+                  <Text style={styles.ratingPrompt}>{ratingPrompt}</Text>
+                  <Rating
+                    rating={rating}
+                    onRatingSelected={handleRatingSelected}
+                  />
+                </>
+              )}
             </View>
-            <NavRouteButton 
-              style={styles.navRoute}         
+            <NavRouteButton
+              style={styles.navRoute}
               onPressLeft={handlePrevious}
-              onPressRight={handleNext} 
+              onPressRight={handleNext}
               currentPoint={selectedRoute.points[currentIndex]}
             />
             <ScrollView>
-            <View style={styles.routePointsContainer}>
-              <View style={styles.routePoints}>
-                {selectedRoute.points.map((point, index) => (
-                  <Text key={index} style={[styles.pointText, index === currentIndex && styles.activePoint]}>
-                    {point}
+              <View style={styles.routePointsContainer}>
+                <View style={styles.routePoints}>
+                  {selectedRoute.points.map((point, index) => (
+                    <Text
+                      key={index}
+                      style={[
+                        styles.pointText,
+                        index === currentIndex && styles.activePoint,
+                      ]}
+                    >
+                      {point}
+                    </Text>
+                  ))}
+                </View>
+              </View>
+              <View style={styles.timeDistanceContainer}>
+                <View style={styles.timeContainer}>
+                  <Image
+                    source={require("../../assets/routeCardImages/clock.png")}
+                    style={styles.timeImage}
+                  />
+                  <Text style={styles.time}>
+                    {formatDuration(selectedRoute.duration)}
                   </Text>
-                ))}
+                </View>
+                <Text style={styles.distance}>
+                  {formatDistance(selectedRoute.distance)}
+                </Text>
               </View>
-            </View>
-            <View style={styles.timeDistanceContainer}>
-              <View style={styles.timeContainer}>
-                <Image 
-                  source={require('../../assets/routeCardImages/clock.png')}
-                  style={styles.timeImage}
-                />
-                <Text style={styles.time}>{formatDuration(selectedRoute.duration)}</Text>
-              </View>
-              <Text style={styles.distance}>{formatDistance(selectedRoute.distance)}</Text>
-            </View>
             </ScrollView>
           </View>
         </Animated.View>

@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     top: 135,
   },
+  
 });
 
 export default styles;
