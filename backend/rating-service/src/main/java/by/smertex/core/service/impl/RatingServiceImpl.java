@@ -6,6 +6,7 @@ import by.smertex.core.database.repository.AverageRatingRepository;
 import by.smertex.core.database.repository.RatingRepository;
 import by.smertex.core.dto.AverageRatingDto;
 import by.smertex.core.dto.RatingDto;
+import by.smertex.core.dto.RatingUserDto;
 import by.smertex.core.exception.impl.CrudException;
 import by.smertex.core.mapper.Mapper;
 import by.smertex.core.service.RatingService;
@@ -86,5 +87,14 @@ public class RatingServiceImpl implements RatingService {
             averageRatings.put(routeId, getAverageRating(routeId).averageRating());
         }
         return averageRatings;
+    }
+
+    @Override
+    public RatingDto getRatingByUserId(RatingUserDto ratingUserDto) {
+        Long routeId = ratingUserDto.routeId();
+        Long userId = ratingUserDto.userId();
+        return ratingRepository.findByRouteIdAndUserId(routeId, userId)
+                .map(ratingToDtoMapper::map)
+                .orElseThrow(() -> new CrudException("Rating not found", HttpStatus.NOT_FOUND));
     }
 }

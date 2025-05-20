@@ -19,7 +19,5 @@ public interface RouteService {
 
     void update(Long id, RouteCreateOrUpdateDto dto);
 
-    void addToFavorites(Long routeId, Long userId);
-
     void delete(Long id);
 }
