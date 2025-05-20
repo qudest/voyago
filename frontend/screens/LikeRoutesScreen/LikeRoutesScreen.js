@@ -94,7 +94,6 @@ const LikeRoutesScreen = () => {
     setLoading(true);
     try {
       const response = await findAllFavorites(userData.id, accessToken);
-      const favoriteIds = response.data.map((route) => route.id);
       const routesWithCityNames = await Promise.all(
         response.data.map(async (route) => {
           if (!route.routePoints) return route;
@@ -118,7 +117,8 @@ const LikeRoutesScreen = () => {
             pointNames: [originName, ...waypointNames, destinationName],
             isFavorite: true,
             time: formatDuration(route.duration),
-            distance: (route.distance / 1000).toFixed(1),
+            originalDistance: route.distance,
+            formattedDistance: (route.distance / 1000).toFixed(1),
           };
         })
       );
@@ -149,23 +149,21 @@ const LikeRoutesScreen = () => {
   const handleLikePress = async (route, isLiked) => {
     try {
       if (!isLiked) {
-        console.log(route.id, userData.id, accessToken);
         await deleteFavorites(route.id, userData.id, accessToken);
         setRoutes((prev) => prev.filter((r) => r.id !== route.id));
       }
     } catch (error) {
-      console.error("Ошибка при обновлении избранного:", error);
+      console.log("Ошибка при обновлении избранного:", error);
     }
   };
 
   const handleRoutePress = (route) => {
-    console.log(route.distance);
     navigation.navigate("PreviewRouteScreen", {
       routeData: {
         id: route.id,
         name: route.name,
         rating: parseFloat(route.rating),
-        distance: Number(route.distance),
+        distance: route.originalDistance,
         duration: route.duration,
         pointNames: route.pointNames,
         routePoints: {
@@ -223,7 +221,7 @@ const LikeRoutesScreen = () => {
                   id: route.id,
                   title: route.name || route.title,
                   time: route.time,
-                  distance: route.distance,
+                  distance: (route.distance / 1000).toFixed(1),
                   points: route.pointNames,
                   rating: route.rating,
                 }}
