@@ -33,8 +33,6 @@ const PreviewRouteScreen = ({ navigation, route }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [rating, setRating] = useState(null);
 
-  console.log(rating);
-
   const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
   useEffect(() => {
@@ -83,6 +81,8 @@ const PreviewRouteScreen = ({ navigation, route }) => {
     try {
       const { id, routePoints, distance, duration, pointNames, name } =
         routeParams;
+
+      console.log(id);
 
       const [originCoords, ...waypointsCoords] = await Promise.all([
         getCoordinatesFromPlaceId(routePoints.origin),

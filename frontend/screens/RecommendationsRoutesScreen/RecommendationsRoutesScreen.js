@@ -187,7 +187,6 @@ const RecommendationsRoutesScreen = () => {
   const handleLikePress = async (route, isLiked) => {
     const userId = userData.id;
     const routeId = route.id;
-    console.log(userId, routeId);
     try {
       if (isLiked) {
         const response = await addToFavorites(routeId, userId, accessToken);

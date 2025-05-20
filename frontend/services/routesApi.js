@@ -136,10 +136,23 @@ export const deleteFavorites = async (routeId, userId, accessToken) => {
   });
 };
 
-export const findRoutesByUser = async (accessToken) => {
+export const findRoutesByUser = async (userId, accessToken) => {
   return axios.get(
-    `http://${API_URL}:8090/api/routes`,
+    `http://${API_URL}:8090/api/routes/passed?userId=${userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        Accept: "application/json, application/yaml",
+      },
+    }
+  );
+};
 
+export const addRoutesByUser = async (routeId, userId, accessToken) => {
+  return axios.put(
+    `http://${API_URL}:8090/api/routes/passed`,
+    { routeId, userId },
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
