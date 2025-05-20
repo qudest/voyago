@@ -1,7 +1,9 @@
 package by.smertex.api.controller;
 
+import by.smertex.core.dto.service.account.input.AccountFilterDto;
 import by.smertex.core.dto.service.account.input.AccountUpdateDto;
 import by.smertex.core.dto.service.account.output.AccountReadDto;
+import by.smertex.core.dto.service.account.output.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +11,12 @@ import org.springframework.http.ResponseEntity;
 
 @Tag(name = "Контроллер аккаунтов", description = "Контроллер для работы с аккаунтами")
 public interface GatewayAccountController {
+
+    @Operation(
+            summary = "Получить список всех аккаунтов",
+            description = "Отправляет запрос на получение всех аккаунтов, доступен только администратору"
+    )
+    PageResponse<AccountReadDto> findAllByFilter(AccountFilterDto filter);
 
     @Operation(
             summary = "Получить аккаунт по номеру телефона",

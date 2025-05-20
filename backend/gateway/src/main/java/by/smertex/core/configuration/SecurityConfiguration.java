@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/api/security/**").anonymous()
                                 .requestMatchers("/api/subscription/**").authenticated()
                                 .requestMatchers("/api/account/**").authenticated()
+                                .requestMatchers("/api/account").hasRole("ADMIN")
                                 .requestMatchers("/api/ratings/**").authenticated()
                                 .requestMatchers("/api/routes/**").authenticated()
                                 .requestMatchers("/**").permitAll()
