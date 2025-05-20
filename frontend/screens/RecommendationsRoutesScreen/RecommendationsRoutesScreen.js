@@ -12,7 +12,8 @@ import BackButton from "../../components/BackButton/BackButton";
 import RouteCard from "../../components/RouteCard/RouteCard";
 import SettingsButton from "../../components/SettingsButton/SettingsButton";
 import PremiunRoutesButton from "../../components/PremiumRoutesButton/PremiumRoutesButton";
-import { findAll } from "../../services/routesApi";
+import { findAll, findAllFavorites } from "../../services/routesApi";
+import { addToFavorites, deleteFavorites } from "../../services/routesApi";
 import { postRating } from "../../services/ratingApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppMetrica from "@appmetrica/react-native-analytics";
@@ -30,7 +31,7 @@ const RecommendationsRoutesScreen = () => {
   const [userData, setUserData] = useState(null);
   const [tokenLoaded, setTokenLoaded] = useState(false);
   const [cityNamesCache, setCityNamesCache] = useState({});
-
+  const [favoriteRoutes, setFavoriteRoutes] = useState([]);
   const handlePremiumCreateRoutesButton = () => {
     AppMetrica.reportEvent("Премиум", {
       action_type: "Просмотр экрана премиум маршрутов",
@@ -110,6 +111,13 @@ const RecommendationsRoutesScreen = () => {
     setLoading(true);
     try {
       const response = await findAll(accessToken);
+      console.log(userData.id);
+      const favoritesResponse = await findAllFavorites(
+        userData.id,
+        accessToken
+      );
+      const favoriteIds = favoritesResponse.data.map((route) => route.id);
+      setFavoriteRoutes(favoriteIds);
 
       const routesWithCityNames = await Promise.all(
         response.data.map(async (route) => {
@@ -132,6 +140,7 @@ const RecommendationsRoutesScreen = () => {
           return {
             ...route,
             pointNames: [originName, ...waypointNames, destinationName],
+            isFavorite: favoriteIds.includes(route.id),
           };
         })
       );
@@ -151,10 +160,12 @@ const RecommendationsRoutesScreen = () => {
   }, [filter, tokenLoaded]);
 
   const handlerBackButton = () => navigation.navigate("MainScreen");
+
   const handleSettingsButton = () =>
     navigation.navigate("FiltersScreen", {
       onApplyFilters: (newFilters) => setFilter(newFilters),
     });
+
   const handleRoutePress = (route) => {
     navigation.navigate("PreviewRouteScreen", {
       routeData: {
@@ -172,6 +183,38 @@ const RecommendationsRoutesScreen = () => {
         coordinates: route.coordinates,
       },
     });
+  };
+  const handleLikePress = async (route, isLiked) => {
+    const userId = userData.id;
+    const routeId = route.id;
+    console.log(userId, routeId);
+    try {
+      if (isLiked) {
+        const response = await addToFavorites(routeId, userId, accessToken);
+        if (response.status === 200) {
+          setFavoriteRoutes((prev) => [...prev, routeId]);
+          setRoutes((prev) =>
+            prev.map((r) => (r.id === routeId ? { ...r, isFavorite: true } : r))
+          );
+        }
+      } else {
+        const response = await deleteFavorites(routeId, userId, accessToken);
+        if (response.status === 200) {
+          setFavoriteRoutes((prev) => prev.filter((id) => id !== routeId));
+          setRoutes((prev) =>
+            prev.map((r) =>
+              r.id === routeId ? { ...r, isFavorite: false } : r
+            )
+          );
+        }
+      }
+    } catch (error) {
+      console.log("Полная ошибка при обновлении избранного:", error);
+      console.log("URL запроса:", error.config?.url);
+      console.log("Метод:", error.config?.method);
+      console.log("Заголовки:", error.config?.headers);
+      console.log("Данные:", error.config?.data);
+    }
   };
 
   const handleScroll = (event) => {
@@ -235,6 +278,8 @@ const RecommendationsRoutesScreen = () => {
               cardInformation={mapRouteToCard(route)}
               functional="like"
               onPress={() => handleRoutePress(route)}
+              onLikePress={(isLiked) => handleLikePress(route, isLiked)}
+              isLiked={route.isFavorite}
             />
           ))
         )}
