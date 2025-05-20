@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
-const MyRoutesScreen = () => {
+const LikeRoutesScreen = () => {
   const navigation = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [routes, setRoutes] = useState([]);
@@ -159,12 +159,13 @@ const MyRoutesScreen = () => {
   };
 
   const handleRoutePress = (route) => {
+    console.log(route.distance);
     navigation.navigate("PreviewRouteScreen", {
       routeData: {
         id: route.id,
         name: route.name,
         rating: parseFloat(route.rating),
-        distance: route.distance,
+        distance: Number(route.distance),
         duration: route.duration,
         pointNames: route.pointNames,
         routePoints: {
@@ -247,4 +248,4 @@ const MyRoutesScreen = () => {
   );
 };
 
-export default MyRoutesScreen;
+export default LikeRoutesScreen;
