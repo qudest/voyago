@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.qudest.uiFrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +30,9 @@
         "projectId": "cbddec3a-4a1f-4327-b079-657ed4f64821"
       }
     },
-    "owner": "qudest"
+    "owner": "qudest",
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }

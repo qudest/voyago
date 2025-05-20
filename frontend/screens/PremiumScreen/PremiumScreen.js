@@ -1,14 +1,14 @@
-import styles from './styles';
-import React, { useState, useEffect, useRef } from 'react';
-import { LinearGradient } from 'expo-linear-gradient';
+import styles from "./styles";
+import React, { useState, useEffect, useRef } from "react";
+import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
-import { View, Image, TextInput, Text, TouchableOpacity, Alert,  FlatList, TouchableWithoutFeedback} from 'react-native';
-import BuyButton from '../../components/BuyButton/BuyButton';
-import ExitButton from '../../components/ExitButton/ExitButton'
-
+import { View, Image, Text, FlatList } from "react-native";
+import BuyButton from "../../components/BuyButton/BuyButton";
+import ExitButton from "../../components/ExitButton/ExitButton";
+import AppMetrica from "@appmetrica/react-native-analytics";
 
 const hexToRgb = (hex) => {
-  const bigint = parseInt(hex.replace('#', ''), 16);
+  const bigint = parseInt(hex.replace("#", ""), 16);
   const r = (bigint >> 16) & 255;
   const g = (bigint >> 8) & 255;
   const b = bigint & 255;
@@ -16,10 +16,15 @@ const hexToRgb = (hex) => {
 };
 
 const rgbToHex = (r, g, b) => {
-  return '#' + [r, g, b].map(x => {
-    const hex = x.toString(16).padStart(2, '0');
-    return hex;
-  }).join('');
+  return (
+    "#" +
+    [r, g, b]
+      .map((x) => {
+        const hex = x.toString(16).padStart(2, "0");
+        return hex;
+      })
+      .join("")
+  );
 };
 
 const interpolateColor = (startColor, endColor, progress) => {
@@ -32,7 +37,7 @@ const interpolateColor = (startColor, endColor, progress) => {
 };
 
 const GradientBackground = ({ children }) => {
-  const [colors, setColors] = useState(['#3E3C80', '#CAD6FF']);
+  const [colors, setColors] = useState(["#3E3C80", "#CAD6FF"]);
   const [endX, setEndX] = useState(1);
   const progress = useRef(0);
   const direction = useRef(1);
@@ -40,15 +45,23 @@ const GradientBackground = ({ children }) => {
 
   useEffect(() => {
     const animateColors = () => {
-      progress.current += direction.current * 0.005; 
+      progress.current += direction.current * 0.005;
       if (progress.current >= 1) {
         direction.current = -1;
       } else if (progress.current <= 0) {
         direction.current = 1;
       }
 
-      const newColor1 = interpolateColor('#3E3C80', '#CAD6FF', progress.current);
-      const newColor2 = interpolateColor('#CAD6FF', '#3E3C80', progress.current);
+      const newColor1 = interpolateColor(
+        "#3E3C80",
+        "#CAD6FF",
+        progress.current
+      );
+      const newColor2 = interpolateColor(
+        "#CAD6FF",
+        "#3E3C80",
+        progress.current
+      );
       setColors([newColor1, newColor2]);
       animationFrameId.current = requestAnimationFrame(animateColors);
     };
@@ -61,13 +74,13 @@ const GradientBackground = ({ children }) => {
     let x = 1;
     let dir = 1;
     let lastUpdate = Date.now();
-    
+
     const animatePosition = () => {
       const now = Date.now();
       const deltaTime = now - lastUpdate;
-      
-      if (deltaTime > 30) { 
-        x += dir * 0.003; 
+
+      if (deltaTime > 30) {
+        x += dir * 0.003;
         if (x >= 1.2) dir = -1;
         else if (x <= 0.8) dir = 1;
         setEndX(x);
@@ -92,54 +105,66 @@ const GradientBackground = ({ children }) => {
   );
 };
 
+const PremiumScreen = () => {
+  const navigation = useNavigation();
 
-  const PremiumScreen = () => {
-    const navigation = useNavigation();
-  
-    const textItems = [
-      "Персонализированные маршруты",
-      "Экономия времени",
-      "Легкость использования",
-      "Уникальные места",
-    ];
-  
-    const handleBuyPress = () => {
-      navigation.navigate("PaymentScreen", { costOfPremium: "299" })
-    }
-    const handleExitPress = () => {
-      navigation.navigate("PremiumFreeScreen");
-    }
-    
-    return (
-      <GradientBackground>
-        <View style={styles.container}>
-            <ExitButton onPress={handleExitPress}></ExitButton>
-            <View style={styles.mainInformationContainer}>
-                <View style={styles.imageContainer}>
-                    <Image source={require('../../assets/premium.png')}
-                    style={styles.premiumImage}>
-                    </Image>
-                </View>
-                  <View style={styles.mainInformation}>
-                      <FlatList
-                      data={textItems}
-                      renderItem={({ item }) => (
-                          <View style={styles.listItem}>
-                          <Text style={styles.listText}>{item}</Text>
-                          </View>
-                      )}
-                      scrollEnabled={false}
-                      contentContainerStyle={styles.listContainer} 
-                      />
-                  </View>
-            </View>
-            <View style={styles.buyContainer}>
-                <Text style={styles.costText}>299 р/месяц</Text>
-                <BuyButton onPress={handleBuyPress} ></BuyButton>
-            </View>    
-        </View>
-    </GradientBackground>
-    );
+  const textItems = [
+    "Персонализированные маршруты",
+    "Экономия времени",
+    "Легкость использования",
+    "Уникальные места",
+  ];
+
+  const handleBuyPress = () => {
+    AppMetrica.sendEventsBuffer();
+    AppMetrica.reportEvent("Премиум", {
+      action_type: "Покупка подписки",
+      button_name: "премиум_подписка",
+      screen: "Экран рекламы премиума",
+    });
+    navigation.navigate("PaymentScreen", { costOfPremium: "299" });
   };
+  const handleExitPress = async () => {
+    AppMetrica.reportEvent("Премиум", {
+      action_type: "Отмена покупки подписки",
+      button_name: "премиум_подписк_закрыта",
+      screen: "Экран рекламы премиума",
+    });
+
+    navigation.navigate("PremiumFreeScreen");
+  };
+
+  return (
+    <GradientBackground>
+      <View style={styles.container}>
+        <ExitButton onPress={handleExitPress}></ExitButton>
+        <View style={styles.mainInformationContainer}>
+          <View style={styles.imageContainer}>
+            <Image
+              source={require("../../assets/premium.png")}
+              style={styles.premiumImage}
+            ></Image>
+          </View>
+          <View style={styles.mainInformation}>
+            <FlatList
+              data={textItems}
+              renderItem={({ item }) => (
+                <View style={styles.listItem}>
+                  <Text style={styles.listText}>{item}</Text>
+                </View>
+              )}
+              scrollEnabled={false}
+              contentContainerStyle={styles.listContainer}
+            />
+          </View>
+        </View>
+        <View style={styles.buyContainer}>
+          <Text style={styles.costText}>299 р/месяц</Text>
+          <BuyButton onPress={handleBuyPress}></BuyButton>
+        </View>
+      </View>
+    </GradientBackground>
+  );
+};
 
 export default PremiumScreen;
