@@ -78,7 +78,7 @@ jobs:
       - name: Build Images
         run: |
           cd backend
-          docker compose build
+          docker compose --no-cache build
 
       - name: Push Images
         run: |
