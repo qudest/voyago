@@ -3,12 +3,12 @@ package by.smertex.api.controller.impl;
 import by.smertex.api.controller.GatewayRouteController;
 import by.smertex.core.client.RouteServiceClient;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.service.route.input.RouteFilterDto;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
+import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/routes")
@@ -22,24 +22,52 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
         return routeServiceClient.findById(id);
     }
 
-    @GetMapping
-    public List<RouteReadDto> findAll() {
-        return routeServiceClient.findAll();
-    }
 
     @PostMapping
     public RouteReadDto create(@RequestBody RouteCreateOrUpdateDto dto) {
         return routeServiceClient.create(dto);
     }
 
+    @GetMapping
+    public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto filter) {
+        return routeServiceClient.findAllByFilter(
+                filter.name(),
+                filter.tags(),
+                filter.routePoints(),
+                filter.distanceFrom(),
+                filter.distanceTo(),
+                filter.durationFrom(),
+                filter.durationTo(),
+                filter.rating()
+        );
+    }
+
     @GetMapping("/favorites")
-    public List<RouteReadDto> findAllFavorites(@RequestParam Long userId) {
-        return routeServiceClient.findAllFavorites(userId);
+    public PageResponse<RouteReadDto> findAllFavoritesByFilter(@RequestParam Long userId, RouteFilterDto filter) {
+        return routeServiceClient.findAllFavoritesByFilter(
+                filter.name(),
+                filter.tags(),
+                filter.routePoints(),
+                filter.distanceFrom(),
+                filter.distanceTo(),
+                filter.durationFrom(),
+                filter.durationTo(),
+                filter.rating()
+        );
     }
 
     @GetMapping("/passed")
-    public List<RouteReadDto> findAllPassed(@RequestParam Long userId) {
-        return routeServiceClient.findAllPassed(userId);
+    public PageResponse<RouteReadDto> findAllPassedByFilter(@RequestParam Long userId, RouteFilterDto filter) {
+        return routeServiceClient.findAllPassedByFilter(
+                filter.name(),
+                filter.tags(),
+                filter.routePoints(),
+                filter.distanceFrom(),
+                filter.distanceTo(),
+                filter.durationFrom(),
+                filter.durationTo(),
+                filter.rating()
+        );
     }
 
     @PutMapping("/favorites")

@@ -2,15 +2,16 @@ package by.smertex.api.impl;
 
 import by.smertex.api.RouteController;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteFilterDto;
 import by.smertex.core.dto.input.RouteUserDto;
+import by.smertex.core.dto.output.PageResponse;
 import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.service.RouteService;
 import by.smertex.core.service.UserRouteInfoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/routes")
@@ -26,18 +27,18 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @GetMapping
-    public List<RouteReadDto> findAll() {
-        return routeService.findAll();
+    public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto filter, Pageable pageable) {
+        return routeService.findAllByFilter(filter, pageable);
     }
 
     @GetMapping("/favorites")
-    public List<RouteReadDto> findAllFavorites(@RequestParam("userId") Long userId) {
-        return routeService.findAllFavorites(userId);
+    public PageResponse<RouteReadDto> findAllFavoritesByFilter(@RequestParam Long userId, RouteFilterDto filter, Pageable pageable) {
+        return routeService.findAllFavoritesByFilter(userId, filter, pageable);
     }
 
     @GetMapping("/passed")
-    public List<RouteReadDto> findAllPassed(@RequestParam("userId") Long userId) {
-        return routeService.findAllPassed(userId);
+    public PageResponse<RouteReadDto> findAllPassedByFilter(@RequestParam Long userId, RouteFilterDto filter, Pageable pageable) {
+        return routeService.findAllPassedByFilter(userId, filter, pageable);
     }
 
     @PostMapping

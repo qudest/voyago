@@ -1,14 +1,13 @@
 package by.smertex.api.controller;
 
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.service.route.input.RouteFilterDto;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
+import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import java.util.List;
 
 @Tag(name = "Контроллер маршрутов", description = "Контроллер для работы с маршрутами")
 public interface GatewayRouteController {
@@ -18,16 +17,23 @@ public interface GatewayRouteController {
                                           Long id
     );
 
-    @Operation(summary = "Вывести все маршруты")
-    List<RouteReadDto> findAll();
+    @Operation(summary = "Поиск маршрутов по фильтру")
+    PageResponse<RouteReadDto> findAllByFilter(
+            @Parameter(description = "Фильтр") RouteFilterDto filter);
+
+    @Operation(summary = "Поиск избранных маршрутов по фильтру")
+    PageResponse<RouteReadDto> findAllFavoritesByFilter(
+            @Parameter(description = "Id пользователя") Long userId, @Parameter(description = "Фильтр") RouteFilterDto filter);
+
+    @Operation(summary = "Поиск пройденных маршрутов по фильтру")
+    PageResponse<RouteReadDto> findAllPassedByFilter(
+            @Parameter(description = "Id пользователя") Long userId, @Parameter(description = "Фильтр") RouteFilterDto filter);
+
 
     @Operation(summary = "Создание маршрута")
     RouteReadDto create(@Parameter(description = "Dto для создания/обновления маршрута", required = true)
                                         RouteCreateOrUpdateDto dto
     );
-
-    @Operation(summary = "Вывести все избранные маршруты пользователя")
-    List<RouteReadDto> findAllFavorites(@Parameter(description = "Id пользователя", required = true) Long userId);
 
     @Operation(summary = "Добавление маршрута в избранное")
     void addToFavorites(
@@ -38,9 +44,6 @@ public interface GatewayRouteController {
     void removeFromFavorites(
             @Parameter(description = "Dto c id маршрута и id пользователя") RouteUserDto routeUserDto
     );
-
-    @Operation(summary = "Вывести все пройденные маршруты пользователя")
-    List<RouteReadDto> findAllPassed(@Parameter(description = "Id пользователя", required = true) Long userId);
 
     @Operation(summary = "Добавление маршрута в пройденные")
     void addToPassed(

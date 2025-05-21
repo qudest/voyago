@@ -1,8 +1,11 @@
 package by.smertex.core.client;
 
 import by.smertex.core.configuration.FeignConfig;
+import by.smertex.core.dto.service.route.Tag;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.service.route.input.RoutePoints;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
+import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +16,6 @@ import java.util.List;
 public interface RouteServiceClient {
     @GetMapping("/api/routes/{id}")
     RouteReadDto findById(@PathVariable Long id);
-
-    @GetMapping("/api/routes")
-    List<RouteReadDto> findAll();
 
     @PostMapping("/api/routes")
     RouteReadDto create(@RequestBody RouteCreateOrUpdateDto dto);
@@ -43,4 +43,40 @@ public interface RouteServiceClient {
 
     @DeleteMapping(value = "/api/routes/passed")
     void removeFromPassed(@RequestBody RouteUserDto routeUserDto);
+
+    @GetMapping("/api/routes")
+    PageResponse<RouteReadDto> findAllByFilter(
+            @RequestParam String name,
+            @RequestParam List<Tag> tags,
+            @RequestParam RoutePoints routePoints,
+            @RequestParam Long distanceFrom,
+            @RequestParam Long distanceTo,
+            @RequestParam Long durationFrom,
+            @RequestParam Long durationTo,
+            @RequestParam Float rating
+    );
+
+    @GetMapping("/api/routes/favorites")
+    PageResponse<RouteReadDto> findAllFavoritesByFilter(
+            @RequestParam String name,
+            @RequestParam List<Tag> tags,
+            @RequestParam RoutePoints routePoints,
+            @RequestParam Long distanceFrom,
+            @RequestParam Long distanceTo,
+            @RequestParam Long durationFrom,
+            @RequestParam Long durationTo,
+            @RequestParam Float rating
+    );
+
+    @GetMapping("/api/routes/passed")
+    PageResponse<RouteReadDto> findAllPassedByFilter(
+            @RequestParam String name,
+            @RequestParam List<Tag> tags,
+            @RequestParam RoutePoints routePoints,
+            @RequestParam Long distanceFrom,
+            @RequestParam Long distanceTo,
+            @RequestParam Long durationFrom,
+            @RequestParam Long durationTo,
+            @RequestParam Float rating
+    );
 }
