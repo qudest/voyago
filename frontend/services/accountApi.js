@@ -40,13 +40,22 @@ export const putAccountCityAndName = async (
   id,
   cityToSend,
   nameToSend,
-  preferences
+  preferences,
+  accessToken
 ) => {
-  return axios.put(`http://${API_URL}:8090/api/account/${id}`, {
-    city: cityToSend,
-    name: nameToSend,
-    preferences: preferences,
-  });
+  return axios.put(
+    `http://${API_URL}:8090/api/account/${id}`,
+    {
+      city: cityToSend,
+      name: nameToSend,
+      preferences: preferences,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 };
 
 export const deleteAccount = async (id, accessToken) => {
