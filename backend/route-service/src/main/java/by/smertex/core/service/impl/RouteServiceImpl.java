@@ -117,11 +117,6 @@ public class RouteServiceImpl implements RouteService {
 
     @Override
     @Transactional
-    public void addToFavorites(Long routeId, Long userId) {
-    }
-
-    @Override
-    @Transactional
     public void delete(Long id) {
         routeRepository.findById(id)
                 .map(route -> {

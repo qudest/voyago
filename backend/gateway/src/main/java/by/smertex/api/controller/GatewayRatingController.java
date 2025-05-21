@@ -2,6 +2,7 @@ package by.smertex.api.controller;
 
 import by.smertex.core.dto.service.rating.AverageRatingDto;
 import by.smertex.core.dto.service.rating.RatingDto;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +20,18 @@ public interface GatewayRatingController {
     );
 
     @Operation(summary = "Получить рейтинги для списка маршрутов")
+    @Hidden
     ResponseEntity<Map<Long, Float>> getRatings(
             @Parameter(description = "Список c id маршрутов", required = true)
             List<Long> routeIds
+    );
+
+    @Operation(summary = "Получить рейтинг пользователя для определенного маршрута")
+    ResponseEntity<RatingDto> getRatingByUserId(
+            @Parameter(description = "Id маршрута")
+            Long routeId,
+            @Parameter(description = "Id пользователя")
+            Long userId
     );
 
     @Operation(summary = "Оставить оценку")

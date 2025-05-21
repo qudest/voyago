@@ -2,6 +2,7 @@ package by.smertex.core.client;
 
 import by.smertex.core.dto.service.rating.AverageRatingDto;
 import by.smertex.core.dto.service.rating.RatingDto;
+import by.smertex.core.dto.service.rating.RatingUserDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,4 +22,7 @@ public interface RatingServiceClient {
 
     @PatchMapping("/api/ratings")
     void update();
+
+    @PutMapping("/api/ratings/get")
+    RatingDto getRatingByUserId(RatingUserDto ratingUserDto);
 }

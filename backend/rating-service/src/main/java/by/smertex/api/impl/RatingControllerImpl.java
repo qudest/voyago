@@ -3,6 +3,7 @@ package by.smertex.api.impl;
 import by.smertex.api.RatingController;
 import by.smertex.core.dto.AverageRatingDto;
 import by.smertex.core.dto.RatingDto;
+import by.smertex.core.dto.RatingUserDto;
 import by.smertex.core.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -27,6 +28,11 @@ public class RatingControllerImpl implements RatingController {
     @PutMapping
     public Map<Long, Float> getRatings(@RequestBody List<Long> routeIds) {
         return ratingService.getAverageRatings(routeIds);
+    }
+
+    @PutMapping("/get")
+    public RatingDto getRatingByUserId(@RequestBody RatingUserDto ratingUserDto) {
+        return ratingService.getRatingByUserId(ratingUserDto);
     }
 
     @PostMapping
