@@ -12,6 +12,10 @@ spring:
           route-service.url: ${ROUTE_SERVICE}
           subscription-service.url: ${SUBSCRIPTION-SERVICE}
 
+springdoc:
+  swagger-ui:
+    url: https://voyago-app.ru/v3/api-docs
+
 in-memory:
   username: ${IN_MEMORY_USERNAME:swagger}
   password: ${IN_MEMORY_PASSWORD:swagger}
