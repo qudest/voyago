@@ -7,7 +7,9 @@ import java.util.List;
 public record RouteFilterDto(
         String name,
         List<Tag>tags,
-        RoutePoints routePoints,
+        String origin,
+        List<String> waypoints,
+        String destination,
         Long distanceFrom,
         Long distanceTo,
         Long durationFrom,

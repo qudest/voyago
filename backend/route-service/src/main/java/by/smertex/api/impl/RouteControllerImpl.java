@@ -1,6 +1,7 @@
 package by.smertex.api.impl;
 
 import by.smertex.api.RouteController;
+import by.smertex.core.database.model.Tag;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.input.RouteFilterDto;
 import by.smertex.core.dto.input.RouteUserDto;
@@ -12,6 +13,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/routes")
@@ -27,18 +30,69 @@ public class RouteControllerImpl implements RouteController {
     }
 
     @GetMapping
-    public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto filter, Pageable pageable) {
-        return routeService.findAllByFilter(filter, pageable);
+    public PageResponse<RouteReadDto> findAllByFilter(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
+    ) {
+        return routeService.findAllByFilter(new RouteFilterDto(name, tags, origin, waypoints, destination,
+                distanceFrom, distanceTo, durationFrom, durationTo, rating), pageable);
     }
 
     @GetMapping("/favorites")
-    public PageResponse<RouteReadDto> findAllFavoritesByFilter(@RequestParam Long userId, RouteFilterDto filter, Pageable pageable) {
-        return routeService.findAllFavoritesByFilter(userId, filter, pageable);
+    public PageResponse<RouteReadDto> findAllFavoritesByFilter(
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
+    ) {
+        return routeService.findAllFavoritesByFilter(
+                userId,
+                new RouteFilterDto(name, tags, origin, waypoints, destination,
+                        distanceFrom, distanceTo, durationFrom, durationTo, rating
+                ),
+                pageable
+        );
     }
 
     @GetMapping("/passed")
-    public PageResponse<RouteReadDto> findAllPassedByFilter(@RequestParam Long userId, RouteFilterDto filter, Pageable pageable) {
-        return routeService.findAllPassedByFilter(userId, filter, pageable);
+    public PageResponse<RouteReadDto> findAllPassedByFilter(
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
+    ) {
+        return routeService.findAllPassedByFilter(
+                userId,
+                new RouteFilterDto(name, tags, origin, waypoints, destination,
+                        distanceFrom, distanceTo, durationFrom, durationTo, rating
+                ),
+                pageable
+        );
     }
 
     @PostMapping

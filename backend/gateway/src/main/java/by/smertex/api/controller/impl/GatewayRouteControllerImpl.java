@@ -2,13 +2,15 @@ package by.smertex.api.controller.impl;
 
 import by.smertex.api.controller.GatewayRouteController;
 import by.smertex.core.client.RouteServiceClient;
+import by.smertex.core.dto.service.route.Tag;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
-import by.smertex.core.dto.service.route.input.RouteFilterDto;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
 import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/routes")
@@ -29,44 +31,87 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
     }
 
     @GetMapping
-    public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto filter) {
+    public PageResponse<RouteReadDto> findAllByFilter(
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
+    ) {
         return routeServiceClient.findAllByFilter(
-                filter.name(),
-                filter.tags(),
-                filter.routePoints(),
-                filter.distanceFrom(),
-                filter.distanceTo(),
-                filter.durationFrom(),
-                filter.durationTo(),
-                filter.rating()
+                name,
+                tags,
+                origin,
+                waypoints,
+                destination,
+                distanceFrom,
+                distanceTo,
+                durationFrom,
+                durationTo,
+                rating
         );
     }
 
     @GetMapping("/favorites")
-    public PageResponse<RouteReadDto> findAllFavoritesByFilter(@RequestParam Long userId, RouteFilterDto filter) {
+    public PageResponse<RouteReadDto> findAllFavoritesByFilter(
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
+    ) {
         return routeServiceClient.findAllFavoritesByFilter(
-                filter.name(),
-                filter.tags(),
-                filter.routePoints(),
-                filter.distanceFrom(),
-                filter.distanceTo(),
-                filter.durationFrom(),
-                filter.durationTo(),
-                filter.rating()
+                userId,
+                name,
+                tags,
+                origin,
+                waypoints,
+                destination,
+                distanceFrom,
+                distanceTo,
+                durationFrom,
+                durationTo,
+                rating
         );
     }
 
     @GetMapping("/passed")
-    public PageResponse<RouteReadDto> findAllPassedByFilter(@RequestParam Long userId, RouteFilterDto filter) {
+    public PageResponse<RouteReadDto> findAllPassedByFilter(
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
+    ) {
         return routeServiceClient.findAllPassedByFilter(
-                filter.name(),
-                filter.tags(),
-                filter.routePoints(),
-                filter.distanceFrom(),
-                filter.distanceTo(),
-                filter.durationFrom(),
-                filter.durationTo(),
-                filter.rating()
+                userId,
+                name,
+                tags,
+                origin,
+                waypoints,
+                destination,
+                distanceFrom,
+                distanceTo,
+                durationFrom,
+                durationTo,
+                rating
         );
     }
 

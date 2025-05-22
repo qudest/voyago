@@ -3,7 +3,6 @@ package by.smertex.core.client;
 import by.smertex.core.configuration.FeignConfig;
 import by.smertex.core.dto.service.route.Tag;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
-import by.smertex.core.dto.service.route.input.RoutePoints;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
 import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
@@ -46,37 +45,45 @@ public interface RouteServiceClient {
 
     @GetMapping("/api/routes")
     PageResponse<RouteReadDto> findAllByFilter(
-            @RequestParam String name,
-            @RequestParam List<Tag> tags,
-            @RequestParam RoutePoints routePoints,
-            @RequestParam Long distanceFrom,
-            @RequestParam Long distanceTo,
-            @RequestParam Long durationFrom,
-            @RequestParam Long durationTo,
-            @RequestParam Float rating
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
     );
 
     @GetMapping("/api/routes/favorites")
     PageResponse<RouteReadDto> findAllFavoritesByFilter(
-            @RequestParam String name,
-            @RequestParam List<Tag> tags,
-            @RequestParam RoutePoints routePoints,
-            @RequestParam Long distanceFrom,
-            @RequestParam Long distanceTo,
-            @RequestParam Long durationFrom,
-            @RequestParam Long durationTo,
-            @RequestParam Float rating
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
     );
 
     @GetMapping("/api/routes/passed")
     PageResponse<RouteReadDto> findAllPassedByFilter(
-            @RequestParam String name,
-            @RequestParam List<Tag> tags,
-            @RequestParam RoutePoints routePoints,
-            @RequestParam Long distanceFrom,
-            @RequestParam Long distanceTo,
-            @RequestParam Long durationFrom,
-            @RequestParam Long durationTo,
-            @RequestParam Float rating
+            @RequestParam Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) List<Tag> tags,
+            @RequestParam(required = false) String origin,
+            @RequestParam(required = false) List<String> waypoints,
+            @RequestParam(required = false) String destination,
+            @RequestParam(required = false) Long distanceFrom,
+            @RequestParam(required = false) Long distanceTo,
+            @RequestParam(required = false) Long durationFrom,
+            @RequestParam(required = false) Long durationTo,
+            @RequestParam(required = false) Float rating
     );
 }
