@@ -1,6 +1,5 @@
 package by.smertex.core.dto.service.route.output;
 
-import by.smertex.core.dto.service.route.Tag;
 import by.smertex.core.dto.service.route.input.RoutePoints;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -15,7 +14,7 @@ public record RouteReadDto(
         @Schema(description = "Создатель маршрута", example = "1")
         Long createdBy,
         @Schema(description = "Теги маршрута")
-        List<Tag> tags,
+        List<String> tags,
         @Schema(description = "Точки маршрута")
         RoutePoints routePoints,
         @Schema(description = "Дистанция маршрута (в метрах)", example = "5000")

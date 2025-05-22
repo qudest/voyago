@@ -1,7 +1,6 @@
 package by.smertex.core.client;
 
 import by.smertex.core.configuration.FeignConfig;
-import by.smertex.core.dto.service.route.Tag;
 import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.input.RoutePoints;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
@@ -47,7 +46,7 @@ public interface RouteServiceClient {
     @GetMapping("/api/routes")
     PageResponse<RouteReadDto> findAllByFilter(
             @RequestParam String name,
-            @RequestParam List<Tag> tags,
+            @RequestParam List<String> tags,
             @RequestParam RoutePoints routePoints,
             @RequestParam Long distanceFrom,
             @RequestParam Long distanceTo,
@@ -59,7 +58,7 @@ public interface RouteServiceClient {
     @GetMapping("/api/routes/favorites")
     PageResponse<RouteReadDto> findAllFavoritesByFilter(
             @RequestParam String name,
-            @RequestParam List<Tag> tags,
+            @RequestParam List<String> tags,
             @RequestParam RoutePoints routePoints,
             @RequestParam Long distanceFrom,
             @RequestParam Long distanceTo,
@@ -71,7 +70,7 @@ public interface RouteServiceClient {
     @GetMapping("/api/routes/passed")
     PageResponse<RouteReadDto> findAllPassedByFilter(
             @RequestParam String name,
-            @RequestParam List<Tag> tags,
+            @RequestParam List<String> tags,
             @RequestParam RoutePoints routePoints,
             @RequestParam Long distanceFrom,
             @RequestParam Long distanceTo,
