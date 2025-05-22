@@ -21,8 +21,11 @@ public interface RouteRepository extends JpaRepository<Route, Long> {
                   AND (:#{#dto.tags} IS NULL OR EXISTS (
                         SELECT t FROM r.tags t WHERE t IN :#{#dto.tags}
                   ))
-                  AND (:#{#dto.routePoints.origin} IS NULL OR r.routePoints.origin = :#{#dto.routePoints.origin})
-                  AND (:#{#dto.routePoints.destination} IS NULL OR r.routePoints.destination = :#{#dto.routePoints.destination})
+                  AND (:#{#dto.origin} IS NULL OR r.routePoints.origin = :#{#dto.origin})
+                  AND (:#{#dto.waypoints} IS NULL OR EXISTS (
+                        SELECT t FROM r.routePoints.waypoints t WHERE t IN :#{#dto.waypoints}
+                  ))
+                  AND (:#{#dto.destination} IS NULL OR r.routePoints.destination = :#{#dto.destination})
                   AND (:#{#dto.distanceFrom} IS NULL OR r.distance >= :#{#dto.distanceFrom})
                   AND (:#{#dto.distanceTo} IS NULL OR r.distance <= :#{#dto.distanceTo})
                   AND (:#{#dto.durationFrom} IS NULL OR r.duration >= :#{#dto.durationFrom})
