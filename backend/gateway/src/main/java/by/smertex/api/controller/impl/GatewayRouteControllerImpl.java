@@ -32,7 +32,7 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
     public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto filter) {
         return routeServiceClient.findAllByFilter(
                 filter.name(),
-                filter.tags().stream().map(Enum::name).toList(),
+                filter.tags(),
                 filter.routePoints(),
                 filter.distanceFrom(),
                 filter.distanceTo(),
@@ -46,7 +46,7 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
     public PageResponse<RouteReadDto> findAllFavoritesByFilter(@RequestParam Long userId, RouteFilterDto filter) {
         return routeServiceClient.findAllFavoritesByFilter(
                 filter.name(),
-                filter.tags().stream().map(Enum::name).toList(),
+                filter.tags(),
                 filter.routePoints(),
                 filter.distanceFrom(),
                 filter.distanceTo(),
@@ -60,7 +60,7 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
     public PageResponse<RouteReadDto> findAllPassedByFilter(@RequestParam Long userId, RouteFilterDto filter) {
         return routeServiceClient.findAllPassedByFilter(
                 filter.name(),
-                filter.tags().stream().map(Enum::name).toList(),
+                filter.tags(),
                 filter.routePoints(),
                 filter.distanceFrom(),
                 filter.distanceTo(),
