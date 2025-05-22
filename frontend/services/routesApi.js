@@ -5,8 +5,6 @@ export const findAll = async (accessToken) => {
   return axios.get(`https://${API_URL}/api/routes`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      Accept: "application/json, application/yaml",
     },
   });
 };

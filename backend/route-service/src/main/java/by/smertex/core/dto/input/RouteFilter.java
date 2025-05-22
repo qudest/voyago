@@ -1,15 +1,15 @@
 package by.smertex.core.dto.input;
 
-import by.smertex.core.database.entity.RouteTags;
+import by.smertex.core.database.model.Tag;
 
 import java.time.Duration;
 import java.util.List;
 
 public record RouteFilter(String name,
-                          String creatorName,
-                          RouteTags tags,
+                          Long createdBy,
+                          List<Tag> tags,
                           Float rating,
                           Duration avgTime,
-                          Long distance,
-                          List<Long> pointIds) {
+                          Long distance
+) {
 }

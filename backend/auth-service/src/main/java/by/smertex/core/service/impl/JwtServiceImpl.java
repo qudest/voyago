@@ -1,12 +1,12 @@
 package by.smertex.core.service.impl;
 
+import by.smertex.core.client.AccountServiceClient;
 import by.smertex.core.database.model.impl.Token;
 import by.smertex.core.dto.input.AccountReadDto;
 import by.smertex.core.dto.input.PhoneCodeDto;
 import by.smertex.core.dto.output.JwtClaims;
 import by.smertex.core.dto.output.TokenDto;
 import by.smertex.core.mapper.Mapper;
-import by.smertex.core.service.FindAccountService;
 import by.smertex.core.service.JwtService;
 import by.smertex.core.service.PhoneCodeService;
 import by.smertex.core.util.jwt.JwtUtil;
@@ -20,7 +20,7 @@ public class JwtServiceImpl implements JwtService {
 
     private final PhoneCodeService phoneCodeService;
 
-    private final FindAccountService findAccountService;
+    private final AccountServiceClient accountServiceClient;
 
     // private final TokenRepository tokenRepository;
 
@@ -34,7 +34,7 @@ public class JwtServiceImpl implements JwtService {
     public TokenDto generateToken(PhoneCodeDto dto) {
         phoneCodeService.verifyCode(dto);
         String token = jwtAccessUtil.generateToken(
-                findAccountService.findAccountByPhoneNumber(
+                accountServiceClient.findAccountByPhoneNumber(
                         dto.phoneNumber()
                 )
         );

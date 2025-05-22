@@ -1,28 +1,32 @@
 package by.smertex.api;
 
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
-import by.smertex.core.dto.input.RouteFilter;
+import by.smertex.core.dto.input.RouteUserDto;
 import by.smertex.core.dto.output.RouteReadDto;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface RouteController {
 
-    ResponseEntity<RouteReadDto> findById(Long id);
+    RouteReadDto findById(Long id);
 
-    ResponseEntity<List<RouteReadDto>> findAll(RouteFilter filter, Pageable pageable);
+    List<RouteReadDto> findAll();
 
-    ResponseEntity<List<RouteReadDto>> findAllFavorites(Long userId);
+    List<RouteReadDto> findAllFavorites(Long userId);
 
-    ResponseEntity<RouteReadDto> create(RouteCreateOrUpdateDto dto);
+    List<RouteReadDto> findAllPassed(Long userId);
 
-    ResponseEntity<RouteReadDto> update(Long id, RouteCreateOrUpdateDto dto);
+    RouteReadDto create(RouteCreateOrUpdateDto dto);
 
-    ResponseEntity<Void> rate(Long userId, Long rating);
+    void update(Long id, RouteCreateOrUpdateDto dto);
 
-    ResponseEntity<Void> addToFavorites(Long routeId, Long userId);
+    void addToFavorites(RouteUserDto routeUserDto);
 
-    ResponseEntity<Void> delete(Long id);
+    void removeFromFavorites(RouteUserDto routeUserDto);
+
+    void addToPassed(RouteUserDto routeUserDto);
+
+    void removeFromPassed(RouteUserDto routeUserDto);
+
+    void delete(Long id);
 }
