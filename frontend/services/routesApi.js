@@ -2,7 +2,7 @@ import axios from "axios";
 import { API_URL } from "../variables/ip";
 
 export const findAll = async (accessToken) => {
-  return axios.get(`http://${API_URL}:8090/api/routes`, {
+  return axios.get(`https://${API_URL}/api/routes`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export const RouteCreate = async (
   accessToken
 ) => {
   return axios.post(
-    `http://${API_URL}:8090/api/routes`,
+    `https://${API_URL}/api/routes`,
     {
       name: name,
       createdBy: createdBy,
@@ -55,7 +55,7 @@ export const RouteUpdate = async (
   accessToken
 ) => {
   return axios.put(
-    `http://${API_URL}:8090/api/routes/${id}`,
+    `https://${API_URL}/api/routes/${id}`,
     {
       name: name,
       createdBy: createdBy,
@@ -79,7 +79,7 @@ export const RouteUpdate = async (
 };
 
 export const RouteReadDto = async (id, accessToken) => {
-  return axios.get(`http://${API_URL}:8090/api/routes/${id}`, {
+  return axios.get(`https://${API_URL}/api/routes/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const RouteReadDto = async (id, accessToken) => {
 };
 
 export const RouteDelete = async (id, accessToken) => {
-  return axios.delete(`http://${API_URL}:8090/api/routes/${id}`, {
+  return axios.delete(`https://${API_URL}/api/routes/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
@@ -99,21 +99,18 @@ export const RouteDelete = async (id, accessToken) => {
 };
 
 export const findAllFavorites = async (userId, accessToken) => {
-  return axios.get(
-    `http://${API_URL}:8090/api/routes/favorites?userId=${userId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        Accept: "application/json, application/yaml",
-      },
-    }
-  );
+  return axios.get(`https://${API_URL}/api/routes/favorites?userId=${userId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      Accept: "application/json, application/yaml",
+    },
+  });
 };
 
 export const addToFavorites = async (routeId, userId, accessToken) => {
   return axios.put(
-    `http://${API_URL}:8090/api/routes/favorites`,
+    `https://${API_URL}/api/routes/favorites`,
     { routeId, userId },
     {
       headers: {
@@ -125,7 +122,7 @@ export const addToFavorites = async (routeId, userId, accessToken) => {
   );
 };
 export const deleteFavorites = async (routeId, userId, accessToken) => {
-  return axios.delete(`http://${API_URL}:8090/api/routes/favorites`, {
+  return axios.delete(`https://${API_URL}/api/routes/favorites`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -137,21 +134,18 @@ export const deleteFavorites = async (routeId, userId, accessToken) => {
 };
 
 export const findRoutesByUser = async (userId, accessToken) => {
-  return axios.get(
-    `http://${API_URL}:8090/api/routes/passed?userId=${userId}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        Accept: "application/json, application/yaml",
-      },
-    }
-  );
+  return axios.get(`https://${API_URL}/api/routes/passed?userId=${userId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+      Accept: "application/json, application/yaml",
+    },
+  });
 };
 
 export const addRoutesByUser = async (routeId, userId, accessToken) => {
   return axios.put(
-    `http://${API_URL}:8090/api/routes/passed`,
+    `https://${API_URL}/api/routes/passed`,
     { routeId, userId },
     {
       headers: {

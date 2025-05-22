@@ -147,7 +147,7 @@ const RecommendationsRoutesScreen = () => {
 
       setRoutes(routesWithCityNames);
     } catch (error) {
-      console.log("Ошибка загрузки маршрутов:", error);
+      console.log("Ошибка загрузки маршрутов:", error, error.response);
     } finally {
       setLoading(false);
     }
