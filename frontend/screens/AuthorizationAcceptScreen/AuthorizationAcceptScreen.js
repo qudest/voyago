@@ -97,7 +97,7 @@ const AuthorizationAcceptScreen = () => {
         });
 
         await AsyncStorage.setItem("userData", JSON.stringify(userData));
-        if (userData.role === "ADMIN") {
+        if (userData.role === "ROLE_ADMIN") {
           navigation.navigate("AdminScreen");
         } else {
           if (response.data.city === null) {

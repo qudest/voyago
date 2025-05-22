@@ -124,14 +124,16 @@ const AdditionalParametersScreen = () => {
       selectedCity !== initialCity ? selectedCity : initialCity;
     const nameToSend = name !== initialName ? name : initialName;
 
+    console.log(id, cityToSend, nameToSend, preferences, accessToken);
     try {
       const response = await putAccountCityAndName(
         id,
         cityToSend,
         nameToSend,
-        preferences
+        preferences,
+        accessToken
       );
-      if (response.status === 204) {
+      if (response.status === 200) {
         showAlert("change", "Изменения сохранены");
         const cachedData = await AsyncStorage.getItem("userData");
         const parsedData = JSON.parse(cachedData);
