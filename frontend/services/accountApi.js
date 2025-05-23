@@ -20,7 +20,7 @@ export const putAccountInfo = async (
     creditCard
   );
   return axios.put(
-    `http://${API_URL}:8090/api/account/${id}`,
+    `https://${API_URL}/api/account/${id}`,
     {
       name: userName,
       country: userCountry,
@@ -40,17 +40,26 @@ export const putAccountCityAndName = async (
   id,
   cityToSend,
   nameToSend,
-  preferences
+  preferences,
+  accessToken
 ) => {
-  return axios.put(`http://${API_URL}:8090/api/account/${id}`, {
-    city: cityToSend,
-    name: nameToSend,
-    preferences: preferences,
-  });
+  return axios.put(
+    `https://${API_URL}/api/account/${id}`,
+    {
+      city: cityToSend,
+      name: nameToSend,
+      preferences: preferences,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 };
 
 export const deleteAccount = async (id, accessToken) => {
-  return axios.delete(`http://${API_URL}:8090/api/account/${id}`, {
+  return axios.delete(`https://${API_URL}/api/account/${id}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },

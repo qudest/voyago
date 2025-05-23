@@ -38,9 +38,12 @@ const AutorizationScreen = () => {
       let message = "";
       if (error.response) {
         message = "Что-то пошло не так";
+        console.log(error.response);
       } else if (error.request) {
+        console.log(error.request);
         message = "Что-то пошло не так";
       } else {
+        console.log(error);
         message = "Что-то пошло не так";
       }
       setErrorMessage(message);

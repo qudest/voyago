@@ -22,6 +22,8 @@ import axios from "axios";
 import { postRating } from "../../services/ratingApi";
 import { getRating } from "../../services/ratingApi";
 import AppMetrica from "@appmetrica/react-native-analytics";
+import { addRoutesByUser } from "../../services/routesApi";
+
 const { height } = Dimensions.get("window");
 
 const MainScreen = () => {
@@ -321,12 +323,35 @@ const MainScreen = () => {
   }, [coordinates]);
 
   const handleNext = () => {
+    const isLastPoint = currentIndex === selectedRoute.points.length - 2;
+    const isPreLastPoint = currentIndex === selectedRoute.points.length - 2;
+
+    console.log(isLastPoint);
+    if (isLastPoint && accessToken && userData?.id) {
+      markRouteAsCompleted(selectedRoute.id);
+    }
+
     if (selectedRoute && currentIndex < selectedRoute.points.length - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
 
     if (selectedRoute && currentIndex === selectedRoute.points.length - 2) {
       setIsRatingEnabled(true);
+    }
+  };
+
+  const markRouteAsCompleted = async (routeId) => {
+    try {
+      console.log(routeId, userData.id, accessToken);
+      const response = await addRoutesByUser(routeId, userData.id, accessToken);
+
+      if (response.status === 200) {
+        console.log("Маршрут добавлен в пройденные");
+      } else {
+        console.log("Не удалось добавить маршрут");
+      }
+    } catch (error) {
+      console.error("Ошибка при добавлении маршрута:", error);
     }
   };
 
@@ -376,7 +401,8 @@ const MainScreen = () => {
   const handleRate = async (routeId, rating) => {
     const userId = userData.id;
     try {
-      const response = await postRating(routeId, rating, userId, accessToken);
+      console.log(rating, typeof rating, routeId);
+      const response = await postRating(20, 2, userId, accessToken);
       AppMetrica.reportEvent("Прохождение маршрута", {
         action_type: "Оценивание пройденного маршрута",
         button_name: "Оценить",
@@ -387,7 +413,9 @@ const MainScreen = () => {
       console.log(routeId, rating, accessToken);
       console.log(
         "Ошибка при отправке оценки:",
-        error.response?.data || error.message
+        error.response?.data,
+        error.message,
+        error.config
       );
     }
   };
@@ -473,6 +501,7 @@ const MainScreen = () => {
               onPressLeft={handlePrevious}
               onPressRight={handleNext}
               currentPoint={selectedRoute.points[currentIndex]}
+              isLastPoint={currentIndex === selectedRoute.points.length - 1}
             />
             <ScrollView>
               <View style={styles.routePointsContainer}>
