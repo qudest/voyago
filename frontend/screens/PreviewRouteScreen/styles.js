@@ -1,15 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#FCFFFF',
-    position: 'relative',
+    backgroundColor: "#F5F7FF",
+    backgroundImage:
+      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
+    backgroundSize: "40px 40px",
+    backgroundPosition: "0 0, 20px 20px",
+    position: "relative",
   },
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    position: 'relative',
+    position: "relative",
   },
   headerContainer: {
     marginTop: 25,
@@ -17,13 +21,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 10,
   },
   locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   locationImage: {
     width: 29,
@@ -32,7 +36,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   scrollView: {
     flex: 1,
@@ -42,21 +46,21 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
     borderRadius: 10,
   },
   map: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderRadius: 10,
   },
   contentPoints: {
     borderRadius: 22,
     padding: 15,
-    backgroundColor: '#EFF3FF',
-    shadowColor: '#000',
+    backgroundColor: "#EFF3FF",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -68,27 +72,27 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   timeDistanceContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 10,
     marginBottom: 20,
   },
   timeContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   time: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   distance: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   ratingImage: {
     width: 22,
@@ -97,7 +101,7 @@ const styles = StyleSheet.create({
   },
   rating: {
     fontSize: 16,
-    fontWeight: '400',
+    fontWeight: "400",
   },
   timeImage: {
     width: 24,
@@ -106,16 +110,16 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   footer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 50,
     left: 20,
     right: 20,
     zIndex: 10,
   },
   chooseButton: {
-    width: '100%',
-    height: 50, 
-    justifyContent: 'center',
+    width: "100%",
+    height: 50,
+    justifyContent: "center",
   },
 });
 

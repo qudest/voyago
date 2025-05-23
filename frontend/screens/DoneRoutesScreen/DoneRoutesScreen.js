@@ -36,7 +36,7 @@ const DoneRoutesScreen = () => {
           setUserData(JSON.parse(data));
         }
       } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
+        console.log("Ошибка загрузки данных:", error);
       }
     };
     loadUserData();
@@ -80,7 +80,7 @@ const DoneRoutesScreen = () => {
       setCityNamesCache((prev) => ({ ...prev, [cleanPlaceId]: name }));
       return name;
     } catch (error) {
-      return "Ошибка загрузки";
+      console.log(error);
     }
   };
 
@@ -124,7 +124,7 @@ const DoneRoutesScreen = () => {
 
       setRoutes(routesWithCityNames);
     } catch (error) {
-      console.error("Ошибка загрузки пройденных маршрутов:", error);
+      console.log("Ошибка загрузки пройденных маршрутов:", error);
     } finally {
       setLoading(false);
     }

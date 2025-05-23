@@ -20,6 +20,7 @@
     "expo": "~52.0.40",
     "expo-build-properties": "~0.13.3",
     "expo-dev-client": "~5.0.20",
+    "expo-font": "~13.0.4",
     "expo-linear-gradient": "~14.0.2",
     "expo-status-bar": "~2.0.1",
     "lodash.debounce": "^4.0.8",
@@ -32,12 +33,11 @@
     "react-native-maps": "1.18.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-reanimated": "^3.17.1",
-    "react-native-safe-area-context": "^5.3.0",
+    "react-native-safe-area-context": "^5.4.1",
     "react-native-screens": "^4.9.2",
     "react-native-shimmer-placeholder": "^2.0.9",
     "text-encoding": "^0.7.0",
-    "web-streams-polyfill": "^4.1.0",
-    "expo-font": "~13.0.4"
+    "web-streams-polyfill": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

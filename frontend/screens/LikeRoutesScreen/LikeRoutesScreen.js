@@ -36,7 +36,7 @@ const LikeRoutesScreen = () => {
           setUserData(JSON.parse(data));
         }
       } catch (error) {
-        console.error("Ошибка загрузки данных:", error);
+        console.log("Ошибка загрузки данных:", error);
       }
     };
     loadUserData();
@@ -125,7 +125,7 @@ const LikeRoutesScreen = () => {
 
       setRoutes(routesWithCityNames);
     } catch (error) {
-      console.error("Ошибка загрузки избранных маршрутов:", error);
+      console.log("Ошибка загрузки избранных маршрутов:", error);
     } finally {
       setLoading(false);
     }
