@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-
-import { SafeAreaView, StatusBar } from "react-native";
+import React, { useEffect, useState } from "react";
+import * as Font from "expo-font";
+import { Text, SafeAreaView, StatusBar } from "react-native";
 import "web-streams-polyfill";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -35,6 +35,32 @@ global.TextEncoder = TextEncoder;
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
+        "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
+      });
+      setFontsLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  const oldTextRender = Text.render;
+  Text.render = function (...args) {
+    const origin = oldTextRender.call(this, ...args);
+    return React.cloneElement(origin, {
+      style: [{ fontFamily: "Roboto" }, origin.props.style],
+    });
+  };
+
   AppMetrica.activate({
     apiKey: "91547a79-07d3-40fd-b0bf-6da5c308093c",
     sessionTimeout: 120,

@@ -111,6 +111,11 @@ const AdditionalParametersScreen = () => {
   };
 
   const confirmCancellation = () => {
+    AppMetrica.reportEvent("Премиум", {
+      action_type: "Отмена подписки",
+      button_name: "премиум_подписка_отмена",
+      screen: "Экран дополнительных параметров",
+    });
     hideAlert();
     setSubscriptionCancelled(true);
   };

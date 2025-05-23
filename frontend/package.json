@@ -36,7 +36,8 @@
     "react-native-screens": "^4.9.2",
     "react-native-shimmer-placeholder": "^2.0.9",
     "text-encoding": "^0.7.0",
-    "web-streams-polyfill": "^4.1.0"
+    "web-streams-polyfill": "^4.1.0",
+    "expo-font": "~13.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
