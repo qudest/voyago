@@ -62,6 +62,18 @@ jobs:
     name: Build and Push Docker Images
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      matrix:
+        service:
+          - account-service
+          - ai-service
+          - auth-service
+          - gateway
+          - notification-service
+          - rating-service
+          - route-service
+          - subscription-service
+      max-parallel: 8
     steps:
       - name: Setup repo
         uses: actions/checkout@v4
