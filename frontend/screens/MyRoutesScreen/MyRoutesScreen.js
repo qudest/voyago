@@ -27,6 +27,7 @@ const MyRoutesScreen = () => {
   const [error, setError] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [cityNamesCache, setCityNamesCache] = useState({});
+  const routeNavHook = useRoute();
 
   const [filters, setFilters] = useState({ tags: [], duration: null });
   const [areInitialFiltersLoaded, setAreInitialFiltersLoaded] = useState(false);
