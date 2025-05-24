@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./styles";
 import { useNavigation } from "@react-navigation/native";
 import { View, Image, Text, TouchableOpacity } from "react-native";
@@ -7,10 +7,45 @@ import BackButton from "../../components/BackButton/BackButton";
 const FiltersScreen = ({ route }) => {
   const navigation = useNavigation();
 
-  const { onApplyFilters } = route.params || {};
+  const { onApplyFilters, currentAppliedFilters } = route.params || {};
 
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedDuration, setSelectedDuration] = useState(null);
+  const [selectedTags, setSelectedTags] = useState(() => {
+    const initialTags = currentAppliedFilters?.tags || [];
+    return initialTags;
+  });
+  const [selectedDuration, setSelectedDuration] = useState(() => {
+    const initialDuration = currentAppliedFilters?.duration || null;
+    return initialDuration;
+  });
+
+  useEffect(() => {
+    if (currentAppliedFilters) {
+      const newTags = currentAppliedFilters.tags || [];
+      const newDuration = currentAppliedFilters.duration || null;
+
+      setSelectedTags((prevSelectedTags) => {
+        if (JSON.stringify(prevSelectedTags) !== JSON.stringify(newTags)) {
+          console.log(
+            "[FiltersScreen] useEffect - Обновление selectedTags на:",
+            JSON.stringify(newTags)
+          );
+          return newTags;
+        }
+        return prevSelectedTags;
+      });
+
+      setSelectedDuration((prevSelectedDuration) => {
+        if (prevSelectedDuration !== newDuration) {
+          console.log(
+            "[FiltersScreen] useEffect - Обновление selectedDuration на:",
+            newDuration
+          );
+          return newDuration;
+        }
+        return prevSelectedDuration;
+      });
+    }
+  }, [currentAppliedFilters]);
 
   const handleBackButton = () => {
     handleApplyFilters();

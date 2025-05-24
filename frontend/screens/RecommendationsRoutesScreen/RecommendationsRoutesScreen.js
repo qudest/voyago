@@ -33,6 +33,7 @@ const RecommendationsRoutesScreen = () => {
   const [cityNamesCache, setCityNamesCache] = useState({});
   const [favoriteRoutes, setFavoriteRoutes] = useState([]);
   const [filters, setFilters] = useState({ tags: [], duration: null });
+  const [areInitialFiltersLoaded, setAreInitialFiltersLoaded] = useState(false);
 
   const handlePremiumCreateRoutesButton = () => {
     AppMetrica.reportEvent("Премиум", {
@@ -46,22 +47,44 @@ const RecommendationsRoutesScreen = () => {
   useEffect(() => {
     const fetchCachedData = async () => {
       try {
-        const cachedData = await AsyncStorage.getItem("userData");
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        setAccessToken(accessToken);
+        const cachedUserData = await AsyncStorage.getItem("userData");
+        const storedAccessToken = await AsyncStorage.getItem("accessToken");
+        setAccessToken(storedAccessToken);
         setTokenLoaded(true);
-        if (cachedData) {
-          const parsedData = JSON.parse(cachedData);
+        if (cachedUserData) {
+          const parsedData = JSON.parse(cachedUserData);
           setUserData(parsedData);
-          console.log("Данные из кэша:", parsedData);
+          console.log("Данные пользователя из кэша:", parsedData);
         }
       } catch (error) {
-        console.error("Ошибка при получении данных из кэша:", error);
+        console.error(
+          "Ошибка при получении данных пользователя из кэша:",
+          error
+        );
         setTokenLoaded(true);
       }
     };
-
     fetchCachedData();
+  }, []);
+
+  useEffect(() => {
+    const loadFiltersFromStorage = async () => {
+      try {
+        const storedFilters = await AsyncStorage.getItem("storedFilters");
+        if (storedFilters !== null) {
+          setFilters(JSON.parse(storedFilters));
+          console.log(
+            "Фильтры загружены из AsyncStorage:",
+            JSON.parse(storedFilters)
+          );
+        }
+      } catch (e) {
+        console.error("Не удалось загрузить фильтры из AsyncStorage", e);
+      } finally {
+        setAreInitialFiltersLoaded(true);
+      }
+    };
+    loadFiltersFromStorage();
   }, []);
 
   const getCityName = async (placeId) => {
@@ -196,17 +219,33 @@ const RecommendationsRoutesScreen = () => {
   };
 
   useEffect(() => {
-    if (tokenLoaded) {
+    if (tokenLoaded && areInitialFiltersLoaded && userData) {
       loadRoutes(true);
     }
-  }, [filters, tokenLoaded]);
+  }, [filters, tokenLoaded, areInitialFiltersLoaded, userData]);
 
   const handlerBackButton = () => navigation.navigate("MainScreen");
 
-  const handleSettingsButton = () =>
+  const handleSettingsButton = () => {
     navigation.navigate("FiltersScreen", {
-      onApplyFilters: (newFilters) => setFilters(newFilters),
+      currentAppliedFilters: filters,
+      onApplyFilters: async (newFiltersFromScreen) => {
+        setFilters(newFiltersFromScreen);
+        try {
+          await AsyncStorage.setItem(
+            "storedFilters",
+            JSON.stringify(newFiltersFromScreen)
+          );
+          console.log(
+            "Фильтры сохранены в AsyncStorage:",
+            newFiltersFromScreen
+          );
+        } catch (e) {
+          console.error("Не удалось сохранить фильтры в AsyncStorage", e);
+        }
+      },
     });
+  };
 
   const handleRoutePress = (route) => {
     navigation.navigate("PreviewRouteScreen", {
