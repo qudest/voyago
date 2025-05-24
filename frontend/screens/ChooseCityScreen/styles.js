@@ -1,29 +1,33 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FCFCFF',
-    width: '100%',
+    backgroundColor: "#F5F7FF",
+    backgroundImage:
+      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
+    backgroundSize: "40px 40px",
+    backgroundPosition: "0 0, 20px 20px",
+    width: "100%",
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingTop: 20,
   },
   mainImformation: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 100,
   },
   mainInformationTitle: {
-    color: '#000000',
+    color: "#000000",
     fontSize: 23,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 20,
   },
   fixedButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,

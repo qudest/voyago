@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   TouchableWithoutFeedback,
+  Animated,
 } from "react-native";
 import BackButton from "../../components/BackButton/BackButton";
 import ProfileButton from "../../components/ProfileButton/ProfileButton";

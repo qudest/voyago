@@ -45,24 +45,19 @@ const GradientBackground = ({ children }) => {
 
   useEffect(() => {
     const animateColors = () => {
-      progress.current += direction.current * 0.005;
+      progress.current += direction.current * 0.002;
+      const easedProgress = Math.sin(progress.current * Math.PI * 0.5);
+
       if (progress.current >= 1) {
         direction.current = -1;
       } else if (progress.current <= 0) {
         direction.current = 1;
       }
 
-      const newColor1 = interpolateColor(
-        "#3E3C80",
-        "#CAD6FF",
-        progress.current
-      );
-      const newColor2 = interpolateColor(
-        "#CAD6FF",
-        "#3E3C80",
-        progress.current
-      );
+      const newColor1 = interpolateColor("#3E3C80", "#CAD6FF", easedProgress);
+      const newColor2 = interpolateColor("#CAD6FF", "#3E3C80", easedProgress);
       setColors([newColor1, newColor2]);
+
       animationFrameId.current = requestAnimationFrame(animateColors);
     };
 
@@ -80,7 +75,7 @@ const GradientBackground = ({ children }) => {
       const deltaTime = now - lastUpdate;
 
       if (deltaTime > 30) {
-        x += dir * 0.003;
+        x += dir * 0.0015;
         if (x >= 1.2) dir = -1;
         else if (x <= 0.8) dir = 1;
         setEndX(x);

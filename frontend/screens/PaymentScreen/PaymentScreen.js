@@ -1,7 +1,7 @@
 import styles from "./styles";
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { View, Text } from "react-native";
+import { View, Text, TouchableWithoutFeedback, Keyboard } from "react-native";
 import BackButton from "../../components/BackButton/BackButton";
 import PayButton from "../../components/PayButton/PayButton";
 import { TextInput } from "react-native-gesture-handler";
@@ -94,70 +94,72 @@ const PaymentScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <BackButton onPress={handleBackPress}></BackButton>
-      <View style={styles.informationContainer}>
-        <Text style={styles.nextDebitTitle}>
-          Следующее списание через 30 дней, сумма 299 Р
-        </Text>
-        <Text style={styles.remindTitle}>
-          Мы напомним об этом за 3 дня - никаких неожиданностей.
-        </Text>
-      </View>
-      <View style={styles.paymentContainer}>
-        <View style={styles.cardContainer}>
-          <View style={styles.requisitesContainer}>
-            <Text style={styles.requisitesTitle}>Номер карты</Text>
-            <TextInput
-              style={styles.requisitesInput}
-              placeholder="0000 0000 0000 0000"
-              keyboardType="numeric"
-              value={cardNumber}
-              onChangeText={formatCardNumber}
-              maxLength={19}
-            ></TextInput>
-          </View>
-          <View style={styles.requisitesBottom}>
-            <View style={styles.dateContainer}>
-              <Text style={styles.dateTitle}>Месяц / год</Text>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <BackButton onPress={handleBackPress}></BackButton>
+        <View style={styles.informationContainer}>
+          <Text style={styles.nextDebitTitle}>
+            Следующее списание через 30 дней, сумма 299 Р
+          </Text>
+          <Text style={styles.remindTitle}>
+            Мы напомним об этом за 3 дня - никаких неожиданностей.
+          </Text>
+        </View>
+        <View style={styles.paymentContainer}>
+          <View style={styles.cardContainer}>
+            <View style={styles.requisitesContainer}>
+              <Text style={styles.requisitesTitle}>Номер карты</Text>
               <TextInput
-                style={styles.dateInput}
-                placeholder="01/25"
+                style={styles.requisitesInput}
+                placeholder="0000 0000 0000 0000"
                 keyboardType="numeric"
-                value={expiryDate}
-                onChangeText={handleExpiryChange}
-                maxLength={5}
+                value={cardNumber}
+                onChangeText={formatCardNumber}
+                maxLength={19}
               ></TextInput>
             </View>
-            <View style={styles.cvcCodeContainer}>
-              <Text style={styles.cvcCodeTitle}>CVC код</Text>
-              <TextInput
-                style={styles.cvcCodeInput}
-                placeholder="000"
-                keyboardType="numeric"
-                maxLength={3}
-                secureTextEntry
-              ></TextInput>
+            <View style={styles.requisitesBottom}>
+              <View style={styles.dateContainer}>
+                <Text style={styles.dateTitle}>Месяц / год</Text>
+                <TextInput
+                  style={styles.dateInput}
+                  placeholder="01/25"
+                  keyboardType="numeric"
+                  value={expiryDate}
+                  onChangeText={handleExpiryChange}
+                  maxLength={5}
+                ></TextInput>
+              </View>
+              <View style={styles.cvcCodeContainer}>
+                <Text style={styles.cvcCodeTitle}>CVC код</Text>
+                <TextInput
+                  style={styles.cvcCodeInput}
+                  placeholder="000"
+                  keyboardType="numeric"
+                  maxLength={3}
+                  secureTextEntry
+                ></TextInput>
+              </View>
+            </View>
+          </View>
+          <View style={styles.payInformationContainer}>
+            <Text style={styles.payInformationTitle}>Информация о платеже</Text>
+            <View style={styles.shopInformation}>
+              <Text style={styles.shopTitle}>Магазин</Text>
+              <Text style={styles.shopName}>VOYAGO</Text>
+            </View>
+            <View style={styles.numberInformation}>
+              <Text style={styles.numberTitle}>Номер заказа</Text>
+              <Text style={styles.number}>#{costInformation.number}</Text>
             </View>
           </View>
         </View>
-        <View style={styles.payInformationContainer}>
-          <Text style={styles.payInformationTitle}>Информация о платеже</Text>
-          <View style={styles.shopInformation}>
-            <Text style={styles.shopTitle}>Магазин</Text>
-            <Text style={styles.shopName}>VOYAGO</Text>
-          </View>
-          <View style={styles.numberInformation}>
-            <Text style={styles.numberTitle}>Номер заказа</Text>
-            <Text style={styles.number}>#{costInformation.number}</Text>
-          </View>
-        </View>
+        <PayButton
+          cost={costInformation.cost}
+          onPress={handleBuyPremium}
+        ></PayButton>
       </View>
-      <PayButton
-        cost={costInformation.cost}
-        onPress={handleBuyPremium}
-      ></PayButton>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -1,17 +1,21 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    flexGrow: 1, 
+    position: "relative",
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexGrow: 1,
 
-    backgroundColor: '#FCFFFF',
+    backgroundColor: "#F5F7FF",
+    backgroundImage:
+      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
+    backgroundSize: "40px 40px",
+    backgroundPosition: "0 0, 20px 20px",
   },
   containerMainInf: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
 
     height: 650,
   },
@@ -23,8 +27,7 @@ const styles = StyleSheet.create({
     marginTop: 100,
 
     fontSize: 19,
-    fontFamily: 'Roboto-Regular',
-    
+    fontFamily: "Roboto-Regular",
   },
   inputNumber: {
     marginTop: 50,
@@ -32,69 +35,68 @@ const styles = StyleSheet.create({
 
     width: 256,
 
-    textAlign: 'left',
-    color: '#606265',
+    textAlign: "left",
+    color: "#606265",
     fontSize: 16,
 
-
-    borderBottomWidth: 1, 
-    borderBottomColor: 'black', 
+    borderBottomWidth: 1,
+    borderBottomColor: "black",
     paddingBottom: 8,
   },
   enableContinueButton: {
     bottom: 70,
-    alignSelf: 'center',
+    alignSelf: "center",
 
     width: 295,
     height: 44,
     paddingTop: 10,
 
-    backgroundColor: '#3E3C80',
+    backgroundColor: "#3E3C80",
 
     borderRadius: 22,
 
-    shadowColor: '#000BD8', 
+    shadowColor: "#000BD8",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.5,
     shadowRadius: 4,
-    elevation: 5, 
+    elevation: 5,
   },
   disableContinueButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
 
     width: 295,
     height: 44,
     paddingTop: 10,
 
-    backgroundColor: '#CECED1', 
-    color: '#3E3C80',
+    backgroundColor: "#CECED1",
+    color: "#3E3C80",
 
     borderRadius: 22,
 
-    shadowColor: '#000BD8', 
+    shadowColor: "#000BD8",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.5,
     shadowRadius: 4,
-    elevation: 5, 
+    elevation: 5,
   },
   enableContinueText: {
-    alignSelf: 'center',
+    alignSelf: "center",
 
-    color: '#FFFFFF',
+    color: "#FFFFFF",
 
     fontSize: 16,
     fontWeight: 500,
   },
   disableContinueText: {
-    alignSelf: 'center',
+    alignSelf: "center",
 
-    color: '#3E3C80',
+    color: "#3E3C80",
 
     fontSize: 16,
     fontWeight: 500,
@@ -102,9 +104,9 @@ const styles = StyleSheet.create({
   description: {
     bottom: 10,
 
-    position: 'absolute',
+    position: "absolute",
 
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 10,
   },
 });

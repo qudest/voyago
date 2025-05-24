@@ -32,6 +32,9 @@ const RecommendationsRoutesScreen = () => {
   const [tokenLoaded, setTokenLoaded] = useState(false);
   const [cityNamesCache, setCityNamesCache] = useState({});
   const [favoriteRoutes, setFavoriteRoutes] = useState([]);
+  const [filters, setFilters] = useState({ tags: [], duration: null });
+  const [areInitialFiltersLoaded, setAreInitialFiltersLoaded] = useState(false);
+
   const handlePremiumCreateRoutesButton = () => {
     AppMetrica.reportEvent("Премиум", {
       action_type: "Просмотр экрана премиум маршрутов",
@@ -44,22 +47,44 @@ const RecommendationsRoutesScreen = () => {
   useEffect(() => {
     const fetchCachedData = async () => {
       try {
-        const cachedData = await AsyncStorage.getItem("userData");
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        setAccessToken(accessToken);
+        const cachedUserData = await AsyncStorage.getItem("userData");
+        const storedAccessToken = await AsyncStorage.getItem("accessToken");
+        setAccessToken(storedAccessToken);
         setTokenLoaded(true);
-        if (cachedData) {
-          const parsedData = JSON.parse(cachedData);
+        if (cachedUserData) {
+          const parsedData = JSON.parse(cachedUserData);
           setUserData(parsedData);
-          console.log("Данные из кэша:", parsedData);
+          console.log("Данные пользователя из кэша:", parsedData);
         }
       } catch (error) {
-        console.error("Ошибка при получении данных из кэша:", error);
+        console.error(
+          "Ошибка при получении данных пользователя из кэша:",
+          error
+        );
         setTokenLoaded(true);
       }
     };
-
     fetchCachedData();
+  }, []);
+
+  useEffect(() => {
+    const loadFiltersFromStorage = async () => {
+      try {
+        const storedFilters = await AsyncStorage.getItem("storedFilters");
+        if (storedFilters !== null) {
+          setFilters(JSON.parse(storedFilters));
+          console.log(
+            "Фильтры загружены из AsyncStorage:",
+            JSON.parse(storedFilters)
+          );
+        }
+      } catch (e) {
+        console.error("Не удалось загрузить фильтры из AsyncStorage", e);
+      } finally {
+        setAreInitialFiltersLoaded(true);
+      }
+    };
+    loadFiltersFromStorage();
   }, []);
 
   const getCityName = async (placeId) => {
@@ -110,39 +135,70 @@ const RecommendationsRoutesScreen = () => {
 
     setLoading(true);
     try {
-      const response = await findAll(accessToken);
-      console.log(userData.id);
+      const queryParams = {};
+
+      if (filters.tags && filters.tags.length > 0) {
+        queryParams.tags = filters.tags;
+      }
+
+      if (filters.duration) {
+        const durationOption = getDurationOption(filters.duration);
+        if (durationOption) {
+          queryParams.durationFrom = durationOption.value.from;
+          if (durationOption.value.to !== null) {
+            queryParams.durationTo = durationOption.value.to;
+          }
+        }
+      }
+      console.log(queryParams);
+      const response = await findAll(accessToken, queryParams);
+
       const favoritesResponse = await findAllFavorites(
         userData.id,
         accessToken
       );
-      const favoriteIds = favoritesResponse.data.map((route) => route.id);
+
+      const favoritesArray =
+        favoritesResponse &&
+        favoritesResponse.data &&
+        favoritesResponse.data.data;
+
+      const favoriteIds = Array.isArray(favoritesArray)
+        ? favoritesArray.map((route) => route.id)
+        : [];
       setFavoriteRoutes(favoriteIds);
 
+      const allRoutesApiResponse = response && response.data;
+      const allRoutesArray = Array.isArray(allRoutesApiResponse)
+        ? allRoutesApiResponse
+        : allRoutesApiResponse && allRoutesApiResponse.data;
+
       const routesWithCityNames = await Promise.all(
-        response.data.map(async (route) => {
-          if (!route.routePoints) return route;
+        (Array.isArray(allRoutesArray) ? allRoutesArray : []).map(
+          async (route) => {
+            if (!route.routePoints) return route;
 
-          const processPoint = async (point) => {
-            if (!point) return "Точка не указана";
-            return await getCityName(point);
-          };
+            const processPoint = async (point) => {
+              if (!point) return "Точка не указана";
+              return await getCityName(point);
+            };
 
-          const [originName, ...waypointNames] = await Promise.all([
-            processPoint(route.routePoints.origin),
-            ...(route.routePoints.waypoints || []).map(processPoint),
-          ]);
+            const [originName, ...waypointNames] = await Promise.all([
+              processPoint(route.routePoints.origin),
+              ...(route.routePoints.waypoints || []).map(processPoint),
+            ]);
 
-          const destinationName = await processPoint(
-            route.routePoints.destination
-          );
+            const destinationName = await processPoint(
+              route.routePoints.destination
+            );
 
-          return {
-            ...route,
-            pointNames: [originName, ...waypointNames, destinationName],
-            isFavorite: favoriteIds.includes(route.id),
-          };
-        })
+            return {
+              ...route,
+              pointNames: [originName, ...waypointNames, destinationName],
+              isFavorite: favoriteIds.includes(route.id),
+            };
+          }
+        )
       );
 
       setRoutes(routesWithCityNames);
@@ -153,18 +209,43 @@ const RecommendationsRoutesScreen = () => {
     }
   };
 
+  const getDurationOption = (durationId) => {
+    const durationOptions = [
+      { id: "LESS_THAN_HOUR", value: { from: 0, to: 3600 } },
+      { id: "ONE_TO_TWO_HOURS", value: { from: 3600, to: 7200 } },
+      { id: "MORE_THAN_TWO_HOURS", value: { from: 7200, to: null } },
+    ];
+    return durationOptions.find((opt) => opt.id === durationId);
+  };
+
   useEffect(() => {
-    if (tokenLoaded) {
+    if (tokenLoaded && areInitialFiltersLoaded && userData) {
       loadRoutes(true);
     }
-  }, [filter, tokenLoaded]);
+  }, [filters, tokenLoaded, areInitialFiltersLoaded, userData]);
 
   const handlerBackButton = () => navigation.navigate("MainScreen");
 
-  const handleSettingsButton = () =>
+  const handleSettingsButton = () => {
     navigation.navigate("FiltersScreen", {
-      onApplyFilters: (newFilters) => setFilter(newFilters),
+      currentAppliedFilters: filters,
+      onApplyFilters: async (newFiltersFromScreen) => {
+        setFilters(newFiltersFromScreen);
+        try {
+          await AsyncStorage.setItem(
+            "storedFilters",
+            JSON.stringify(newFiltersFromScreen)
+          );
+          console.log(
+            "Фильтры сохранены в AsyncStorage:",
+            newFiltersFromScreen
+          );
+        } catch (e) {
+          console.error("Не удалось сохранить фильтры в AsyncStorage", e);
+        }
+      },
     });
+  };
 
   const handleRoutePress = (route) => {
     navigation.navigate("PreviewRouteScreen", {
