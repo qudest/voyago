@@ -173,14 +173,37 @@ export const deleteFavorites = async (routeId, userId, accessToken) => {
   });
 };
 
-export const findRoutesByUser = async (userId, accessToken) => {
-  return axios.get(`https://${API_URL}/api/routes/passed?userId=${userId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "application/json",
-      Accept: "application/json, application/yaml",
-    },
-  });
+export const findRoutesByUser = async (userId, accessToken, filters = {}) => {
+  try {
+    const params = {
+      userId,
+      ...filters,
+    };
+
+    const queryString = qs.stringify(params, {
+      arrayFormat: "repeat",
+      skipNulls: true,
+      encoder: (value) => encodeURIComponent(value),
+    });
+
+    return await axios.get(
+      `https://${API_URL}/api/routes/favorites?${queryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+          Accept: "application/json, application/yaml",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error fetching favorites:", {
+      message: error.message,
+      config: error.config,
+      response: error.response?.data,
+    });
+    throw error;
+  }
 };
 
 export const addRoutesByUser = async (routeId, userId, accessToken) => {

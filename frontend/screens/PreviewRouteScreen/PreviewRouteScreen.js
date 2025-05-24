@@ -237,6 +237,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
       button_name: "выбрать",
       screen: "Экран предпросмотра маршрута",
     });
+    console.log(routeInfo);
     navigation.navigate("MainScreen", { selectedRoute: routeInfo });
   };
   return (
