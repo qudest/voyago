@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     marginBottom: 4,
   },
+  inputTitle: {
+    marginTop: 5,
+    fontSize: 19,
+  },
   createDiscription: {
     fontSize: 19,
     fontWeight: 400,

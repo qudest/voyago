@@ -38,7 +38,6 @@ const EditRouteScreen = () => {
     { place_id: "", name: "" },
   ];
 
-  // Инициализация начальных точек
   let initialPointsForState;
   if (
     routeDataFromParams &&
@@ -85,7 +84,6 @@ const EditRouteScreen = () => {
     routeDataFromParams?.name || "Новый маршрут"
   );
 
-  // Сохраняем исходные данные для сравнения и использования
   const [routeId, setRouteId] = useState(routeDataFromParams?.id || null);
   const [initialDistance, setInitialDistance] = useState(
     routeDataFromParams?.distance || 0
@@ -126,7 +124,7 @@ const EditRouteScreen = () => {
           setUserId(parsedData.id);
         }
       } catch (error) {
-        console.error("Error fetching user data and token:", error);
+        console.log(error);
       }
     };
     fetchUserDataAndToken();
@@ -165,7 +163,10 @@ const EditRouteScreen = () => {
       }
       return null;
     } catch (error) {
-      console.error("Error getting coordinates:", error);
+      console.log(
+        "Не удалось получить координаты для начальной или конечной точки.",
+        error
+      );
       return null;
     }
   };
@@ -221,14 +222,12 @@ const EditRouteScreen = () => {
         );
         return { distance, duration };
       } else {
-        setErrorMessage(
-          data.error_message || "Маршрут не найден или превышено число точек."
-        );
+        setErrorMessage("Маршрут не найден");
         setErrorModalVisible(true);
         return { distance: initialDistance, duration: initialDuration };
       }
     } catch (error) {
-      console.error("Error calculating route:", error);
+      console.log("Ошибка при расчете маршрута.", error);
       setErrorMessage(
         "Ошибка при расчете маршрута. Проверьте интернет-соединение."
       );
@@ -345,17 +344,7 @@ const EditRouteScreen = () => {
         },
       });
     } catch (error) {
-      console.error("Error updating route:", error);
       let message = "Что-то пошло не так при обновлении.";
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message = error.response.data.message;
-      } else if (error.message) {
-        message = error.message;
-      }
       if (
         error.response &&
         error.response.status === 400 &&
@@ -385,8 +374,8 @@ const EditRouteScreen = () => {
       await RouteDelete(routeId, accessToken);
       navigation.navigate("MyRoutesScreen");
     } catch (error) {
-      console.log("Error deleting route:", error);
-      setErrorMessage("Ошибка при удалении маршрута. " + (error.message || ""));
+      console.log("Ошибка при удалении маршрута", error);
+      setErrorMessage("Ошибка при удалении маршрута. ");
       setErrorModalVisible(true);
     } finally {
       setIsLoading(false);
@@ -442,12 +431,6 @@ const EditRouteScreen = () => {
             key={index}
             selectedAddress={point.name}
             onAddressSelect={(selectedPointData) => {
-              console.log(
-                "EditRouteScreen onAddressSelect:",
-                selectedPointData,
-                "for index:",
-                index
-              );
               const newPoints = [...selectedPoints];
               newPoints[index] = selectedPointData; // {name: '...', place_id: '...'}
               setSelectedPoints(newPoints);
