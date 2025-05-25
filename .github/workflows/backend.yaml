@@ -85,8 +85,7 @@ jobs:
       - name: Generate coverage badges
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          jacoco-csv-file: |
-            ${{ github.workspace }}/**/backend/**/build/reports/jacoco/test/*.csv
+          jacoco-csv-file: "**/jacocoTestReport.csv"
 
 #  build_and_push_images:
 #    # if: ${{ github.base_ref == 'main' }}
