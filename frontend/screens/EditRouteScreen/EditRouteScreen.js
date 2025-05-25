@@ -113,7 +113,6 @@ const EditRouteScreen = () => {
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Флаг, что точки были изменены
   const [pointsChanged, setPointsChanged] = useState(false);
 
   useEffect(() => {
@@ -137,12 +136,10 @@ const EditRouteScreen = () => {
     const filledCount = selectedPoints.filter(
       (p) => p.place_id && p.name
     ).length;
-    // Кнопка активна, если минимум 2 точки заполнены и есть название маршрута
     setButtonEnabled(filledCount >= 2 && routeName.trim().length > 0);
     setShowEmptyFieldsWarning(false);
   }, [selectedPoints, routeName]);
 
-  // Отслеживание изменений в точках
   useEffect(() => {
     if (
       JSON.stringify(selectedPoints) !== JSON.stringify(initialPointsForState)
@@ -175,7 +172,7 @@ const EditRouteScreen = () => {
 
   const calculateRoute = async (originId, destinationId, waypointsIds) => {
     if (!originId || !destinationId)
-      return { distance: initialDistance, duration: initialDuration }; // Возвращаем старые, если нет ключевых точек
+      return { distance: initialDistance, duration: initialDuration };
 
     const originCoords = await getCoordinatesFromPlaceId(originId);
     const destinationCoords = await getCoordinatesFromPlaceId(destinationId);
@@ -309,6 +306,16 @@ const EditRouteScreen = () => {
     };
 
     try {
+      console.log(
+        routeId,
+        routePayload.name,
+        userId,
+        routePayload.tags,
+        routePayload.routePoints,
+        routePayload.distance,
+        routePayload.duration,
+        accessToken
+      );
       await RouteUpdate(
         routeId,
         routePayload.name,
@@ -316,17 +323,13 @@ const EditRouteScreen = () => {
         routePayload.tags,
         routePayload.routePoints,
         routePayload.distance,
-        routePayload.duration
+        routePayload.duration,
+        accessToken
       );
 
       setInitialDistance(currentDistance);
       setInitialDuration(currentDuration);
-      setInitialPointsForState(JSON.parse(JSON.stringify(selectedPoints)));
       setPointsChanged(false);
-
-      Alert.alert("Успех", "Маршрут успешно обновлен!", [
-        { text: "OK", onPress: () => navigation.navigate("MyRoutesScreen") },
-      ]);
 
       navigation.navigate("PreviewRouteScreen", {
         routeData: {
@@ -419,63 +422,59 @@ const EditRouteScreen = () => {
   return (
     <View style={styles.container}>
       <BackButton onPress={() => navigation.goBack()} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }}
-      >
-        <View style={styles.topContainer}>
-          <Text style={styles.createTitle}>{"Редактирование маршрута"}</Text>
-          <TextInput
-            style={styles.inputTitle}
-            value={routeName}
-            onChangeText={setRouteName}
-            placeholder="Название маршрута"
-            maxLength={40}
-            placeholderTextColor="#999"
-            cursorColor="#FCFFFF"
-          />
-        </View>
 
-        <View style={styles.pointsContainer}>
-          {selectedPoints.map((point, index) => (
-            <PointOfRoute
-              key={index}
-              selectedAddress={point.name}
-              onAddressSelect={(selectedPointData) => {
-                console.log(
-                  "EditRouteScreen onAddressSelect:",
-                  selectedPointData,
-                  "for index:",
-                  index
-                );
-                const newPoints = [...selectedPoints];
-                newPoints[index] = selectedPointData; // {name: '...', place_id: '...'}
-                setSelectedPoints(newPoints);
-              }}
-              onRemove={() => handleRemovePoint(index)}
-              showRemoveButton={selectedPoints.length > 2}
-            />
-          ))}
-        </View>
-
-        {showEmptyFieldsWarning && (
-          <Text style={styles.warningText}>
-            {!routeName.trim()
-              ? "Введите название маршрута!"
-              : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
-          </Text>
-        )}
-
-        <AddPoint
-          onPress={handleAddPoint}
-          disabled={selectedPoints.length >= 6} // condition из CreateRouteScreen
+      <View style={styles.topContainer}>
+        <Text style={styles.createTitle}>{"Редактирование маршрута"}</Text>
+        <TextInput
+          style={styles.inputTitle}
+          value={routeName}
+          onChangeText={setRouteName}
+          placeholder="Название маршрута"
+          maxLength={40}
+          placeholderTextColor="#999"
+          cursorColor="#FCFFFF"
         />
-      </ScrollView>
+      </View>
+
+      <View style={styles.pointsContainer}>
+        {selectedPoints.map((point, index) => (
+          <PointOfRoute
+            key={index}
+            selectedAddress={point.name}
+            onAddressSelect={(selectedPointData) => {
+              console.log(
+                "EditRouteScreen onAddressSelect:",
+                selectedPointData,
+                "for index:",
+                index
+              );
+              const newPoints = [...selectedPoints];
+              newPoints[index] = selectedPointData; // {name: '...', place_id: '...'}
+              setSelectedPoints(newPoints);
+            }}
+            onRemove={() => handleRemovePoint(index)}
+            showRemoveButton={selectedPoints.length > 2}
+          />
+        ))}
+      </View>
+
+      {showEmptyFieldsWarning && (
+        <Text style={styles.warningText}>
+          {!routeName.trim()
+            ? "Введите название маршрута!"
+            : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
+        </Text>
+      )}
+
+      <AddPoint
+        onPress={handleAddPoint}
+        disabled={selectedPoints.length >= 6}
+      />
 
       <View style={styles.actionsContainer}>
         <CreateRouteButton
           onPress={handleSave}
-          disabled={!buttonEnabled || isLoading} // condition из CreateRouteScreen
+          disabled={!buttonEnabled || isLoading}
           title={"Сохранить изменения"}
         />
         {routeId && (
