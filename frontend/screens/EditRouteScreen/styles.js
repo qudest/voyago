@@ -1,47 +1,78 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#F5F7FF",
-    backgroundImage:
-      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
-    backgroundSize: "40px 40px",
-    backgroundPosition: "0 0, 20px 20px",
-    justifyContent: "space-around",
-    alignItems: "center",
   },
-  pointsContainer: {
-    width: "100%",
-    marginTop: "30%",
+  container: {
+    flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F5F7FF",
   },
-  topContainer: {
-    position: "absolute",
-    width: "100%",
-    justifyContent: "center",
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: "#333",
+  },
+
+  fixedTopSection: {
+    paddingHorizontal: 15,
+    paddingTop: Platform.OS === "ios" ? 0 : 10,
+  },
+  titleInputContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginVertical: 10,
   },
-  createTitle: {
-    fontSize: 19,
-    fontWeight: 500,
-    marginBottom: 4,
+  screenTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 15,
+    color: "#333",
   },
-  inputTitle: {
-    marginTop: 5,
-    fontSize: 19,
+  inputRouteName: {
+    width: "90%",
+    textAlign: "left",
+    color: "#333",
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#B0B0B0",
+    paddingBottom: 8,
+    paddingHorizontal: 5,
+    borderRadius: 5,
   },
-  createDiscription: {
-    fontSize: 19,
-    fontWeight: 400,
-    marginBottom: 16,
+
+  scrollableSection: {
+    marginTop: 20,
+    alignItems: "center",
+    flex: 1,
   },
+  scrollableContentContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 20,
+    alignItems: "center",
+  },
+
   warningText: {
-    color: "#3E3C80",
-    fontSize: 19,
-    fontWeight: 400,
+    color: "#606265",
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 15,
+    textAlign: "center",
+  },
+
+  fixedBottomSection: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  actionsContainer: {
+    width: "100%",
+    marginTop: 10,
   },
 });
 

@@ -3,9 +3,8 @@ import {
   View,
   Text,
   TextInput,
-  Alert,
   ActivityIndicator,
-  ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import styles from "./styles";
@@ -124,17 +123,17 @@ const EditRouteScreen = () => {
           setUserId(parsedData.id);
         }
       } catch (error) {
-        console.log(error);
+        console.log("Ошибка получения данных пользователя:", error);
       }
     };
     fetchUserDataAndToken();
   }, []);
 
   useEffect(() => {
-    const filledCount = selectedPoints.filter(
+    const filledPointsCount = selectedPoints.filter(
       (p) => p.place_id && p.name
     ).length;
-    setButtonEnabled(filledCount >= 2 && routeName.trim().length > 0);
+    setButtonEnabled(filledPointsCount >= 2 && routeName.trim().length > 0);
     setShowEmptyFieldsWarning(false);
   }, [selectedPoints, routeName]);
 
@@ -163,26 +162,26 @@ const EditRouteScreen = () => {
       }
       return null;
     } catch (error) {
-      console.log(
-        "Не удалось получить координаты для начальной или конечной точки.",
-        error
-      );
+      console.log("Не удалось получить координаты для точки.", error);
       return null;
     }
   };
 
   const calculateRoute = async (originId, destinationId, waypointsIds) => {
-    if (!originId || !destinationId)
+    if (!originId || !destinationId) {
+      console.log(
+        "OriginId или DestinationId отсутствуют для расчета маршрута"
+      );
       return { distance: initialDistance, duration: initialDuration };
+    }
 
     const originCoords = await getCoordinatesFromPlaceId(originId);
     const destinationCoords = await getCoordinatesFromPlaceId(destinationId);
 
     if (!originCoords || !destinationCoords) {
-      setErrorMessage(
-        "Не удалось получить координаты для начальной или конечной точки."
+      console.log(
+        "Не удалось получить координаты для начальной или конечной точки при расчете."
       );
-      setErrorModalVisible(true);
       return { distance: initialDistance, duration: initialDuration };
     }
 
@@ -222,16 +221,15 @@ const EditRouteScreen = () => {
         );
         return { distance, duration };
       } else {
-        setErrorMessage("Маршрут не найден");
-        setErrorModalVisible(true);
+        console.log(
+          "Маршрут не найден API Directions:",
+          data.status,
+          data.error_message
+        );
         return { distance: initialDistance, duration: initialDuration };
       }
     } catch (error) {
-      console.log("Ошибка при расчете маршрута.", error);
-      setErrorMessage(
-        "Ошибка при расчете маршрута. Проверьте интернет-соединение."
-      );
-      setErrorModalVisible(true);
+      console.log("Ошибка при расчете маршрута");
       return { distance: initialDistance, duration: initialDuration };
     }
   };
@@ -253,6 +251,16 @@ const EditRouteScreen = () => {
   const handleSave = async () => {
     if (!buttonEnabled) {
       setShowEmptyFieldsWarning(true);
+      return;
+    }
+
+    const allPointsAreFullyFilled = selectedPoints.every(
+      (point) => point.name && point.place_id
+    );
+
+    if (!allPointsAreFullyFilled) {
+      setErrorMessage("Заполните все точки");
+      setErrorModalVisible(true);
       return;
     }
 
@@ -282,8 +290,48 @@ const EditRouteScreen = () => {
         destinationPoint.place_id,
         waypoints.filter((p) => p.place_id).map((p) => p.place_id)
       );
-      currentDistance = calculationResult.distance;
-      currentDuration = calculationResult.duration;
+      if (
+        calculationResult.distance !== initialDistance ||
+        calculationResult.duration !== initialDuration
+      ) {
+        currentDistance = calculationResult.distance;
+        currentDuration = calculationResult.duration;
+      } else if (
+        calculationResult.distance === 0 &&
+        calculationResult.duration === 0 &&
+        (initialDistance !== 0 || initialDuration !== 0)
+      ) {
+        currentDistance = 0;
+        currentDuration = 0;
+      }
+
+      if (
+        currentDistance === 0 &&
+        currentDuration === 0 &&
+        originPoint?.place_id &&
+        destinationPoint?.place_id
+      ) {
+        const originCoordsCheck = await getCoordinatesFromPlaceId(
+          originPoint.place_id
+        );
+        const destinationCoordsCheck = await getCoordinatesFromPlaceId(
+          destinationPoint.place_id
+        );
+        if (!originCoordsCheck || !destinationCoordsCheck) {
+          setErrorMessage(
+            "Не удалось получить координаты для начальной или конечной точки. Проверьте выбранные адреса."
+          );
+          setErrorModalVisible(true);
+          setIsLoading(false);
+          return;
+        }
+        setErrorMessage(
+          "Маршрут между указанными точками не найден. Пожалуйста, проверьте точки."
+        );
+        setErrorModalVisible(true);
+        setIsLoading(false);
+        return;
+      }
     }
 
     const routePayload = {
@@ -305,16 +353,6 @@ const EditRouteScreen = () => {
     };
 
     try {
-      console.log(
-        routeId,
-        routePayload.name,
-        userId,
-        routePayload.tags,
-        routePayload.routePoints,
-        routePayload.distance,
-        routePayload.duration,
-        accessToken
-      );
       await RouteUpdate(
         routeId,
         routePayload.name,
@@ -344,13 +382,14 @@ const EditRouteScreen = () => {
         },
       });
     } catch (error) {
+      console.log("Ошибка при обновлении маршрута:");
       let message = "Что-то пошло не так при обновлении.";
       if (
         error.response &&
         error.response.status === 400 &&
         error.response.data &&
         error.response.data.message &&
-        error.response.data.message.includes("already exists")
+        error.response.data.message.toLowerCase().includes("already exists")
       ) {
         message = "Маршрут с таким названием уже существует.";
       }
@@ -374,8 +413,8 @@ const EditRouteScreen = () => {
       await RouteDelete(routeId, accessToken);
       navigation.navigate("MyRoutesScreen");
     } catch (error) {
-      console.log("Ошибка при удалении маршрута", error);
-      setErrorMessage("Ошибка при удалении маршрута. ");
+      console.log("Ошибка при удалении маршрута");
+      setErrorMessage("Ошибка при удалении маршрута.");
       setErrorModalVisible(true);
     } finally {
       setIsLoading(false);
@@ -390,12 +429,13 @@ const EditRouteScreen = () => {
     setErrorModalVisible(false);
   };
 
-  if (isLoading) {
+  if (isLoading && !isDeleteModalVisible && !isErrorModalVisible) {
     return (
       <View style={styles.container}>
         <BackButton onPress={() => navigation.goBack()} />
         <ActivityIndicator
           size="large"
+          color="#3E3C80"
           style={
             styles.loader || {
               flex: 1,
@@ -409,76 +449,93 @@ const EditRouteScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <BackButton onPress={() => navigation.goBack()} />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.fixedTopSection}>
+          <BackButton onPress={() => navigation.goBack()} />
+          <View style={styles.titleInputContainer}>
+            <Text style={styles.screenTitle}>Редактирование маршрута</Text>
+            <TextInput
+              style={styles.inputRouteName}
+              value={routeName}
+              onChangeText={setRouteName}
+              placeholder="Название маршрута"
+              maxLength={40}
+              placeholderTextColor="#A0A0A0"
+              cursorColor="#3E3C80"
+            />
+          </View>
+        </View>
 
-      <View style={styles.topContainer}>
-        <Text style={styles.createTitle}>{"Редактирование маршрута"}</Text>
-        <TextInput
-          style={styles.inputTitle}
-          value={routeName}
-          onChangeText={setRouteName}
-          placeholder="Название маршрута"
-          maxLength={40}
-          placeholderTextColor="#999"
-          cursorColor="#FCFFFF"
-        />
-      </View>
+        <View style={styles.scrollableSection}>
+          {selectedPoints.map((point, index) => (
+            <PointOfRoute
+              key={index}
+              selectedAddress={point.name}
+              onAddressSelect={(selectedPointData) => {
+                const newPoints = [...selectedPoints];
+                if (
+                  selectedPointData &&
+                  selectedPointData.name &&
+                  selectedPointData.place_id
+                ) {
+                  newPoints[index] = {
+                    name: selectedPointData.name,
+                    place_id: selectedPointData.place_id,
+                  };
+                } else {
+                  console.log(
+                    "Получены некорректные данные для точки маршрута:",
+                    selectedPointData
+                  );
+                }
+                setSelectedPoints(newPoints);
+              }}
+              onRemove={() => handleRemovePoint(index)}
+              showRemoveButton={selectedPoints.length > 2}
+            />
+          ))}
+          {showEmptyFieldsWarning && (
+            <Text style={styles.warningText}>
+              {!routeName.trim()
+                ? "Введите название маршрута!"
+                : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
+            </Text>
+          )}
+        </View>
 
-      <View style={styles.pointsContainer}>
-        {selectedPoints.map((point, index) => (
-          <PointOfRoute
-            key={index}
-            selectedAddress={point.name}
-            onAddressSelect={(selectedPointData) => {
-              const newPoints = [...selectedPoints];
-              newPoints[index] = selectedPointData; // {name: '...', place_id: '...'}
-              setSelectedPoints(newPoints);
-            }}
-            onRemove={() => handleRemovePoint(index)}
-            showRemoveButton={selectedPoints.length > 2}
+        <View style={styles.fixedBottomSection}>
+          <AddPoint
+            onPress={handleAddPoint}
+            condition={selectedPoints.length >= 6}
           />
-        ))}
-      </View>
+          <View style={styles.actionsContainer}>
+            <CreateRouteButton
+              onPress={handleSave}
+              condition={isLoading}
+              title={"Сохранить изменения"}
+            />
+            {routeId && (
+              <DeleteRouteButton onPress={handleDelete} disabled={isLoading} />
+            )}
+          </View>
+        </View>
 
-      {showEmptyFieldsWarning && (
-        <Text style={styles.warningText}>
-          {!routeName.trim()
-            ? "Введите название маршрута!"
-            : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
-        </Text>
-      )}
-
-      <AddPoint
-        onPress={handleAddPoint}
-        disabled={selectedPoints.length >= 6}
-      />
-
-      <View style={styles.actionsContainer}>
-        <CreateRouteButton
-          onPress={handleSave}
-          disabled={!buttonEnabled || isLoading}
-          title={"Сохранить изменения"}
+        <AlertDelete
+          isVisible={isDeleteModalVisible}
+          onCancel={cancelDelete}
+          onConfirm={confirmDelete}
+          title="Удаление маршрута"
+          message="Вы точно хотите удалить этот маршрут?"
         />
-        {routeId && (
-          <DeleteRouteButton onPress={handleDelete} disabled={isLoading} />
-        )}
+        <AlertError
+          isVisible={isErrorModalVisible}
+          onConfirm={confirmError}
+          title="Ошибка"
+          message={errorMessage}
+        />
       </View>
-
-      <AlertDelete
-        isVisible={isDeleteModalVisible}
-        onCancel={cancelDelete}
-        onConfirm={confirmDelete}
-        title="Удаление маршрута"
-        message="Вы точно хотите удалить маршрут?"
-      />
-      <AlertError
-        isVisible={isErrorModalVisible}
-        onConfirm={confirmError}
-        title="Ошибка!"
-        message={errorMessage}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
