@@ -146,7 +146,7 @@ const MainScreen = () => {
       );
 
       if (!currentRouteData.id) {
-        console.error(
+        console.log(
           "КРИТИЧЕСКАЯ ОШИБКА: ID маршрута (selectedRoute.id) отсутствует!"
         );
       }

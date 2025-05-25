@@ -99,7 +99,7 @@ const CreateRouteScreen = () => {
         .join("|");
 
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.lat},${destinationCoords.lng}&waypoints=optimize:true|${waypointsParam}&key=${API_KEY}`
+        `https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.lat},${destinationCoords.lng}&waypoints=optimize:true|${waypointsParam}&key=${API_KEY}&mode=walking`
       );
 
       const data = await response.json();
