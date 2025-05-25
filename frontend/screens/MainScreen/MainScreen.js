@@ -366,7 +366,7 @@ const MainScreen = () => {
       );
       return response.data.result.geometry.location;
     } catch (error) {
-      console.error("Error fetching coordinates:", error);
+      console.log("Error fetching coordinates:", error);
       return null;
     }
   };
@@ -636,7 +636,6 @@ const MainScreen = () => {
               />
             ))}
 
-            {/* Маркеры кафе */}
             {nearbyCafes.map((cafe, index) => (
               <Marker
                 key={`cafe-${index}`}

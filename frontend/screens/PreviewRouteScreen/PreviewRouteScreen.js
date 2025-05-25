@@ -150,6 +150,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             )}`,
             waypoints: waypointsParam,
             mode: "walking",
+            alternatives: false, // Добавить для пешего режима
             key: API_KEY,
             language: "ru",
           },
@@ -223,7 +224,6 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           points: pointNames || [],
         };
       }
-      throw new Error("Маршрут не найден в Directions API");
     } catch (error) {
       console.log(
         "Ошибка в fetchRouteData для ID",
