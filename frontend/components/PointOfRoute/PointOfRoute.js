@@ -75,6 +75,7 @@ const PointOfRoute = ({
   };
 
   const handleAddressSelect = (prediction) => {
+    console.log("handleAddressSelect triggered with:", prediction);
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
       blurTimeoutRef.current = null;
