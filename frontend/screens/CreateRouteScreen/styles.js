@@ -1,56 +1,66 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
     backgroundColor: "#F5F7FF",
-    backgroundImage:
-      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
-    backgroundSize: "40px 40px",
-    backgroundPosition: "0 0, 20px 20px",
-    justifyContent: "space-around",
-    alignItems: "center",
   },
-  pointsContainer: {
-    width: "100%",
-    marginTop: "30%",
-    justifyContent: "center",
-    alignItems: "center",
+  container: {
+    flex: 1,
   },
-  topContainer: {
-    position: "absolute",
-    width: "100%",
-    justifyContent: "center",
+
+  fixedTopSection: {
+    paddingHorizontal: 15,
+    paddingTop: Platform.OS === "ios" ? 0 : 10,
+  },
+  topContentContainer: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   createTitle: {
     fontSize: 19,
-    fontWeight: 500,
-    marginBottom: 20,
-  },
-  createDiscription: {
-    fontSize: 19,
-    fontWeight: 400,
-    marginBottom: 16,
-  },
-  warningText: {
-    color: "#3E3C80",
-    fontSize: 19,
-    fontWeight: 400,
+    fontWeight: "600",
+    marginBottom: 15,
+    marginTop: 10,
+    color: "#333",
   },
   inputTitle: {
-    marginBottom: 0,
-
-    width: 256,
-
+    marginTop: 10,
+    width: "80%",
     textAlign: "left",
+    color: "#333",
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#B0B0B0",
+    paddingBottom: 8,
+    paddingHorizontal: 5,
+  },
+
+  scrollableSection: {
+    flex: 1,
+  },
+  scrollableContentContainer: {
+    paddingHorizontal: 15,
+    paddingBottom: 20,
+    alignItems: "center",
+  },
+  pointsListContainer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  warningText: {
     color: "#606265",
     fontSize: 16,
+    fontWeight: "500",
+    marginTop: 15,
+    textAlign: "center",
+  },
 
-    borderBottomWidth: 1,
-    borderBottomColor: "black",
-    paddingBottom: 8,
+  fixedBottomSection: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    alignItems: "center",
+    borderTopColor: "#E0E0E0",
   },
 });
 

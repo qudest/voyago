@@ -140,11 +140,6 @@ const MainScreen = () => {
   useEffect(() => {
     const currentRouteData = routeParams?.selectedRoute;
     if (currentRouteData) {
-      console.log(
-        "MainScreen: Получен selectedRoute из параметров:",
-        JSON.stringify(currentRouteData, null, 2)
-      );
-
       if (!currentRouteData.id) {
         console.log(
           "КРИТИЧЕСКАЯ ОШИБКА: ID маршрута (selectedRoute.id) отсутствует!"
@@ -279,10 +274,6 @@ const MainScreen = () => {
       console.log(`Поиск кафе вокруг ${searchPoints.length} точек маршрута.`);
       for (const point of searchPoints) {
         if (allCafes.length >= 6) break;
-
-        console.log(
-          `Запрос кафе для точки: ${point.latitude},${point.longitude}`
-        );
         const response = await axios.get(
           "https://maps.googleapis.com/maps/api/place/nearbysearch/json",
           {
