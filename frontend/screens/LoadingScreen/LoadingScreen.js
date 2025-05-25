@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { View, Image, Animated, Easing } from "react-native";
 import styles from "./styles";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoadingScreen = ({ navigation }) => {
   const cloudLeftAnim = useRef(new Animated.Value(0)).current;
@@ -71,11 +72,40 @@ const LoadingScreen = ({ navigation }) => {
     animateClouds();
     animateLogo();
 
-    const timer = setTimeout(() => {
-      navigation.replace("AuthorizationScreen");
-    }, 5000);
+    const bootstrapAsync = async () => {
+      let accessToken;
+      let userDataString;
+      let userData;
 
-    return () => clearTimeout(timer);
+      try {
+        accessToken = await AsyncStorage.getItem("accessToken");
+        userDataString = await AsyncStorage.getItem("userData");
+
+        if (accessToken && userDataString) {
+          userData = JSON.parse(userDataString);
+
+          if (userData.role === "ROLE_ADMIN") {
+            navigation.replace("AdminScreen");
+          } else if (userData.city === null) {
+            navigation.replace("ChooseCityScreen", {
+              idAccount: userData.id,
+              phoneNumber: userData.phoneNumber,
+            });
+          } else {
+            navigation.replace("MainScreen");
+          }
+        } else {
+          navigation.replace("AuthorizationScreen");
+        }
+      } catch (e) {
+        console.log("Error restoring session:", e);
+        await AsyncStorage.removeItem("accessToken");
+        await AsyncStorage.removeItem("userData");
+        navigation.replace("AuthorizationScreen");
+      }
+    };
+
+    bootstrapAsync();
   }, [navigation, cloudLeftAnim, cloudRightAnim, logoAnimX]);
 
   return (

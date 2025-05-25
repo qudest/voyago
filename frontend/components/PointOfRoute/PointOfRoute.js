@@ -75,6 +75,7 @@ const PointOfRoute = ({
   };
 
   const handleAddressSelect = (prediction) => {
+    console.log("handleAddressSelect triggered with:", prediction);
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
       blurTimeoutRef.current = null;
@@ -167,7 +168,7 @@ const PointOfRoute = ({
         )}
       </View>
       {isSearchFocused && filteredAddress.length > 0 && (
-        <View style={styles.dropdown}>
+        <View style={[styles.dropdown, { maxHeight: 200 }]}>
           <FlatList
             data={filteredAddress}
             keyExtractor={(item) => item.id}
@@ -181,6 +182,7 @@ const PointOfRoute = ({
             )}
             keyboardShouldPersistTaps="handled"
             nestedScrollEnabled={true}
+            style={{ flexGrow: 0 }}
           />
         </View>
       )}

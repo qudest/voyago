@@ -46,13 +46,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "black",
   },
   enableRepeatCodeButton: {
-    marginBottom: 10,
-
+    marginTop: 15,
     color: "#606265",
   },
   disableRepeatCodeButton: {
-    marginBottom: 10,
-
+    marginTop: 15,
     color: "#3E3C80",
   },
   enableContinueButton: {
@@ -98,12 +96,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  buttomContainer: {
+    justifyContent: "center",
+  },
   enableContinueText: {
     alignSelf: "center",
     color: "#FFFFFF",
 
     fontSize: 16,
     fontWeight: 500,
+    marginBottom: 100,
   },
   disableContinueText: {
     alignSelf: "center",
@@ -111,6 +113,7 @@ const styles = StyleSheet.create({
 
     fontSize: 16,
     fontWeight: 500,
+    marginBottom: 100,
   },
   description: {
     textAlign: "center",

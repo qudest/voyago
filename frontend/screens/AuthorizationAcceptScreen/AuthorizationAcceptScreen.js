@@ -201,6 +201,7 @@ const AuthorizationAcceptScreen = () => {
           title="Ошибка!"
           message={errorMessage}
         />
+
         <View style={styles.containerMainInf}>
           <Image
             source={require("../../assets/logoname.png")}
@@ -217,19 +218,20 @@ const AuthorizationAcceptScreen = () => {
             value={code}
             keyboardType="numeric"
           />
+
+          <TouchableOpacity onPress={resetTimer} disabled={isTimerActive}>
+            <Text
+              style={[
+                styles.enableRepeatCodeButton,
+                !isTimerActive && styles.disableRepeatCodeButton,
+              ]}
+            >
+              {isTimerActive
+                ? `Получить новый код можно через ${timer} сек`
+                : "Получить новый код"}
+            </Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={resetTimer} disabled={isTimerActive}>
-          <Text
-            style={[
-              styles.enableRepeatCodeButton,
-              !isTimerActive && styles.disableRepeatCodeButton,
-            ]}
-          >
-            {isTimerActive
-              ? `Получить новый код можно через ${timer} сек`
-              : "Получить новый код"}
-          </Text>
-        </TouchableOpacity>
         <ContinueButton
           onPress={fetchCodeAccess}
           condition={!isButtonDisabled}

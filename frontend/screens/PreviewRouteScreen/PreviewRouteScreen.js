@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react"; // Добавил useRef
 import {
   View,
   Image,
@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
-  Alert,
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import polyline from "@mapbox/polyline";
@@ -21,7 +20,7 @@ import AppMetrica from "@appmetrica/react-native-analytics";
 const PreviewRouteScreen = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [routeInfo, setRouteInfo] = useState({
-    id: 1,
+    id: null,
     name: "",
     coordinates: [],
     markers: [],
@@ -32,20 +31,32 @@ const PreviewRouteScreen = ({ navigation, route }) => {
   });
   const [accessToken, setAccessToken] = useState(null);
   const [rating, setRating] = useState(null);
+  const isMountedRef = useRef(true);
 
   const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const fetchUserToken = async () => {
       try {
-        const accessToken = await AsyncStorage.getItem("accessToken");
-        setAccessToken(accessToken);
+        const token = await AsyncStorage.getItem("accessToken");
+        if (isMountedRef.current) {
+          setAccessToken(token);
+        }
       } catch (error) {
-        console.log("Ошибка загрузки данных:", error);
+        console.log("Ошибка загрузки accessToken:", error);
+        if (isMountedRef.current) {
+          setAccessToken(null);
+        }
       }
     };
-
-    fetchUserData();
+    fetchUserToken();
   }, []);
 
   const formatMetrics = (distance, duration) => {
@@ -73,6 +84,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
       );
       return response.data.result.geometry.location;
     } catch (error) {
+      console.log("Ошибка getCoordinatesFromPlaceId для:", placeId, error);
       return null;
     }
   };
@@ -82,19 +94,40 @@ const PreviewRouteScreen = ({ navigation, route }) => {
       const { id, routePoints, distance, duration, pointNames, name } =
         routeParams;
 
-      console.log(id);
+      console.log("fetchRouteData для ID:", id);
 
-      const [originCoords, ...waypointsCoords] = await Promise.all([
-        getCoordinatesFromPlaceId(routePoints.origin),
-        ...routePoints.waypoints.map((wp) => getCoordinatesFromPlaceId(wp)),
-      ]);
+      if (!routePoints || !routePoints.origin || !routePoints.destination) {
+        console.log("routePoints некорректны или отсутствуют:", routePoints);
+      }
 
-      const destinationCoords = await getCoordinatesFromPlaceId(
+      const originCoordsPromise = getCoordinatesFromPlaceId(routePoints.origin);
+      const waypointsCoordsPromises = (routePoints.waypoints || []).map((wp) =>
+        getCoordinatesFromPlaceId(wp)
+      );
+      const destinationCoordsPromise = getCoordinatesFromPlaceId(
         routePoints.destination
       );
 
+      const [originCoords, ...waypointsCoords] = await Promise.all([
+        originCoordsPromise,
+        ...waypointsCoordsPromises,
+      ]);
+      const destinationCoords = await destinationCoordsPromise;
+
+      if (
+        !originCoords ||
+        !destinationCoords ||
+        waypointsCoords.some((c) => !c)
+      ) {
+        console.log("Не удалось получить координаты для всех точек:", {
+          originCoords,
+          waypointsCoords,
+          destinationCoords,
+        });
+      }
+
       const waypointsParam =
-        routePoints.waypoints.length > 0
+        (routePoints.waypoints || []).length > 0
           ? `optimize:true|${routePoints.waypoints
               .map((wp) => {
                 const wpId = String(wp).replace("place_id:", "");
@@ -137,7 +170,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
               latitude: originCoords.lat,
               longitude: originCoords.lng,
             },
-            title: pointNames[0] || "Старт",
+            title: pointNames?.[0] || "Старт",
             description: "Начальная точка маршрута",
             icon: require("../../assets/markers/default.png"),
           },
@@ -146,7 +179,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
               latitude: coord.lat,
               longitude: coord.lng,
             },
-            title: pointNames[index + 1] || `Точка ${index + 1}`,
+            title: pointNames?.[index + 1] || `Точка ${index + 1}`,
             description: "Промежуточная точка",
             icon: require("../../assets/markers/default.png"),
           })),
@@ -155,7 +188,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
               latitude: destinationCoords.lat,
               longitude: destinationCoords.lng,
             },
-            title: pointNames[pointNames.length - 1] || "Финиш",
+            title: pointNames?.[pointNames.length - 1] || "Финиш",
             description: "Конечная точка маршрута",
             icon: require("../../assets/markers/default.png"),
           },
@@ -187,49 +220,91 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           duration:
             duration ||
             route.legs.reduce((sum, leg) => sum + leg.duration.value, 0),
-          points: pointNames,
+          points: pointNames || [],
         };
       }
-      throw new Error("Маршрут не найден");
+      throw new Error("Маршрут не найден в Directions API");
     } catch (error) {
-      throw error;
+      console.log(
+        "Ошибка в fetchRouteData для ID",
+        routeParams?.id,
+        ":",
+        error
+      );
+    }
+  };
+
+  const fetchRouteRating = async (routeId, token) => {
+    if (!token) {
+      if (isMountedRef.current) setRating(null);
+      return;
+    }
+    try {
+      const response = await getRating(routeId, token);
+      if (isMountedRef.current) {
+        setRating(response.data.averageRating);
+      }
+    } catch (error) {
+      console.log("Ошибка при получении рейтинга для ID:", routeId);
+      if (isMountedRef.current) {
+        setRating(null);
+      }
     }
   };
 
   useEffect(() => {
-    if (route.params?.routeData) {
+    const currentRouteParamsData = route.params?.routeData;
+
+    if (currentRouteParamsData && accessToken !== null) {
       setLoading(true);
-      fetchRouteData(route.params.routeData)
+      setRating(null);
+
+      fetchRouteData(currentRouteParamsData)
         .then((data) => {
-          setRouteInfo(data);
-          fetchRouteRating(data.id);
-          setLoading(false);
+          if (isMountedRef.current) {
+            setRouteInfo(data);
+            if (accessToken) {
+              fetchRouteRating(data.id, accessToken);
+            } else {
+              console.log(
+                "Токен отсутствует после fetchRouteData, рейтинг не будет загружен."
+              );
+              setRating(null);
+            }
+          }
         })
         .catch((error) => {
-          setLoading(false);
+          console.error("Основная ошибка загрузки данных маршрута:", error);
+          if (isMountedRef.current) {
+            setRouteInfo({
+              id: null,
+              name: "Ошибка загрузки",
+              coordinates: [],
+              markers: [],
+              region: null,
+              distance: 0,
+              duration: 0,
+              points: [],
+            });
+            setRating(null);
+          }
+        })
+        .finally(() => {
+          if (isMountedRef.current) {
+            setLoading(false);
+          }
         });
+    } else if (currentRouteParamsData && accessToken === null) {
+      setLoading(true);
+    } else if (!currentRouteParamsData) {
+      setLoading(false);
     }
-  }, [route.params]);
+  }, [route.params?.routeData, accessToken]);
 
   const { distance, duration } = formatMetrics(
     routeInfo.distance,
     routeInfo.duration
   );
-
-  const fetchRouteRating = async (routeId) => {
-    try {
-      const response = await getRating(routeId, accessToken);
-      setRating(response.data.averageRating);
-      console.log("отправилось", response.data.averageRating);
-    } catch (error) {
-      console.log(routeId, response.data.averageRating);
-      console.log(
-        "Ошибка при отправке оценки:",
-        error.response?.data || error.message
-      );
-      setRating(null);
-    }
-  };
 
   const handleMainScreen = () => {
     AppMetrica.reportEvent("Прохождение маршрута", {
@@ -237,9 +312,16 @@ const PreviewRouteScreen = ({ navigation, route }) => {
       button_name: "выбрать",
       screen: "Экран предпросмотра маршрута",
     });
-    console.log(routeInfo);
-    navigation.navigate("MainScreen", { selectedRoute: routeInfo });
+    console.log("Переход на MainScreen с routeInfo:", routeInfo);
+    if (routeInfo && routeInfo.id) {
+      navigation.navigate("MainScreen", { selectedRoute: routeInfo });
+    } else {
+      console.log(
+        "Попытка перейти на MainScreen без корректных данных маршрута."
+      );
+    }
   };
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
@@ -247,7 +329,9 @@ const PreviewRouteScreen = ({ navigation, route }) => {
 
         <View style={styles.headerContainer}>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-            {routeInfo.name || route.params?.routeData?.name || "Маршрут"}
+            {loading && !routeInfo.name
+              ? "Загрузка..."
+              : routeInfo.name || route.params?.routeData?.name || "Маршрут"}
           </Text>
         </View>
 
@@ -255,34 +339,38 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           <View style={styles.mapContainer}>
             {loading ? (
               <ActivityIndicator size="large" style={styles.loader} />
-            ) : routeInfo.region ? (
-              <MapView
-                style={styles.map}
-                initialRegion={routeInfo.region}
-                region={routeInfo.region}
-              >
+            ) : routeInfo.region && routeInfo.coordinates.length > 0 ? (
+              <MapView style={styles.map} initialRegion={routeInfo.region}>
                 {routeInfo.markers.map((marker, index) => (
                   <Marker
-                    key={`marker-${index}`}
+                    key={`marker-${index}-${
+                      marker.title?.replace(/\s/g, "-") || index
+                    }`}
                     coordinate={marker.coordinate}
                     title={marker.title}
                     description={marker.description}
                     image={marker.icon}
                   />
                 ))}
-                <Polyline
-                  coordinates={routeInfo.coordinates}
-                  strokeColor="#464BDC"
-                  strokeWidth={4}
-                />
+                {routeInfo.coordinates.length > 0 && (
+                  <Polyline
+                    coordinates={routeInfo.coordinates}
+                    strokeColor="#464BDC"
+                    strokeWidth={4}
+                  />
+                )}
               </MapView>
             ) : (
-              <Text style={styles.errorText}>Не удалось загрузить карту</Text>
+              <Text style={styles.errorText}>
+                {routeInfo.name === "Ошибка загрузки"
+                  ? "Не удалось загрузить данные маршрута"
+                  : "Карта не доступна"}
+              </Text>
             )}
           </View>
 
           <View style={styles.contentPoints}>
-            {routeInfo.points?.map((point, index) => (
+            {(routeInfo.points || []).map((point, index) => (
               <Text key={`point-${index}`} style={styles.pointText}>
                 {point}
               </Text>
@@ -296,17 +384,31 @@ const PreviewRouteScreen = ({ navigation, route }) => {
                   source={require("../../assets/routeCardImages/clock.png")}
                   style={styles.timeImage}
                 />
-                <Text style={styles.time}>{duration}</Text>
+                <Text style={styles.time}>
+                  {routeInfo.id && !loading ? duration : "--"}
+                </Text>
               </View>
 
-              <Text style={styles.distance}>{distance}</Text>
+              <Text style={styles.distance}>
+                {routeInfo.id && !loading ? distance : "--"}
+              </Text>
 
               <View style={styles.ratingContainer}>
                 <Image
                   source={require("../../assets/routeCardImages/rating.png")}
                   style={styles.ratingImage}
                 />
-                <Text style={styles.rating}>{rating || "0.0"}</Text>
+                <Text style={styles.rating}>
+                  {loading && rating === null
+                    ? "..."
+                    : typeof rating === "number"
+                    ? rating.toFixed(1)
+                    : rating === null && routeInfo.id
+                    ? "N/A"
+                    : routeInfo.id
+                    ? "0.0"
+                    : "--"}
+                </Text>
               </View>
             </View>
           </View>
@@ -316,6 +418,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           <ChooseButton
             style={styles.chooseButton}
             onPress={handleMainScreen}
+            disabled={loading || !routeInfo.id}
           />
         </View>
       </View>

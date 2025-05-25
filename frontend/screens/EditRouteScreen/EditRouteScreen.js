@@ -3,30 +3,28 @@ import {
   View,
   Text,
   TextInput,
-  Alert,
   ActivityIndicator,
-  ScrollView,
-} from "react-native"; // Добавлен ScrollView
+  SafeAreaView,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import styles from "./styles"; // Убедитесь, что стили подходят
+import styles from "./styles";
 import BackButton from "../../components/BackButton/BackButton";
 import AddPoint from "../../components/AddPoint/AddPoint";
 import PointOfRoute from "../../components/PointOfRoute/PointOfRoute";
 import CreateRouteButton from "../../components/CreateRouteButton/CreateRouteButton";
 import DeleteRouteButton from "../../components/DeleteRouteButton/DeleteRouteButton";
 import AlertDelete from "../../components/AlertDelete/AlertDelete";
-import AlertError from "../../components/AlertError/AlertError"; // Добавлен AlertError
-import { RouteUpdate, RouteDelete } from "../../services/routesApi"; // RouteCreate здесь не нужен, если только для создания нового из этого экрана (но логика на обновление)
+import AlertError from "../../components/AlertError/AlertError";
+import { RouteUpdate, RouteDelete } from "../../services/routesApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0"; // Ваш API ключ Google
+const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
 const EditRouteScreen = () => {
   const navigation = useNavigation();
   const { params } = useRoute();
   const routeDataFromParams = params?.routeData;
 
-  // Вспомогательная функция для извлечения чистого place_id
   const extractActualPlaceId = (placeIdWithPrefix) => {
     if (!placeIdWithPrefix) return "";
     return String(placeIdWithPrefix)
@@ -34,13 +32,11 @@ const EditRouteScreen = () => {
       .trim();
   };
 
-  // Функция для получения точек по умолчанию
   const getDefaultPoints = () => [
     { place_id: "", name: "" },
     { place_id: "", name: "" },
   ];
 
-  // Инициализация начальных точек
   let initialPointsForState;
   if (
     routeDataFromParams &&
@@ -70,7 +66,7 @@ const EditRouteScreen = () => {
           }
         }
       }
-      return { name: name || "", place_id }; // Убедимся, что name не undefined
+      return { name: name || "", place_id };
     });
 
     if (initialPointsForState.length < 2) {
@@ -87,7 +83,6 @@ const EditRouteScreen = () => {
     routeDataFromParams?.name || "Новый маршрут"
   );
 
-  // Сохраняем исходные данные для сравнения и использования
   const [routeId, setRouteId] = useState(routeDataFromParams?.id || null);
   const [initialDistance, setInitialDistance] = useState(
     routeDataFromParams?.distance || 0
@@ -101,7 +96,6 @@ const EditRouteScreen = () => {
   const [initialTags, setInitialTags] = useState(
     routeDataFromParams?.tags || []
   );
-  // Координаты могут понадобиться для Preview, если они были
   const [initialCoordinates, setInitialCoordinates] = useState(
     routeDataFromParams?.coordinates || null
   );
@@ -111,12 +105,11 @@ const EditRouteScreen = () => {
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [userId, setUserId] = useState(null);
-  const [accessToken, setAccessToken] = useState(null); // Для API вызовов, если требуется
+  const [accessToken, setAccessToken] = useState(null);
 
   const [isErrorModalVisible, setErrorModalVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Флаг, что точки были изменены
   const [pointsChanged, setPointsChanged] = useState(false);
 
   useEffect(() => {
@@ -130,22 +123,20 @@ const EditRouteScreen = () => {
           setUserId(parsedData.id);
         }
       } catch (error) {
-        console.error("Error fetching user data and token:", error);
+        console.log("Ошибка получения данных пользователя:", error);
       }
     };
     fetchUserDataAndToken();
   }, []);
 
   useEffect(() => {
-    const filledCount = selectedPoints.filter(
-      (p) => p.place_id && p.name // Убедимся, что и имя и ID есть
+    const filledPointsCount = selectedPoints.filter(
+      (p) => p.place_id && p.name
     ).length;
-    // Кнопка активна, если минимум 2 точки заполнены и есть название маршрута
-    setButtonEnabled(filledCount >= 2 && routeName.trim().length > 0);
-    setShowEmptyFieldsWarning(false); // Сбрасываем предупреждение при изменении
+    setButtonEnabled(filledPointsCount >= 2 && routeName.trim().length > 0);
+    setShowEmptyFieldsWarning(false);
   }, [selectedPoints, routeName]);
 
-  // Отслеживание изменений в точках
   useEffect(() => {
     if (
       JSON.stringify(selectedPoints) !== JSON.stringify(initialPointsForState)
@@ -171,23 +162,26 @@ const EditRouteScreen = () => {
       }
       return null;
     } catch (error) {
-      console.error("Error getting coordinates:", error);
+      console.log("Не удалось получить координаты для точки.", error);
       return null;
     }
   };
 
   const calculateRoute = async (originId, destinationId, waypointsIds) => {
-    if (!originId || !destinationId)
-      return { distance: initialDistance, duration: initialDuration }; // Возвращаем старые, если нет ключевых точек
+    if (!originId || !destinationId) {
+      console.log(
+        "OriginId или DestinationId отсутствуют для расчета маршрута"
+      );
+      return { distance: initialDistance, duration: initialDuration };
+    }
 
     const originCoords = await getCoordinatesFromPlaceId(originId);
     const destinationCoords = await getCoordinatesFromPlaceId(destinationId);
 
     if (!originCoords || !destinationCoords) {
-      setErrorMessage(
-        "Не удалось получить координаты для начальной или конечной точки."
+      console.log(
+        "Не удалось получить координаты для начальной или конечной точки при расчете."
       );
-      setErrorModalVisible(true);
       return { distance: initialDistance, duration: initialDuration };
     }
 
@@ -195,7 +189,6 @@ const EditRouteScreen = () => {
       (waypointsIds || []).map((wp) => getCoordinatesFromPlaceId(wp))
     );
 
-    // Фильтруем null значения, если какие-то waypoints не удалось разрешить
     const validWaypointsCoords = waypointsCoords.filter(
       (coord) => coord !== null
     );
@@ -228,18 +221,15 @@ const EditRouteScreen = () => {
         );
         return { distance, duration };
       } else {
-        setErrorMessage(
-          data.error_message || "Маршрут не найден или превышено число точек."
+        console.log(
+          "Маршрут не найден API Directions:",
+          data.status,
+          data.error_message
         );
-        setErrorModalVisible(true);
-        return { distance: initialDistance, duration: initialDuration }; // Возвращаем старые значения при ошибке API
+        return { distance: initialDistance, duration: initialDuration };
       }
     } catch (error) {
-      console.error("Error calculating route:", error);
-      setErrorMessage(
-        "Ошибка при расчете маршрута. Проверьте интернет-соединение."
-      );
-      setErrorModalVisible(true);
+      console.log("Ошибка при расчете маршрута");
       return { distance: initialDistance, duration: initialDuration };
     }
   };
@@ -264,13 +254,22 @@ const EditRouteScreen = () => {
       return;
     }
 
+    const allPointsAreFullyFilled = selectedPoints.every(
+      (point) => point.name && point.place_id
+    );
+
+    if (!allPointsAreFullyFilled) {
+      setErrorMessage("Заполните все точки");
+      setErrorModalVisible(true);
+      return;
+    }
+
     if (!userId) {
       setErrorMessage("ID пользователя не найден. Попробуйте перезайти.");
       setErrorModalVisible(true);
       return;
     }
     if (!routeId) {
-      // Это должно быть редактирование, ID должен быть
       setErrorMessage("Ошибка: ID маршрута отсутствует. Невозможно обновить.");
       setErrorModalVisible(true);
       return;
@@ -291,13 +290,53 @@ const EditRouteScreen = () => {
         destinationPoint.place_id,
         waypoints.filter((p) => p.place_id).map((p) => p.place_id)
       );
-      currentDistance = calculationResult.distance;
-      currentDuration = calculationResult.duration;
+      if (
+        calculationResult.distance !== initialDistance ||
+        calculationResult.duration !== initialDuration
+      ) {
+        currentDistance = calculationResult.distance;
+        currentDuration = calculationResult.duration;
+      } else if (
+        calculationResult.distance === 0 &&
+        calculationResult.duration === 0 &&
+        (initialDistance !== 0 || initialDuration !== 0)
+      ) {
+        currentDistance = 0;
+        currentDuration = 0;
+      }
+
+      if (
+        currentDistance === 0 &&
+        currentDuration === 0 &&
+        originPoint?.place_id &&
+        destinationPoint?.place_id
+      ) {
+        const originCoordsCheck = await getCoordinatesFromPlaceId(
+          originPoint.place_id
+        );
+        const destinationCoordsCheck = await getCoordinatesFromPlaceId(
+          destinationPoint.place_id
+        );
+        if (!originCoordsCheck || !destinationCoordsCheck) {
+          setErrorMessage(
+            "Не удалось получить координаты для начальной или конечной точки. Проверьте выбранные адреса."
+          );
+          setErrorModalVisible(true);
+          setIsLoading(false);
+          return;
+        }
+        setErrorMessage(
+          "Маршрут между указанными точками не найден. Пожалуйста, проверьте точки."
+        );
+        setErrorModalVisible(true);
+        setIsLoading(false);
+        return;
+      }
     }
 
     const routePayload = {
       name: routeName,
-      createdBy: userId, // В RouteUpdate это может быть не нужно, уточните API
+      createdBy: userId,
       routePoints: {
         origin: originPoint?.place_id ? `place_id:${originPoint.place_id}` : "",
         destination: destinationPoint?.place_id
@@ -309,66 +348,48 @@ const EditRouteScreen = () => {
       },
       distance: currentDistance,
       duration: currentDuration,
-      // rating и tags пока берем исходные, если их нельзя редактировать на этом экране
       rating: initialRating,
       tags: initialTags,
     };
 
     try {
-      // Для RouteUpdate могут требоваться другие параметры или accessToken
       await RouteUpdate(
         routeId,
         routePayload.name,
-        userId, // или accessToken, уточните сигнатуру функции RouteUpdate
+        userId,
         routePayload.tags,
         routePayload.routePoints,
         routePayload.distance,
-        routePayload.duration
-        // accessToken // если он нужен
+        routePayload.duration,
+        accessToken
       );
 
-      // Обновляем "initial" значения после успешного сохранения
       setInitialDistance(currentDistance);
       setInitialDuration(currentDuration);
-      // initialPointsForState нужно обновить, чтобы pointsChanged сбросился
-      setInitialPointsForState(JSON.parse(JSON.stringify(selectedPoints))); // Глубокое копирование
       setPointsChanged(false);
 
-      Alert.alert("Успех", "Маршрут успешно обновлен!", [
-        { text: "OK", onPress: () => navigation.navigate("MyRoutesScreen") }, // или PreviewRouteScreen
-      ]);
-      // Или навигация на Preview с обновленными данными:
-      // navigation.navigate("PreviewRouteScreen", {
-      //   routeData: {
-      //       id: routeId,
-      //       name: routePayload.name,
-      //       rating: routePayload.rating,
-      //       distance: routePayload.distance,
-      //       duration: routePayload.duration,
-      //       pointNames: selectedPoints.map(p => p.name),
-      //       routePoints: routePayload.routePoints,
-      //       coordinates: initialCoordinates,
-      //       tags: routePayload.tags
-      //   },
-      // });
+      navigation.navigate("PreviewRouteScreen", {
+        routeData: {
+          id: routeId,
+          name: routePayload.name,
+          rating: routePayload.rating,
+          distance: routePayload.distance,
+          duration: routePayload.duration,
+          pointNames: selectedPoints.map((p) => p.name),
+          routePoints: routePayload.routePoints,
+          coordinates: initialCoordinates,
+          tags: routePayload.tags,
+        },
+      });
     } catch (error) {
-      console.error("Error updating route:", error);
+      console.log("Ошибка при обновлении маршрута:");
       let message = "Что-то пошло не так при обновлении.";
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        message = error.response.data.message;
-      } else if (error.message) {
-        message = error.message;
-      }
       if (
         error.response &&
         error.response.status === 400 &&
         error.response.data &&
         error.response.data.message &&
-        error.response.data.message.includes("already exists")
+        error.response.data.message.toLowerCase().includes("already exists")
       ) {
         message = "Маршрут с таким названием уже существует.";
       }
@@ -380,7 +401,7 @@ const EditRouteScreen = () => {
   };
 
   const handleDelete = () => {
-    if (!routeId) return; // Нечего удалять, если это новый несохраненный
+    if (!routeId) return;
     setDeleteModalVisible(true);
   };
 
@@ -389,11 +410,11 @@ const EditRouteScreen = () => {
     setDeleteModalVisible(false);
     setIsLoading(true);
     try {
-      await RouteDelete(routeId, accessToken); // Передаем accessToken, если нужен
+      await RouteDelete(routeId, accessToken);
       navigation.navigate("MyRoutesScreen");
     } catch (error) {
-      console.log("Error deleting route:", error);
-      setErrorMessage("Ошибка при удалении маршрута. " + (error.message || ""));
+      console.log("Ошибка при удалении маршрута");
+      setErrorMessage("Ошибка при удалении маршрута.");
       setErrorModalVisible(true);
     } finally {
       setIsLoading(false);
@@ -408,12 +429,13 @@ const EditRouteScreen = () => {
     setErrorModalVisible(false);
   };
 
-  if (isLoading) {
+  if (isLoading && !isDeleteModalVisible && !isErrorModalVisible) {
     return (
       <View style={styles.container}>
         <BackButton onPress={() => navigation.goBack()} />
         <ActivityIndicator
           size="large"
+          color="#3E3C80"
           style={
             styles.loader || {
               flex: 1,
@@ -427,83 +449,93 @@ const EditRouteScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <BackButton onPress={() => navigation.goBack()} />
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 100 }} // Отступ для кнопок внизу
-      >
-        <View style={styles.topContainer}>
-          <Text style={styles.createTitle}>{"Редактирование маршрута"}</Text>
-          <TextInput
-            style={styles.inputTitle}
-            value={routeName}
-            onChangeText={setRouteName}
-            placeholder="Название маршрута"
-            maxLength={40}
-            placeholderTextColor="#999"
-            cursorColor="#FCFFFF" // из CreateRouteScreen
-          />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.fixedTopSection}>
+          <BackButton onPress={() => navigation.goBack()} />
+          <View style={styles.titleInputContainer}>
+            <Text style={styles.screenTitle}>Редактирование маршрута</Text>
+            <TextInput
+              style={styles.inputRouteName}
+              value={routeName}
+              onChangeText={setRouteName}
+              placeholder="Название маршрута"
+              maxLength={40}
+              placeholderTextColor="#A0A0A0"
+              cursorColor="#3E3C80"
+            />
+          </View>
         </View>
 
-        <View style={styles.pointsContainer}>
+        <View style={styles.scrollableSection}>
           {selectedPoints.map((point, index) => (
             <PointOfRoute
               key={index}
               selectedAddress={point.name}
-              // Передаем place_id, если PointOfRoute его использует для инициализации поиска или отображения
-              // initialPlaceId={point.place_id}
               onAddressSelect={(selectedPointData) => {
                 const newPoints = [...selectedPoints];
-                newPoints[index] = selectedPointData; // {name: '...', place_id: '...'}
+                if (
+                  selectedPointData &&
+                  selectedPointData.name &&
+                  selectedPointData.place_id
+                ) {
+                  newPoints[index] = {
+                    name: selectedPointData.name,
+                    place_id: selectedPointData.place_id,
+                  };
+                } else {
+                  console.log(
+                    "Получены некорректные данные для точки маршрута:",
+                    selectedPointData
+                  );
+                }
                 setSelectedPoints(newPoints);
               }}
               onRemove={() => handleRemovePoint(index)}
               showRemoveButton={selectedPoints.length > 2}
-              // placeholder={`Точка ${index + 1}`} // Можно добавить плейсхолдер
             />
           ))}
+          {showEmptyFieldsWarning && (
+            <Text style={styles.warningText}>
+              {!routeName.trim()
+                ? "Введите название маршрута!"
+                : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
+            </Text>
+          )}
         </View>
 
-        {showEmptyFieldsWarning && (
-          <Text style={styles.warningText}>
-            {!routeName.trim()
-              ? "Введите название маршрута!"
-              : "Минимум 2 точки должны быть заполнены (начальная и конечная)!"}
-          </Text>
-        )}
+        <View style={styles.fixedBottomSection}>
+          <AddPoint
+            onPress={handleAddPoint}
+            condition={selectedPoints.length >= 6}
+          />
+          <View style={styles.actionsContainer}>
+            <CreateRouteButton
+              onPress={handleSave}
+              condition={isLoading}
+              title={"Сохранить изменения"}
+            />
+            {routeId && (
+              <DeleteRouteButton onPress={handleDelete} disabled={isLoading} />
+            )}
+          </View>
+        </View>
 
-        <AddPoint
-          onPress={handleAddPoint}
-          disabled={selectedPoints.length >= 6} // condition из CreateRouteScreen
+        <AlertDelete
+          isVisible={isDeleteModalVisible}
+          onCancel={cancelDelete}
+          onConfirm={confirmDelete}
+          title="Удаление маршрута"
+          message="Вы точно хотите удалить этот маршрут?"
         />
-      </ScrollView>
-
-      <View style={styles.actionsContainer}>
-        <CreateRouteButton
-          onPress={handleSave}
-          disabled={!buttonEnabled || isLoading} // condition из CreateRouteScreen
-          title={"Сохранить изменения"}
+        <AlertError
+          isVisible={isErrorModalVisible}
+          onConfirm={confirmError}
+          title="Ошибка"
+          message={errorMessage}
         />
-        {routeId && (
-          <DeleteRouteButton onPress={handleDelete} disabled={isLoading} />
-        )}
       </View>
-
-      <AlertDelete
-        isVisible={isDeleteModalVisible}
-        onCancel={cancelDelete}
-        onConfirm={confirmDelete}
-        title="Удаление маршрута"
-        message="Вы точно хотите удалить маршрут?"
-      />
-      <AlertError
-        isVisible={isErrorModalVisible}
-        onConfirm={confirmError}
-        title="Ошибка!"
-        message={errorMessage}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 

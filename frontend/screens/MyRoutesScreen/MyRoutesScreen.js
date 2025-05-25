@@ -8,6 +8,7 @@ import {
   TextInput,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import BackButton from "../../components/BackButton/BackButton";
 import RouteCard from "../../components/RouteCard/RouteCard";
@@ -32,6 +33,8 @@ const MyRoutesScreen = () => {
   const [filters, setFilters] = useState({ tags: [], duration: null });
   const [areInitialFiltersLoaded, setAreInitialFiltersLoaded] = useState(false);
 
+  const [initialLoadAttempted, setInitialLoadAttempted] = useState(false);
+
   useEffect(() => {
     const fetchCachedUserAndToken = async () => {
       try {
@@ -43,7 +46,7 @@ const MyRoutesScreen = () => {
           setUserData(parsedData);
         }
       } catch (error) {
-        console.error(
+        console.log(
           "Ошибка при получении данных пользователя и токена из кэша:",
           error
         );
@@ -66,7 +69,7 @@ const MyRoutesScreen = () => {
           );
         }
       } catch (e) {
-        console.error(
+        console.log(
           "Не удалось загрузить фильтры для 'Мои маршруты' из AsyncStorage",
           e
         );
@@ -98,6 +101,11 @@ const MyRoutesScreen = () => {
       );
       const data = await response.json();
       if (data.status !== "OK") {
+        console.warn(
+          `API Error for place_id ${cleanPlaceId}: ${data.status} - ${
+            data.error_message || ""
+          }`
+        );
         return "Место не найдено";
       }
       const name =
@@ -107,67 +115,79 @@ const MyRoutesScreen = () => {
       setCityNamesCache((prev) => ({ ...prev, [cleanPlaceId]: name }));
       return name;
     } catch (error) {
-      console.error("Ошибка getCityName:", error);
+      console.log("Ошибка getCityName:", error);
       return "Ошибка загрузки";
     }
   };
 
   const fetchAllMyRoutes = async () => {
-    if (loading || !accessToken) return;
+    if (!accessToken) {
+      return;
+    }
 
     setLoading(true);
     setError(null);
+
     try {
       const response = await findAll(accessToken);
 
       const routesData =
         response.data && Array.isArray(response.data)
           ? response.data
-          : response.data.data && Array.isArray(response.data.data)
+          : response.data?.data && Array.isArray(response.data.data)
           ? response.data.data
           : [];
 
       const routesWithCityNames = await Promise.all(
         routesData.map(async (route) => {
-          if (!route.routePoints) return route;
+          if (!route.routePoints)
+            return { ...route, pointNames: ["Точки не указаны"] };
           const processPoint = async (point) => {
             if (!point) return "Точка не указана";
             return await getCityName(point);
           };
-          const [originName, ...waypointNames] = await Promise.all([
-            processPoint(route.routePoints.origin),
-            ...(route.routePoints.waypoints || []).map(processPoint),
-          ]);
+          const originName = await processPoint(route.routePoints.origin);
+          const waypointNames = route.routePoints.waypoints
+            ? await Promise.all(route.routePoints.waypoints.map(processPoint))
+            : [];
           const destinationName = await processPoint(
             route.routePoints.destination
           );
           return {
             ...route,
-            pointNames: [originName, ...waypointNames, destinationName],
+            pointNames: [originName, ...waypointNames, destinationName].filter(
+              Boolean
+            ),
           };
         })
       );
       setAllMyRoutes(routesWithCityNames);
     } catch (err) {
-      setError(err.message);
-      console.log('Ошибка загрузки "моих" маршрутов:', err.response || err);
+      setError(err.message || "Произошла неизвестная ошибка");
+      console.log(
+        'Ошибка загрузки "моих" маршрутов:',
+        err.response?.data || err.message || err
+      );
       setAllMyRoutes([]);
     } finally {
       setLoading(false);
+      setInitialLoadAttempted(true);
     }
   };
 
   useEffect(() => {
-    if (accessToken && (allMyRoutes.length === 0 || !areInitialFiltersLoaded)) {
-      fetchAllMyRoutes();
+    if (accessToken && areInitialFiltersLoaded) {
+      if (!initialLoadAttempted || (allMyRoutes.length === 0 && !error)) {
+        fetchAllMyRoutes();
+      }
     }
-  }, [accessToken, userData]);
+  }, [accessToken, areInitialFiltersLoaded, initialLoadAttempted]);
 
   const getDurationOption = (durationId) => {
     const durationOptions = [
       { id: "LESS_THAN_HOUR", value: { from: 0, to: 3600 } },
       { id: "ONE_TO_TWO_HOURS", value: { from: 3600, to: 7200 } },
-      { id: "MORE_THAN_TWO_HOURS", value: { from: 7200, to: null } },
+      { id: "MORE_THAN_TWO_HOURS", value: { from: 7200, to: Infinity } },
     ];
     return durationOptions.find((opt) => opt.id === durationId);
   };
@@ -179,7 +199,13 @@ const MyRoutesScreen = () => {
 
     if (searchQuery.trim()) {
       const searchLower = searchQuery.toLowerCase();
-      const ignoreWords = ["выбрать"];
+      const ignoreWords = [
+        "выбрать",
+        "место не указано",
+        "ошибка загрузки",
+        "место не найдено",
+        "название недоступно",
+      ]; // Дополнен список
 
       routesToFilter = routesToFilter.filter((route) => {
         const titleMatch = (route.name || "")
@@ -207,12 +233,12 @@ const MyRoutesScreen = () => {
       const durationOption = getDurationOption(filters.duration);
       if (durationOption) {
         routesToFilter = routesToFilter.filter((route) => {
-          const routeDuration = route.duration; // в секундах
+          const routeDuration = route.duration;
           if (routeDuration === undefined || routeDuration === null)
             return false;
           if (routeDuration < durationOption.value.from) return false;
           if (
-            durationOption.value.to !== null &&
+            durationOption.value.to !== Infinity &&
             routeDuration > durationOption.value.to
           )
             return false;
@@ -241,7 +267,7 @@ const MyRoutesScreen = () => {
   };
 
   const handlerBackButton = () => {
-    navigation.navigate("ProfileScreen");
+    navigation.goBack();
   };
 
   const handleSettingsButton = () => {
@@ -259,12 +285,13 @@ const MyRoutesScreen = () => {
             newFiltersFromScreen
           );
         } catch (e) {
-          console.error(
+          console.log(
             "Не удалось сохранить фильтры для 'Мои маршруты' в AsyncStorage",
             e
           );
         }
       },
+      sourceScreen: "MyRoutesScreen",
     });
   };
 
@@ -295,6 +322,7 @@ const MyRoutesScreen = () => {
         pointNames: route.pointNames,
         routePoints: route.routePoints,
         coordinates: route.coordinates,
+        // tags: route.tags,
       },
     });
   };
@@ -311,11 +339,10 @@ const MyRoutesScreen = () => {
     };
   };
 
-  if (loading && allMyRoutes.length === 0) {
+  if (loading && !initialLoadAttempted) {
     return (
       <View style={styles.container}>
         <BackButton onPress={handlerBackButton} />
-        <Text style={styles.containerTitle}>Мои маршруты</Text>
         <ActivityIndicator size="large" style={styles.loader} />
       </View>
     );
@@ -326,12 +353,20 @@ const MyRoutesScreen = () => {
       <View style={styles.container}>
         <BackButton onPress={handlerBackButton} />
         <Text style={styles.containerTitle}>Мои маршруты</Text>
-        <Text style={styles.errorText}>
-          Что-то пошло не так. Попробуйте позже.
-        </Text>
-        <TouchableOpacity onPress={fetchAllMyRoutes} style={styles.retryButton}>
-          <Text style={styles.retryButtonText}>Повторить</Text>
-        </TouchableOpacity>
+        <View style={styles.centeredMessageContainer}>
+          <Text style={styles.errorText}>
+            Что-то пошло не так. Попробуйте позже.
+          </Text>
+          <TouchableOpacity
+            onPress={() => {
+              setInitialLoadAttempted(false);
+              fetchAllMyRoutes();
+            }}
+            style={styles.retryButton}
+          >
+            <Text style={styles.retryButtonText}>Повторить</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -363,32 +398,44 @@ const MyRoutesScreen = () => {
         />
       </View>
 
+      {loading && initialLoadAttempted && (
+        <ActivityIndicator size="small" style={styles.inlineLoader} />
+      )}
+
       <ScrollView
         style={styles.buttonContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 70 }}
       >
-        {displayedRoutes.map((route) => {
-          const cardInfo = mapRouteToCard(route);
-          if (!cardInfo) return null;
-          return (
-            <RouteCard
-              key={route.id}
-              cardInformation={cardInfo}
-              functional="edit"
-              onEditPress={() => handleEditRoute(route)}
-              onPress={() => handlePreviewRoute(route)}
-            />
-          );
-        })}
+        {displayedRoutes.length > 0 &&
+          displayedRoutes.map((route) => {
+            const cardInfo = mapRouteToCard(route);
+            if (!cardInfo) return null;
+            return (
+              <RouteCard
+                key={route.id}
+                cardInformation={cardInfo}
+                functional="edit"
+                onEditPress={() => handleEditRoute(route)}
+                onPress={() => handlePreviewRoute(route)}
+              />
+            );
+          })}
 
-        {!loading && displayedRoutes.length === 0 && (
-          <Text style={styles.noResults}>
-            {searchQuery || filters.tags.length > 0 || filters.duration
-              ? "Маршруты по вашим критериям не найдены"
-              : "У вас пока нет созданных маршрутов"}
-          </Text>
-        )}
+        {initialLoadAttempted &&
+          !loading &&
+          !error &&
+          displayedRoutes.length === 0 && (
+            <View style={styles.centeredMessageContainer}>
+              <Text style={styles.noResults}>
+                {searchQuery ||
+                (filters.tags && filters.tags.length > 0) ||
+                filters.duration
+                  ? "Маршруты по вашим критериям не найдены"
+                  : "У вас пока нет созданных маршрутов"}
+              </Text>
+            </View>
+          )}
       </ScrollView>
     </View>
   );
