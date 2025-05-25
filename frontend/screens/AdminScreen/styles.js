@@ -16,6 +16,7 @@ const styles = StyleSheet.create({
   mainInformation: {
     flexDirection: "row",
     marginTop: 40,
+    marginBottom: 30,
   },
   mainText: {
     fontSize: 23,

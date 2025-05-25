@@ -2,13 +2,10 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "#F5F7FF",
-    backgroundImage:
-      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
-    backgroundSize: "40px 40px",
-    backgroundPosition: "0 0, 20px 20px",
   },
   list: {
     marginTop: 70,
@@ -19,10 +16,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 300,
     backgroundColor: "#F5F7FF",
-    backgroundImage:
-      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
-    backgroundSize: "40px 40px",
-    backgroundPosition: "0 0, 20px 20px",
   },
   emptyText: {
     textAlign: "center",
@@ -101,9 +94,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: "70%",
+    height: "100%",
     fontSize: 23,
     fontWeight: 500,
-    color: "#3E3C80",
+    color: "#F5F7FF",
+  },
+  loader: {
+    flex: 1,
+    backgroundColor: "#F5F7FF",
   },
 });
 

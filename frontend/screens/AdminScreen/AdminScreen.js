@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Image,
-  ActivityIndicator,
-  TouchableOpacity,
-  Text,
-  ScrollView,
-  SafeAreaView,
-  Alert,
-} from "react-native";
+import { View, Image, Text, Alert } from "react-native";
 import styles from "./styles";
-import BackButton from "../../components/BackButton/BackButton";
-import ChooseButton from "../../components/ChooseButton/ChooseButton";
 import ProfileButton from "../../components/ProfileButton/ProfileButton";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,7 +34,7 @@ const AdminScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.mainInformation}>
-        <Text style={styles.mainText}>Привет, @admin2!</Text>
+        <Text style={styles.mainText}>Привет!</Text>
         <Image
           source={require("../../assets/profileImages/logoprofile.png")}
           style={styles.imageLogo}
