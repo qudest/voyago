@@ -6,18 +6,21 @@ import by.smertex.core.database.model.UserRouteInfo;
 import by.smertex.core.database.repository.RouteRepository;
 import by.smertex.core.dto.external.AverageRatingDto;
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteFilterDto;
+import by.smertex.core.dto.output.PageResponse;
 import by.smertex.core.dto.output.RouteReadDto;
 import by.smertex.core.exception.impl.CrudException;
 import by.smertex.core.mapper.Mapper;
 import by.smertex.core.service.RouteService;
 import by.smertex.core.service.UserRouteInfoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -42,56 +45,46 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public List<RouteReadDto> findAll() {
-        List<RouteReadDto> list = routeRepository.findAll().stream().map(routeDtoMapper::map).toList();
-        Map<Long, Float> averageRatings = ratingServiceClient.getRating(list.stream().map(RouteReadDto::getId).toList());
-        list.forEach(routeReadDto -> {
-            Float rating = averageRatings.get(routeReadDto.getId());
-            routeReadDto.setRating(rating);
-        });
-        return list;
+    public PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto routeFilter, Pageable pageable) {
+        Slice<RouteReadDto> slice = routeRepository.findAllByFilter(routeFilter, pageable)
+                .map(routeDtoMapper::map);
+        return PageResponse.toPage(slice);
     }
 
     @Override
-    public List<RouteReadDto> findAllFavorites(Long userId) {
-        return Optional.ofNullable(userRouteInfoService.findAllByUserId(userId))
-                .orElse(List.of())
+    public PageResponse<RouteReadDto> findAllFavoritesByFilter(Long userId, RouteFilterDto routeFilter, Pageable pageable) {
+        Slice<RouteReadDto> slice = routeRepository.findAllByFilter(routeFilter, pageable)
+                .map(routeDtoMapper::map);
+        List<Long> allByUserId = userRouteInfoService.findAllByUserId(userId)
                 .stream()
-                .filter(userRouteInfo -> userRouteInfo != null && Boolean.TRUE.equals(userRouteInfo.getIsFavorite()))
-                .map(UserRouteInfo::getRouteId)
-                .map(routeId -> routeRepository.findById(routeId).orElse(null))
                 .filter(Objects::nonNull)
-                .map(routeDtoMapper::map)
-                .peek(routeReadDto -> {
-                    if (routeReadDto != null) {
-                        AverageRatingDto rating = ratingServiceClient.getRating(routeReadDto.getId());
-                        if (rating != null) {
-                            routeReadDto.setRating(rating.averageRating());
-                        }
-                    }
-                })
+                .filter(userRouteInfo -> Boolean.TRUE.equals(userRouteInfo.getIsFavorite()))
+                .map(UserRouteInfo::getRouteId)
                 .toList();
+        return getRouteReadDtoPageResponse(slice, allByUserId);
     }
 
     @Override
-    public List<RouteReadDto> findAllPassed(Long userId) {
-        return Optional.ofNullable(userRouteInfoService.findAllByUserId(userId))
-                .orElse(List.of())
+    public PageResponse<RouteReadDto> findAllPassedByFilter(Long userId, RouteFilterDto routeFilter, Pageable pageable) {
+        Slice<RouteReadDto> slice = routeRepository.findAllByFilter(routeFilter, pageable)
+                .map(routeDtoMapper::map);
+        List<Long> allByUserId = userRouteInfoService.findAllByUserId(userId)
                 .stream()
-                .filter(userRouteInfo -> userRouteInfo != null && Boolean.TRUE.equals(userRouteInfo.getIsPassed()))
-                .map(UserRouteInfo::getRouteId)
-                .map(routeId -> routeRepository.findById(routeId).orElse(null))
                 .filter(Objects::nonNull)
-                .map(routeDtoMapper::map)
-                .peek(routeReadDto -> {
-                    if (routeReadDto != null) {
-                        AverageRatingDto rating = ratingServiceClient.getRating(routeReadDto.getId());
-                        if (rating != null) {
-                            routeReadDto.setRating(rating.averageRating());
-                        }
-                    }
-                })
+                .filter(userRouteInfo -> Boolean.TRUE.equals(userRouteInfo.getIsPassed()))
+                .map(UserRouteInfo::getRouteId)
                 .toList();
+        return getRouteReadDtoPageResponse(slice, allByUserId);
+    }
+
+    private PageResponse<RouteReadDto> getRouteReadDtoPageResponse(Slice<RouteReadDto> slice, List<Long> allByUserId) {
+        int size = slice.getSize();
+        int page = slice.getNumber();
+        List<RouteReadDto> list = slice.stream()
+                .filter(Objects::nonNull)
+                .filter(route -> allByUserId.contains(route.getId()))
+                .toList();
+        return PageResponse.toPage(list, size, page);
     }
 
     @Override

@@ -1,19 +1,20 @@
 package by.smertex.core.service;
 
 import by.smertex.core.dto.input.RouteCreateOrUpdateDto;
+import by.smertex.core.dto.input.RouteFilterDto;
+import by.smertex.core.dto.output.PageResponse;
 import by.smertex.core.dto.output.RouteReadDto;
-
-import java.util.List;
+import org.springframework.data.domain.Pageable;
 
 public interface RouteService {
 
     RouteReadDto findById(Long id);
 
-    List<RouteReadDto> findAll();
+    PageResponse<RouteReadDto> findAllByFilter(RouteFilterDto routeFilter, Pageable pageable);
 
-    List<RouteReadDto> findAllFavorites(Long userId);
+    PageResponse<RouteReadDto> findAllFavoritesByFilter(Long userId, RouteFilterDto routeFilter, Pageable pageable);
 
-    List<RouteReadDto> findAllPassed(Long userId);
+    PageResponse<RouteReadDto> findAllPassedByFilter(Long userId, RouteFilterDto routeFilter, Pageable pageable);
 
     RouteReadDto create(RouteCreateOrUpdateDto dto);
 
