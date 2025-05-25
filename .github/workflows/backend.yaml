@@ -62,16 +62,18 @@ jobs:
         uses: madrapps/jacoco-report@v1.7.2
         with:
           paths: |
-            ${{ github.workspace }}/**/account-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/ai-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/auth-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/notification-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/rating-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/route-service/build/reports/jacoco/test/jacocoTestReport.xml
-            ${{ github.workspace }}/**/subscription-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/account-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/ai-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/auth-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/notification-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/rating-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/route-service/build/reports/jacoco/test/jacocoTestReport.xml
+            ${{ github.workspace }}/**/backend/subscription-service/build/reports/jacoco/test/jacocoTestReport.xml
           token: ${{ secrets.GITHUB_TOKEN }}
           min-coverage-overall: 40
-          min-coverage-changed-files: 0
+          min-coverage-changed-files: 60
+          title: Code Coverage
+          update-comment: true
 
 #  build_and_push_images:
 #    # if: ${{ github.base_ref == 'main' }}
