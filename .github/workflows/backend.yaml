@@ -68,6 +68,7 @@ jobs:
           name: JUnit Tests
           path: ${{ github.workspace }}/**/backend/**/build/test-results/test/*.xml
           reporter: java-junit
+          use-actions-summary: 'true'
 
       - name: Add coverage to PR
         id: jacoco
@@ -80,6 +81,12 @@ jobs:
           min-coverage-changed-files: 80
           title: Code Coverage
           update-comment: true
+
+      - name: Generate coverage badges
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          jacoco-csv-file: |
+            ${{ github.workspace }}/**/backend/**/build/reports/jacoco/test/*.csv
 
 #  build_and_push_images:
 #    # if: ${{ github.base_ref == 'main' }}
