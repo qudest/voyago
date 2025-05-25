@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    position: "relative",
   },
   loadingContainer: {
     flex: 1,
@@ -47,9 +48,10 @@ const styles = StyleSheet.create({
   },
 
   scrollableSection: {
-    marginTop: 20,
+    marginTop: 15,
     alignItems: "center",
     flex: 1,
+    marginBottom: 120,
   },
   scrollableContentContainer: {
     paddingHorizontal: 15,
@@ -66,9 +68,12 @@ const styles = StyleSheet.create({
   },
 
   fixedBottomSection: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    alignItems: "center",
   },
   actionsContainer: {
     width: "100%",
