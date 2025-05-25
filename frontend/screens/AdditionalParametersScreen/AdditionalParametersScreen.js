@@ -55,7 +55,7 @@ const AdditionalParametersScreen = () => {
           setName(parsedData.name || "");
         }
       } catch (error) {
-        console.error("Ошибка при получении данных из кэша:", error);
+        console.log("Ошибка при получении данных из кэша:", error);
       }
     };
     fetchUserData();
@@ -139,7 +139,6 @@ const AdditionalParametersScreen = () => {
         accessToken
       );
       if (response.status === 200) {
-        showAlert("change", "Изменения сохранены");
         const cachedData = await AsyncStorage.getItem("userData");
         const parsedData = JSON.parse(cachedData);
         const updatedData = {
@@ -153,9 +152,9 @@ const AdditionalParametersScreen = () => {
       let message = "Что-то пошло не так";
       console.log(error);
       if (error.response) {
-        message = error.response.data.message || "Ошибка сервера";
+        message = "Неверное имя пользователя";
       } else if (error.request) {
-        message = "Нет ответа от сервера";
+        message = "Что-то пошло не так";
       }
       setErrorMessage(message);
       setErrorModalVisible(true);
@@ -167,6 +166,7 @@ const AdditionalParametersScreen = () => {
       const response = await deleteAccount(id, accessToken);
       if (response.status === 200) {
         await AsyncStorage.removeItem("userData");
+        await AsyncStorage.removeItem("accessToken");
         navigation.navigate("AuthorizationScreen");
       }
     } catch (error) {
@@ -209,7 +209,9 @@ const AdditionalParametersScreen = () => {
           </View>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.nameTitle}>Изменить имя</Text>
+          <Text style={styles.nameTitle}>
+            Изменить имя (от 6 до 24 символов)
+          </Text>
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.inputName}

@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   SafeAreaView,
-  Alert,
 } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import polyline from "@mapbox/polyline";
