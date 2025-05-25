@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   TouchableWithoutFeedback,
+  Animated,
 } from "react-native";
 import BackButton from "../../components/BackButton/BackButton";
 import ProfileButton from "../../components/ProfileButton/ProfileButton";
@@ -59,7 +60,8 @@ const ProfileScreen = () => {
   };
   const handlePremiumRoutesPress = () => {
     if (premium) {
-      navigation.navigate("RecommendationsRoutesScreen");
+      console.log(premium);
+      navigation.navigate("PremiumCreateRouteScreen");
     } else {
       navigation.navigate("PremiumScreen");
     }
@@ -70,8 +72,21 @@ const ProfileScreen = () => {
   const handleSettingsPress = () => {
     navigation.navigate("AdditionalParametersScreen");
   };
-  const handleExitPress = () => {
-    navigation.navigate("AuthorizationScreen");
+  const handleExitPress = async () => {
+    try {
+      await AsyncStorage.removeItem("accessToken");
+      await AsyncStorage.removeItem("userData");
+      setUserData(null);
+      setPremium(false);
+      navigation.replace("AuthorizationScreen");
+    } catch (e) {
+      console.log("Ошибка при очистке AsyncStorage:", e);
+      Alert.alert(
+        "Ошибка",
+        "Не удалось выйти из аккаунта. Пожалуйста, попробуйте еще раз."
+      );
+      navigation.replace("AuthorizationScreen");
+    }
   };
 
   const checkPremium = async (phoneNumber, token) => {

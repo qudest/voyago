@@ -1,14 +1,14 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FCFFF',
-    position: 'relative',
+    backgroundColor: "#FCFCFF",
+    position: "relative",
   },
   containerLogo: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 200,
   },
   imageLogo: {
@@ -21,14 +21,13 @@ const styles = StyleSheet.create({
     height: 35,
   },
   containerClouds: {
-    height: '100%',
-    flexDirection: 'row', 
-    justifyContent: 'space-between',
-    width: '100%',
-    position: 'absolute',  
-    left: 0, 
-    right: 0, 
-
+    height: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    position: "absolute",
+    left: 0,
+    right: 0,
   },
   imageCloudLeft: {
     marginTop: 500,
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
   imageCloudRight: {
     marginTop: 100,
   },
-  flexGrow: 1
+  flexGrow: 1,
 });
 
 export default styles;

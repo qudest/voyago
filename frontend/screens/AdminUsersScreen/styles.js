@@ -4,7 +4,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#FCFCFF",
+    backgroundColor: "#F5F7FF",
+    backgroundImage:
+      "linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF), linear-gradient(135deg, #FFFFFF 25%, transparent 25%, transparent 75%, #FFFFFF 75%, #FFFFFF)",
+    backgroundSize: "40px 40px",
+    backgroundPosition: "0 0, 20px 20px",
     height: "100%",
   },
   list: {
