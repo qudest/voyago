@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: account-service
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      hbm2ddl.auto: validate
+      show_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog.master.yaml
+
+  kafka:
+    consumer:
+      bootstrap-servers: ${KAFKA_CONSUMER_BOOTSTRAP_SERVERS}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      group-id: payment-subscription-events
+      properties:
+        spring.json.trusted.packages: "*"
+        value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+server:
+  port: ${APP_PORT:8090}

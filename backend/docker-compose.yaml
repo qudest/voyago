@@ -1,0 +1,267 @@
+networks:
+  app:
+    driver: bridge
+
+services:
+  redis:
+    container_name: redis
+    image: redis:7.2.4-alpine
+    restart: always
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
+    expose:
+      - "6379"
+    volumes:
+      - ./volumes/redis:/data
+    networks:
+      - app
+
+  postgres:
+    container_name: "postgres"
+    image: postgres:17.2-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - POSTGRES_DB=db
+      - ALLOW_RUNNING_AS_ROOT=yes
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    networks:
+      - app
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+      start_interval: 1s
+
+  gateway:
+    image: qudest/voyago:gateway
+    container_name: "gateway"
+    build: ./gateway
+    platform: linux/amd64
+    environment:
+      - ACCOUNT_SERVICE=http://account-service:8090
+      - AUTH_SERVICE=http://auth-service:8090
+      - RATING_SERVICE=http://rating-service:8090
+      - ROUTE_SERVICE=http://route-service:8090
+      - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - APP_PORT=8090
+      - IN_MEMORY_USERNAME=${GATEWAY_USERNAME:-username}
+      - IN_MEMORY_PASSWORD=${GATEWAY_PASSWORD:-password}
+    networks:
+      - app
+    depends_on:
+      - auth-service
+      - account-service
+      - rating-service
+      - subscription-service
+      - route-service
+    ports:
+      - "8090:8090"
+
+  notification-service:
+    image: qudest/voyago:notification-service
+    container_name: "notification-service"
+    build: ./notification-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8090
+    expose:
+      - "8090"
+    depends_on:
+      - auth-service
+    networks:
+      - app
+
+  auth-service:
+    image: qudest/voyago:auth-service
+    container_name: "auth-service"
+    build: ./auth-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
+      - ACCOUNT_SERVICE=http://account-service:8090
+      - APP_PORT=8090
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - account-service
+      - redis
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  rating-service:
+    image: qudest/voyago:rating-service
+    container_name: "rating-service"
+    build: ./rating-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - APP_PORT=8090
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-redis}
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - postgres
+      - redis
+
+  route-service:
+    image: qudest/voyago:route-service
+    container_name: "route-service"
+    build: ./route-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - APP_PORT=8090
+      - RATING_SERVICE_URL=http://rating-service:8090
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - postgres
+      - redis
+      - rating-service
+
+  account-service:
+    image: qudest/voyago:account-service
+    container_name: "account-service"
+    build: ./account-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - DB_URL=jdbc:postgresql://postgres:5432/db
+      - DB_USERNAME=${POSTGRES_USER:-postgres}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8090
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - postgres
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  subscription-service:
+    image: qudest/voyago:subscription-service
+    container_name: "subscription-service"
+    build: ./subscription-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - KAFKA_PRODUCER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
+      - APP_PORT=8090
+      - ALLOW_RUNNING_AS_ROOT=yes
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+
+  kafka-1:
+    container_name: kafka-1
+    image: bitnami/kafka:3.9.0
+    restart: always
+    expose:
+      - 9092
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-1:9090,EXTERNAL://kafka-1:9092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - ./volumes/kafka-1:/bitnami/kafka
+    networks:
+      - app
+
+  kafka-2:
+    container_name: kafka-2
+    image: bitnami/kafka:3.9.0
+    restart: always
+    expose:
+      - 9094
+    environment:
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-2:9090,EXTERNAL://kafka-2:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - ./volumes/kafka-2:/bitnami/kafka
+    networks:
+      - app
+
+  kafka-3:
+    container_name: kafka-3
+    image: bitnami/kafka:3.9.0
+    restart: always
+    expose:
+      - 9096
+    environment:
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_KRAFT_CLUSTER_ID=5c0f5185-729b-45bd-924f-f261b9daded6
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9090,CONTROLLER://:9091,EXTERNAL://:9096
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka-3:9090,EXTERNAL://kafka-3:9096
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - ./volumes/kafka-3:/bitnami/kafka
+    networks:
+      - app
+
+  pgadmin:
+    image: dpage/pgadmin4:9.3
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL:-admin@mail.ru}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD:-admin}
+    ports:
+      - "5050:80"
+    volumes:
+      - ./volumes/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - app

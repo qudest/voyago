@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: route-service
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          rating-service:
+            url: ${RATING_SERVICE_URL}
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties.hibernate:
+      hbm2ddl.auto: validate
+      show_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/db.changelog.master.yaml
+
+server:
+  port: ${APP_PORT:8091}

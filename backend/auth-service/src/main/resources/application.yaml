@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: auth-service
+
+  kafka:
+    bootstrap-servers: ${KAFKA_PRODUCER_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          account-service:
+            url: ${ACCOUNT_SERVICE}
+
+jwt:
+  access:
+    secret: ${JWT_SECRET:887cc2e79f9044cdf72aa19ba913cd48e4063a3f2129983abcd85b6bd1102eb8}
+    lifetime: ${JWT_LIFETIME:360m}
+  refresh:
+    secret: ${JWT_SECRET:60b263b26771adae5d9519096730c16ef634fcbe0976040bb0e0375bd4318124}
+    lifetime: ${JWT_LIFETIME:4320m}
+
+code.lifetime: 3
+
+server:
+  port: ${APP_PORT:8090}
