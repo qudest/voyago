@@ -41,5 +41,5 @@ jobs:
         if: github.event.pull_request.base.ref == 'develop'
 
       - name: 🚀 Build app
-        run: cd frontend && eas build --non-interactive
+        run: cd frontend && eas build --platform android --non-interactive --no-wait
         if: github.event.pull_request.base.ref == 'main'
