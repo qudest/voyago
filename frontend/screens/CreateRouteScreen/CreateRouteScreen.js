@@ -136,7 +136,7 @@ const CreateRouteScreen = () => {
         .map((coord) => `${coord.lat},${coord.lng}`)
         .join("|");
 
-      let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.lat},${destinationCoords.lng}&key=${API_KEY}`;
+      let url = `https://maps.googleapis.com/maps/api/directions/json?origin=${originCoords.lat},${originCoords.lng}&destination=${destinationCoords.lat},${destinationCoords.lng}&mode=walking&key=${API_KEY}`;
       if (waypointsParam) {
         url += `&waypoints=optimize:true|${waypointsParam}`;
       }

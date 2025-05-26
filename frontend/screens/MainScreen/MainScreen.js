@@ -44,6 +44,7 @@ const MainScreen = () => {
   const [region, setRegion] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [nearbyCafes, setNearbyCafes] = useState([]);
+
   const routeParams = useRoute().params;
   const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
@@ -301,7 +302,7 @@ const MainScreen = () => {
                   longitude: cafe.geometry.location.lng,
                 },
                 rating: cafe.rating || "N/A",
-                icon: require("../../assets/markers/current.png"),
+                icon: require("../../assets/markers/caffemini2.png"),
               });
               cafeIds.add(cafe.place_id);
             }
@@ -366,7 +367,7 @@ const MainScreen = () => {
       );
       return response.data.result.geometry.location;
     } catch (error) {
-      console.error("Error fetching coordinates:", error);
+      console.log("Error fetching coordinates:", error);
       return null;
     }
   };
@@ -413,7 +414,7 @@ const MainScreen = () => {
             },
             title: "Старт",
             type: "start",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           },
           ...waypointsCoords.map((coord, index) => ({
             coordinate: {
@@ -422,7 +423,7 @@ const MainScreen = () => {
             },
             title: `Точка ${index + 1}`,
             type: "waypoint",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           })),
           {
             coordinate: {
@@ -431,7 +432,7 @@ const MainScreen = () => {
             },
             title: "Финиш",
             type: "end",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           },
         ];
         setMarkers(newMarkers);
@@ -532,6 +533,11 @@ const MainScreen = () => {
     }
 
     if (selectedRoute && currentIndex === selectedRoute.points.length - 2) {
+      AppMetrica.reportEvent("Прохождение маршрута", {
+        action_type: "Завершение маршрута",
+        button_name: "завершение",
+        screen: "Экран просмотра маршрута",
+      });
       setIsRatingEnabled(true);
     }
   };
@@ -632,11 +638,14 @@ const MainScreen = () => {
                 key={`marker-${index}`}
                 coordinate={marker.coordinate}
                 title={marker.title}
-                image={marker.icon}
+                image={
+                  index === currentIndex
+                    ? require("../../assets/markers/currentmini2.png")
+                    : marker.icon
+                }
               />
             ))}
 
-            {/* Маркеры кафе */}
             {nearbyCafes.map((cafe, index) => (
               <Marker
                 key={`cafe-${index}`}

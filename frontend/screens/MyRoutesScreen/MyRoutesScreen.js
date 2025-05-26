@@ -101,11 +101,6 @@ const MyRoutesScreen = () => {
       );
       const data = await response.json();
       if (data.status !== "OK") {
-        console.warn(
-          `API Error for place_id ${cleanPlaceId}: ${data.status} - ${
-            data.error_message || ""
-          }`
-        );
         return "Место не найдено";
       }
       const name =
@@ -129,7 +124,7 @@ const MyRoutesScreen = () => {
     setError(null);
 
     try {
-      const response = await findAll(accessToken);
+      const response = await findAll(accessToken, filters);
 
       const routesData =
         response.data && Array.isArray(response.data)
@@ -138,8 +133,12 @@ const MyRoutesScreen = () => {
           ? response.data.data
           : [];
 
+      const filteredRoutes = routesData.filter(
+        (route) => route.createdBy === userData.id
+      );
+
       const routesWithCityNames = await Promise.all(
-        routesData.map(async (route) => {
+        filteredRoutes.map(async (route) => {
           if (!route.routePoints)
             return { ...route, pointNames: ["Точки не указаны"] };
           const processPoint = async (point) => {
@@ -205,7 +204,7 @@ const MyRoutesScreen = () => {
         "ошибка загрузки",
         "место не найдено",
         "название недоступно",
-      ]; // Дополнен список
+      ];
 
       routesToFilter = routesToFilter.filter((route) => {
         const titleMatch = (route.name || "")
@@ -352,20 +351,10 @@ const MyRoutesScreen = () => {
     return (
       <View style={styles.container}>
         <BackButton onPress={handlerBackButton} />
-        <Text style={styles.containerTitle}>Мои маршруты</Text>
         <View style={styles.centeredMessageContainer}>
           <Text style={styles.errorText}>
             Что-то пошло не так. Попробуйте позже.
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              setInitialLoadAttempted(false);
-              fetchAllMyRoutes();
-            }}
-            style={styles.retryButton}
-          >
-            <Text style={styles.retryButtonText}>Повторить</Text>
-          </TouchableOpacity>
         </View>
       </View>
     );

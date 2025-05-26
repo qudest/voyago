@@ -13,7 +13,7 @@ import {
 import BackButton from "../../components/BackButton/BackButton";
 import RouteCard from "../../components/RouteCard/RouteCard";
 import SettingsButton from "../../components/SettingsButton/SettingsButton";
-import { findRoutesByUser } from "../../services/routesApi";
+import { findDoneRoutes } from "../../services/routesApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
@@ -61,7 +61,7 @@ const DoneRoutesScreen = () => {
           );
         }
       } catch (e) {
-        console.error(
+        console.log(
           "Не удалось загрузить фильтры для пройденных маршрутов из AsyncStorage",
           e
         );
@@ -117,7 +117,8 @@ const DoneRoutesScreen = () => {
     if (!userData?.id || !accessToken) return;
     setLoading(true);
     try {
-      const response = await findRoutesByUser(userData.id, accessToken);
+      console.log(userData.id, accessToken, filters);
+      const response = await findDoneRoutes(userData.id, accessToken, filters);
       const routesData =
         response.data && Array.isArray(response.data)
           ? response.data
@@ -236,7 +237,7 @@ const DoneRoutesScreen = () => {
             newFiltersFromScreen
           );
         } catch (e) {
-          console.error(
+          console.log(
             "Не удалось сохранить фильтры для пройденных маршрутов в AsyncStorage",
             e
           );

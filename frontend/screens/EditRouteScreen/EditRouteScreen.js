@@ -203,7 +203,7 @@ const EditRouteScreen = () => {
       destinationCoords.lng
     }${
       waypointsParam ? `&waypoints=optimize:true|${waypointsParam}` : ""
-    }&key=${API_KEY}`;
+    }&mode=walking&key=${API_KEY}`;
 
     try {
       const response = await fetch(apiUrl);
