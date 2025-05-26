@@ -8,6 +8,7 @@ import { TextInput } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { getPremium } from "../../services/premiumApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppMetrica from "@appmetrica/react-native-analytics";
 
 const PaymentScreen = () => {
   const navigation = useNavigation();
@@ -86,6 +87,11 @@ const PaymentScreen = () => {
         };
         await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
         setUserData(updatedUserData);
+        AppMetrica.reportEvent("Премиум", {
+          action_type: "Покупка премиума картой",
+          button_name: "оплатить",
+          screen: "Экран оплаты подписки",
+        });
         navigation.navigate("MainScreen");
       }
     } catch (error) {

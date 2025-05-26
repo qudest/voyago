@@ -61,7 +61,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
 
   const formatMetrics = (distance, duration) => {
     const hours = Math.floor(duration / 3600);
-    const minutes = Math.round((duration % 3600) / 60);
+    const minutes = Math.floor((duration % 3600) / 60);
     return {
       distance: `${(distance / 1000).toFixed(1)} км`,
       duration: `${hours > 0 ? `${hours} ч ` : ""}${minutes} мин`,
@@ -173,7 +173,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             },
             title: pointNames?.[0] || "Старт",
             description: "Начальная точка маршрута",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           },
           ...waypointsCoords.map((coord, index) => ({
             coordinate: {
@@ -182,7 +182,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             },
             title: pointNames?.[index + 1] || `Точка ${index + 1}`,
             description: "Промежуточная точка",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           })),
           {
             coordinate: {
@@ -191,7 +191,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             },
             title: pointNames?.[pointNames.length - 1] || "Финиш",
             description: "Конечная точка маршрута",
-            icon: require("../../assets/markers/default.png"),
+            icon: require("../../assets/markers/defaultdarkmini2.png"),
           },
         ];
 
