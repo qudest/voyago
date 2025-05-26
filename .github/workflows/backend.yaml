@@ -34,7 +34,7 @@ jobs:
           ./gradlew build -x test --no-daemon
 
   test:
-    if: ${{ github.base_ref == 'develop' }}
+    # if: ${{ github.base_ref == 'develop' }}
     name: Tests
     runs-on: ubuntu-latest
     needs: build
