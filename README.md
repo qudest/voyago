@@ -2,7 +2,7 @@
 
 ## Сервис для оптимального планирования пешего маршрута по достопримечательностям
 
-### Участники команды 3 группы 3:     
+### Участники команды 3 группы 3:    
 - [Лобцов Дмитрий](https://github.com/shelf08) / PM & Team-lead  
 - [Нагорный Арсений](https://github.com/qudest) / DevOps engineer  
 - [Акельева Ульяна](https://github.com/ulianacode) / Designer & Front-end developer 
