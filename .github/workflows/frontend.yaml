@@ -14,32 +14,50 @@ permissions:
   pull-requests: write
 
 jobs:
-  build:
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
+    outputs:
+      node_version: ${{ steps.setup-node.outputs.node-version }}
     steps:
-      - name: 🏗 Setup repo
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: 🏗 Setup Node
+      - name: Setup Node.js
+        id: setup-node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
 
-      - name: 🏗 Setup EAS
+      - name: Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 📦 Install dependencies
+      - name: Install dependencies
         run: cd frontend && npm ci
 
-      - name: 🚀 Preview build app
+  preview:
+    name: Preview build
+    needs: setup
+    if: github.event.pull_request.base.ref == 'develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run preview build
         run: cd frontend && eas update --auto --branch "${{ github.event.pull_request.head.ref }}" --non-interactive
-        if: github.event.pull_request.base.ref == 'develop'
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 🚀 Build app
+  production:
+    name: Production build
+    needs: setup
+    if: github.event.pull_request.base.ref == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run production build
         run: cd frontend && eas build --platform android --non-interactive --no-wait
-        if: github.event.pull_request.base.ref == 'main'
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
