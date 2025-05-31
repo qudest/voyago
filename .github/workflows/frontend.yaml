@@ -16,6 +16,7 @@ permissions:
 jobs:
   preview:
     if: github.event.pull_request.base.ref == 'develop'
+    name: Preview build
     runs-on: ubuntu-latest
     steps:
       - name: Setup repo
@@ -42,6 +43,7 @@ jobs:
 
   production:
     if: github.event.pull_request.base.ref == 'main'
+    name: Production build
     runs-on: ubuntu-latest
     steps:
       - name: Setup repo
