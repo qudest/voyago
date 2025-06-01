@@ -12,7 +12,7 @@
   
 ### **Ссылки на сервисы**  
 - [Miro](https://miro.com/app/board/uXjVIe9QVfg=/?share_link_id=9825766657)  
-- [Jira](https://id.atlassian.com/invite/p/jira-software?id=qe3coq-XR56xxgWpeUenvg)
+- [Jira](https://id.atlassian.com/invite/p/jira-software?id=K3AEkwtTQkyiv6ivcc7gnQ)
 - [Figma](https://www.figma.com/design/EqIQmygpggXKefPpovrrsU/Project-Tourist-Guide?node-id=0-1&t=ZUOqSJMtTMUjJAl5-1)   
 
 ### **Документация**  
@@ -67,4 +67,6 @@
 - [Отчет PM 2 аттестация](Documentation/Otchet-PM-2att.pdf)
 - [05.05.2025-11.05.2025](Documentation/05_05_2025_11_05_2025.pdf)  
 - [12.05.2025-18.05.2025](Documentation/12_05_2025_18_05_2025.pdf)  
-- [19.05.2025-25.05.2025](Documentation/19_05_2025_25_05_2025.pdf)  
+- [19.05.2025-25.05.2025](Documentation/19_05_2025_25_05_2025.pdf)
+- [26.05.2025-01.06.2025](Documentation/26_05_2025_01_06_2025.pdf)  
+
