@@ -9,7 +9,7 @@ spring:
           account-service.url: ${ACCOUNT_SERVICE}
 google:
   maps:
-    api-key: ${GOOGLE_API-KEY}
+    api-key: ${GOOGLE_API_KEY}
 
 server:
   port: ${APP_PORT:8090}

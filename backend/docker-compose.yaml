@@ -202,7 +202,7 @@ services:
     platform: linux/amd64
     restart: always
     environment:
-      - GOOGLE_API-KEY=${GOOGLE_API-KEY:-google_api_key}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-google_api_key}
       - APP_PORT=8090
       - ACCOUNT_SERVICE=http://account-service:8090
     expose:
