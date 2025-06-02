@@ -2,7 +2,7 @@
 
 ## Сервис для оптимального планирования пешего маршрута по достопримечательностям
 
-### Участники команды 3 группы 3:     
+### Участники команды 3 группы 3:    
 - [Лобцов Дмитрий](https://github.com/shelf08) / PM & Team-lead  
 - [Нагорный Арсений](https://github.com/qudest) / DevOps engineer  
 - [Акельева Ульяна](https://github.com/ulianacode) / Designer & Front-end developer 
@@ -12,26 +12,29 @@
   
 ### **Ссылки на сервисы**  
 - [Miro](https://miro.com/app/board/uXjVIe9QVfg=/?share_link_id=9825766657)  
-- [Jira](https://id.atlassian.com/invite/p/jira-software?id=qe3coq-XR56xxgWpeUenvg)
+- [Jira](https://id.atlassian.com/invite/p/jira-software?id=K3AEkwtTQkyiv6ivcc7gnQ)
 - [Figma](https://www.figma.com/design/EqIQmygpggXKefPpovrrsU/Project-Tourist-Guide?node-id=0-1&t=ZUOqSJMtTMUjJAl5-1)   
 
 ### **Документация**  
 - Техническое задание [pdf](Documentation/Tech_zadanie_Voyago.pdf) [doc](Documentation/Tech_zadanie_Voyago.docx)  
 - SWOT и анализ конкурентов [pdf](Documentation/SWOT-and-competitors.pdf) [doc](Documentation/SWOT-and-competitors.docx)  
-- Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)
-- Диаграммы [png](Documentation/uml)
-- План тестирования [pdf](Documentation/Testing-plan.pdf) [doc](Documentation/Testing-plan.docx)
+- Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)  
+- Диаграммы [png](Documentation/uml)  
+- План тестирования [pdf](Documentation/Testing-plan.pdf) [doc](Documentation/Testing-plan.docx)  
 - Технические риски [pdf](Documentation/Tech-risks.pdf) [doc](Documentation/Tech-risks.docx)
-- Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)
-- Презентация MVP (2 аттестация) [pdf](Documentation/Voyago-Presentation-2-att.pdf) [pptx](Documentation/Voyago-Presentation-2-att.pptx)
-- [Описание API](Documentation/api-docs.yaml)
-- [Swagger](http://109.196.99.78:8090/swagger-ui/index.html#/) | логин: **swagger**, пароль: **swagger**
+- [Описание API](Documentation/api-docs.yaml)  
+- [Swagger](http://109.196.99.78:8090/swagger-ui/index.html#/) | логин: **swagger**, пароль: **swagger**  
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
-### **Тестирование 2 аттестация**
+### **Тестирование**
 - Тест-кейсы [xlsx](Documentation/Test-cases-ALL.xlsx)  
 - Тестирование сервисов [xlsx](Documentation/API-Tests-ALL.xlsx)
 - Отчет о тестировании [pdf](Documentation/Otchet-testiorovaniya.pdf)
+
+### **Презентации** 
+- Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)  
+- Презентация MVP (2 аттестация) [pdf](Documentation/Voyago-Presentation-2-att.pdf) [pptx](Documentation/Voyago-Presentation-2-att.pptx)  
+- Презентация предзащиты [pdf](Documentation/pre-defense.pdf) [pptx](https://drive.google.com/drive/folders/1XFXzRAAWr5ckmWYNLUeRiaELAC6JWl_D?usp=drive_link)
 
 ### **Видео**  
 - [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
@@ -64,4 +67,6 @@
 - [Отчет PM 2 аттестация](Documentation/Otchet-PM-2att.pdf)
 - [05.05.2025-11.05.2025](Documentation/05_05_2025_11_05_2025.pdf)  
 - [12.05.2025-18.05.2025](Documentation/12_05_2025_18_05_2025.pdf)  
-- [19.05.2025-25.05.2025](Documentation/19_05_2025_25_05_2025.pdf)  
+- [19.05.2025-25.05.2025](Documentation/19_05_2025_25_05_2025.pdf)
+- [26.05.2025-01.06.2025](Documentation/26_05_2025_01_06_2025.pdf)  
+
