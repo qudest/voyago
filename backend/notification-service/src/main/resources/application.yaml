@@ -12,5 +12,12 @@ spring:
         spring.json.trusted.packages: "*"
         value.deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
 
+  profiles:
+    active: ${PROFILE}
+
+sms:
+  email: ${SMS_EMAIL}
+  api-key: ${SMS_API_KEY}
+
 server:
   port: ${APP_PORT:8090}

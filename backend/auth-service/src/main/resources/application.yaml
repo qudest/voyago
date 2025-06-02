@@ -31,7 +31,7 @@ jwt:
     secret: ${JWT_SECRET:60b263b26771adae5d9519096730c16ef634fcbe0976040bb0e0375bd4318124}
     lifetime: ${JWT_LIFETIME:4320m}
 
-code.lifetime: 3
+code.lifetime: 10
 
 server:
   port: ${APP_PORT:8090}

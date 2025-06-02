@@ -77,6 +77,9 @@ services:
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
+      - SMS_EMAIL=${SMS_EMAIL}
+      - SMS_API_KEY=${SMS_API_KEY}
+      - PROFILE=prod
     expose:
       - "8090"
     depends_on:
