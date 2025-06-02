@@ -190,6 +190,23 @@ services:
       - kafka-2
       - kafka-3
 
+  ai-service:
+    image: qudest/voyago:ai-service
+    container_name: "ai-service"
+    build: ./ai-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - GOOGLE_API-KEY=${GOOGLE_API-KEY}
+      - APP_PORT=8090
+      - ACCOUNT_SERVICE=http://account-service:8090
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - account-service
+
   kafka-1:
     container_name: kafka-1
     image: bitnami/kafka:3.9.0

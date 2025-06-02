@@ -77,8 +77,8 @@ public class GenerateRouteServiceImpl implements GenerateRouteService {
         }
 
         RoutePoints routePoints = RoutePoints.builder()
-                .origin(placeIds.get(0))
-                .destination(placeIds.get(placeIds.size() - 1))
+                .origin(placeIds.getFirst())
+                .destination(placeIds.getLast())
                 .waypoints(placeIds)
                 .build();
 
