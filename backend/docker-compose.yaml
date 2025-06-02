@@ -64,6 +64,8 @@ services:
     ports:
       - "8090:8090"
 
+
+
   notification-service:
     image: qudest/voyago:notification-service
     container_name: "notification-service"
