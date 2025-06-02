@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 public record GenerateRouteDto(@NotBlank @Pattern(regexp = Patterns.PHONE_NUMBER) String phone,
-                               String country,
-                               String city) {
+                               @NotBlank String country,
+                               @NotBlank String city) {
 }
