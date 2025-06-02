@@ -50,6 +50,7 @@ services:
       - RATING_SERVICE=http://rating-service:8090
       - ROUTE_SERVICE=http://route-service:8090
       - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - AI_SERVICE=http://ai-service:8090
       - APP_PORT=8090
       - IN_MEMORY_USERNAME=${GATEWAY_USERNAME:-username}
       - IN_MEMORY_PASSWORD=${GATEWAY_PASSWORD:-password}
