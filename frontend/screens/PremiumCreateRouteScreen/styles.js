@@ -28,6 +28,11 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     color: "#3E3C80",
   },
+  nameOfRoute: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: 600,
+  },
   tagContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
