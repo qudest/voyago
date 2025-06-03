@@ -7,6 +7,7 @@ import by.smertex.core.dto.service.route.input.RouteUserDto;
 import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,7 +55,8 @@ public interface RouteServiceClient {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
     );
 
     @GetMapping("/api/routes/favorites")
@@ -69,7 +71,8 @@ public interface RouteServiceClient {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
     );
 
     @GetMapping("/api/routes/passed")
@@ -84,6 +87,7 @@ public interface RouteServiceClient {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            Pageable pageable
     );
 }
