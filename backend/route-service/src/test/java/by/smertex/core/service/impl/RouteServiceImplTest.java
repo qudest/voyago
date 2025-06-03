@@ -83,7 +83,7 @@ class RouteServiceImplTest {
         RouteReadDto routeReadDto = new RouteReadDto();
         Slice<Route> routeSlice = new SliceImpl<>(List.of(route), pageable, false);
 
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(routeSlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(routeSlice);
         when(routeDtoMapper.map(route)).thenReturn(routeReadDto);
 
         PageResponse<RouteReadDto> response = routeService.findAllByFilter(filter, pageable);
@@ -97,7 +97,7 @@ class RouteServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Slice<Route> emptySlice = new SliceImpl<>(List.of(), pageable, false);
 
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(emptySlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(emptySlice);
 
         PageResponse<RouteReadDto> response = routeService.findAllByFilter(filter, pageable);
 
@@ -115,7 +115,7 @@ class RouteServiceImplTest {
         nonFavoriteRoute.setId(200L);
 
         Slice<Route> routeSlice = new SliceImpl<>(List.of(new Route(), new Route()), pageable, false);
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(routeSlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(routeSlice);
         when(routeDtoMapper.map(any())).thenReturn(favoriteRoute, nonFavoriteRoute);
         UserRouteInfo favoriteInfo = new UserRouteInfo();
         favoriteInfo.setRouteId(100L);
@@ -136,7 +136,7 @@ class RouteServiceImplTest {
         route1.setId(500L);
 
         Slice<Route> routeSlice = new SliceImpl<>(List.of(new Route()), pageable, false);
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(routeSlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(routeSlice);
         when(routeDtoMapper.map(any())).thenReturn(route1);
         when(userRouteInfoService.findAllByUserId(userId)).thenReturn(List.of());
 
@@ -156,7 +156,7 @@ class RouteServiceImplTest {
         nonPassedRoute.setId(400L);
 
         Slice<Route> routeSlice = new SliceImpl<>(List.of(new Route(), new Route()), pageable, false);
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(routeSlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(routeSlice);
         when(routeDtoMapper.map(any())).thenReturn(passedRoute, nonPassedRoute);
         UserRouteInfo passedInfo = new UserRouteInfo();
         passedInfo.setRouteId(300L);
@@ -177,7 +177,7 @@ class RouteServiceImplTest {
         route1.setId(600L);
 
         Slice<Route> routeSlice = new SliceImpl<>(List.of(new Route()), pageable, false);
-        when(routeRepository.findAllByFilter(filter, pageable)).thenReturn(routeSlice);
+        when(routeRepository.findAllByFilter(eq(filter), eq(pageable))).thenReturn(routeSlice);
         when(routeDtoMapper.map(any())).thenReturn(route1);
         when(userRouteInfoService.findAllByUserId(userId)).thenReturn(List.of());
 
