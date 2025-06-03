@@ -4,7 +4,13 @@ import qs from "qs";
 
 export const findAll = async (accessToken, params = {}) => {
   try {
-    const queryString = Object.entries(params)
+    const updatedParams = {
+      page: 0,
+      size: 500,
+      ...params,
+    };
+
+    const queryString = Object.entries(updatedParams)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
           return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
@@ -24,7 +30,6 @@ export const findAll = async (accessToken, params = {}) => {
     );
   } catch (error) {
     console.log("Error fetching routes:", error);
-    throw error;
   }
 };
 
@@ -118,6 +123,7 @@ export const RouteDelete = async (id, accessToken) => {
 export const findAllFavorites = async (userId, accessToken, filters = {}) => {
   const params = {
     userId,
+    size: 500,
     ...filters,
   };
 

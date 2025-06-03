@@ -14,6 +14,7 @@ import {
   putAccountCityAndName,
   deleteAccount,
 } from "../../services/accountApi";
+import { putAccountInfo } from "../../services/accountApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppMetrica from "@appmetrica/react-native-analytics";
 
@@ -25,12 +26,14 @@ const AdditionalParametersScreen = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { alert, showAlert, hideAlert } = useAlert();
   const navigation = useNavigation();
+  const [userData, setUserData] = useState(null);
   const [id, setUserId] = useState(null);
   const [initialCity, setInitialCity] = useState("");
   const [initialName, setInitialName] = useState("");
   const [preferences, setPreferences] = useState();
   const [isSubscriptionCancelled, setSubscriptionCancelled] = useState(false);
   const [accessToken, setAccessToken] = useState(null);
+  const [isNoSubscriptionFound, setNoSubscriptionFound] = useState(false);
 
   useEffect(() => {
     const fetchCachedData = async () => {
@@ -53,6 +56,7 @@ const AdditionalParametersScreen = () => {
           setInitialName(parsedData.name || "");
           setSelectedCity(parsedData.city || "");
           setName(parsedData.name || "");
+          setUserData(JSON.parse(cachedData));
         }
       } catch (error) {
         console.log("Ошибка при получении данных из кэша:", error);
@@ -89,11 +93,15 @@ const AdditionalParametersScreen = () => {
   };
 
   const handleCancelPress = () => {
-    showAlert(
-      "cancel",
-      "Отмена подписки",
-      "Вы точно хотите отменить подписку?"
-    );
+    if (userData.premium) {
+      showAlert(
+        "cancel",
+        "Отмена подписки",
+        "Вы точно хотите отменить подписку?"
+      );
+    } else {
+      setNoSubscriptionFound(true);
+    }
   };
 
   const confirmDelete = () => {
@@ -110,18 +118,52 @@ const AdditionalParametersScreen = () => {
     hideAlert();
   };
 
-  const confirmCancellation = () => {
+  const confirmCancellation = async () => {
     AppMetrica.reportEvent("Премиум", {
       action_type: "Отмена подписки",
       button_name: "премиум_подписка_отмена",
       screen: "Экран дополнительных параметров",
     });
+
     hideAlert();
-    setSubscriptionCancelled(true);
+
+    try {
+      // 1. Получаем и обновляем userData в AsyncStorage
+      const cachedData = await AsyncStorage.getItem("userData");
+      if (cachedData) {
+        const parsedData = JSON.parse(cachedData);
+        const updatedUserData = { ...parsedData, premium: false };
+
+        await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
+        setUserData(updatedUserData); // обновляем локальное состояние
+
+        // 2. Отправляем обновлённые данные на сервер
+        await putAccountInfo(
+          parsedData.id,
+          parsedData.name,
+          "Russia",
+          parsedData.city,
+          parsedData.preferences || [],
+          null,
+          accessToken
+        );
+
+        // 3. Показываем уведомление
+        setSubscriptionCancelled(true);
+      }
+    } catch (error) {
+      console.log("Ошибка при отмене подписки:", error);
+      setErrorMessage("Не удалось отменить подписку");
+      setErrorModalVisible(true);
+    }
   };
 
   const handleAlertChangeClose = () => {
     setSubscriptionCancelled(false);
+  };
+
+  const handleAlertNoPremium = () => {
+    setNoSubscriptionFound(false);
   };
 
   const putCity = async () => {
@@ -276,6 +318,13 @@ const AdditionalParametersScreen = () => {
         isVisible={isSubscriptionCancelled}
         onCancel={handleAlertChangeClose}
         title="Подписка успешно отменена"
+        message=" "
+      />
+
+      <AlertChange
+        isVisible={isNoSubscriptionFound}
+        onCancel={handleAlertNoPremium}
+        title="Подписка не найдена"
         message=" "
       />
     </View>
