@@ -25,6 +25,16 @@ configurations {
 	}
 }
 
+ext {
+	springCloudVersion = "2024.0.1"
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -37,7 +47,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.grpc:grpc-services'
 	implementation 'org.springframework.grpc:spring-grpc-server-web-spring-boot-starter'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'io.github.openfeign:feign-httpclient:13.5'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation("com.google.maps:google-maps-services:2.2.0")
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

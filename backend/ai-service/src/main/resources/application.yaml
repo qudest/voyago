@@ -2,5 +2,14 @@ spring:
   application:
     name: ai-service
 
+  cloud:
+    openfeign:
+      client:
+        config:
+          account-service.url: ${ACCOUNT_SERVICE}
+google:
+  maps:
+    api-key: ${GOOGLE_API_KEY:google_api_key}
+
 server:
-  port: 8090
+  port: ${APP_PORT:8090}
