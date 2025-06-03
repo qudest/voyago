@@ -18,6 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import GenerateRoute from "../../components/GenerateRoute/GenerateRoute";
 import { aiRoute } from "../../services/premiumApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { addToFavorites, deleteFavorites } from "../../services/routesApi";
+import { RouteCreate } from "../../services/routesApi";
 
 const PremiumCreateRouteScreen = () => {
   const navigation = useNavigation();
@@ -26,6 +28,7 @@ const PremiumCreateRouteScreen = () => {
   const [routeData, setRouteData] = useState(null);
   const [coordinates, setCoordinates] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [likeRoute, setLikeRoute] = useState(false);
 
   const API_KEY = "AIzaSyBRLV9UQ_6w-HUHZmNH5J_xDDW-OLoh0q0";
 
@@ -197,7 +200,7 @@ const PremiumCreateRouteScreen = () => {
     navigation.navigate("RecommendationsRoutesScreen");
   };
 
-  const handleChooseRoute = () => {
+  const handleChooseRoute = async () => {
     if (!routeData) {
       return;
     }
@@ -226,7 +229,130 @@ const PremiumCreateRouteScreen = () => {
         0.01,
     };
 
-    navigation.navigate("MainScreen", { selectedRoute: routeInfo });
+    const cleanRoutePoints = {
+      origin:
+        typeof routeData.routePoints.origin === "string"
+          ? routeData.routePoints.origin
+          : routeData.routePoints.origin.place_id ||
+            routeData.routePoints.origin.id,
+
+      destination:
+        typeof routeData.routePoints.destination === "string"
+          ? routeData.routePoints.destination
+          : routeData.routePoints.destination.place_id ||
+            routeData.routePoints.destination.id,
+
+      waypoints: (routeData.routePoints.waypoints || []).map((wp) =>
+        typeof wp === "string" ? wp : wp.place_id || wp.id
+      ),
+    };
+
+    try {
+      const response = await RouteCreate(
+        routeData.name || "Без названия",
+        Number(userData.id),
+        userData.preferences || [],
+        cleanRoutePoints,
+        routeData.distance,
+        routeData.duration,
+        accessToken
+      );
+
+      if (response?.data?.id) {
+        const routeId = response.data.id;
+        setRouteData((prev) => ({ ...prev, id: routeId }));
+        routeInfo.id = routeId;
+      } else {
+        console.log("Не удалось сохранить маршрут");
+      }
+
+      navigation.navigate("MainScreen", { selectedRoute: routeInfo });
+    } catch (error) {
+      console.log("Ошибка при сохранении маршрута:", error);
+    }
+  };
+
+  const handleLikePress = async () => {
+    const newLikeState = !likeRoute;
+    setLikeRoute(newLikeState);
+
+    if (!routeData || !userData || !accessToken) {
+      console.log("Нет данных для выполнения действия");
+      return;
+    }
+
+    if (newLikeState) {
+      try {
+        let routeId = routeData.id;
+
+        if (!routeId) {
+          const cleanRoutePoints = {
+            origin:
+              typeof routeData.routePoints.origin === "string"
+                ? routeData.routePoints.origin
+                : routeData.routePoints.origin.place_id ||
+                  routeData.routePoints.origin.id,
+
+            destination:
+              typeof routeData.routePoints.destination === "string"
+                ? routeData.routePoints.destination
+                : routeData.routePoints.destination.place_id ||
+                  routeData.routePoints.destination.id,
+
+            waypoints: (routeData.routePoints.waypoints || []).map((wp) =>
+              typeof wp === "string" ? wp : wp.place_id || wp.id
+            ),
+          };
+
+          console.log(
+            routeData.name,
+            Number(userData.id),
+            userData.preferences,
+            cleanRoutePoints,
+            routeData.distance,
+            routeData.duration,
+            accessToken
+          );
+          const response = await RouteCreate(
+            routeData.name || "Без названия",
+            Number(userData.id),
+            userData.preferences || [],
+            cleanRoutePoints,
+            routeData.distance,
+            routeData.duration,
+            accessToken
+          );
+
+          console.log(response);
+          if (response?.data?.id) {
+            routeId = response.data.id;
+            setRouteData((prev) => ({ ...prev, id: routeId }));
+          } else {
+            console.log("Не удалось сохранить маршрут");
+          }
+        }
+
+        await addToFavorites(routeId, userData.id, accessToken);
+        console.log("Маршрут успешно добавлен в избранное");
+      } catch (error) {
+        console.log(
+          "Ошибка при добавлении маршрута в избранное:",
+          error?.response?.data || error
+        );
+      }
+    } else {
+      try {
+        if (!routeData?.id) {
+          console.log("Невозможно удалить из избранного: нет ID маршрута");
+          return;
+        }
+
+        await deleteFavorites(routeData.id, userData.id, accessToken);
+        console.log("Маршрут успешно удалён из избранного");
+      } catch (error) {
+        console.log("Ошибка при удалении маршрута из избранного:", error);
+      }
+    }
   };
 
   return (
@@ -242,6 +368,18 @@ const PremiumCreateRouteScreen = () => {
         <GenerateRoute onPress={handleGenerateButton} />
         <View>
           <View style={styles.infoContainer}>
+            <TouchableOpacity
+              style={styles.functionalImage}
+              onPress={handleLikePress}
+            >
+              <Image
+                source={
+                  likeRoute
+                    ? require("../../assets/routeCardImages/likecolor.png")
+                    : require("../../assets/routeCardImages/like.png")
+                }
+              />
+            </TouchableOpacity>
             <Text style={styles.nameOfRoute}>
               {routeData ? routeData.name : "Загрузка..."}
             </Text>

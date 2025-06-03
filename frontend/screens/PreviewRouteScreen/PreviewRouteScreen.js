@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"; // Добавил useRef
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Image,
@@ -150,7 +150,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             )}`,
             waypoints: waypointsParam,
             mode: "walking",
-            alternatives: false, // Добавить для пешего режима
+            alternatives: false,
             key: API_KEY,
             language: "ru",
           },
@@ -209,6 +209,10 @@ const PreviewRouteScreen = ({ navigation, route }) => {
             0.01,
         };
 
+        const filteredPointNames =
+          pointNames?.filter((point, index, arr) => point !== arr[index - 1]) ||
+          [];
+
         return {
           id,
           name,
@@ -221,7 +225,7 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           duration:
             duration ||
             route.legs.reduce((sum, leg) => sum + leg.duration.value, 0),
-          points: pointNames || [],
+          points: filteredPointNames || [],
         };
       }
     } catch (error) {
@@ -335,40 +339,39 @@ const PreviewRouteScreen = ({ navigation, route }) => {
           </Text>
         </View>
 
+        <View style={styles.mapContainer}>
+          {loading ? (
+            <ActivityIndicator size="large" style={styles.loader} />
+          ) : routeInfo.region && routeInfo.coordinates.length > 0 ? (
+            <MapView style={styles.map} initialRegion={routeInfo.region}>
+              {routeInfo.markers.map((marker, index) => (
+                <Marker
+                  key={`marker-${index}-${
+                    marker.title?.replace(/\s/g, "-") || index
+                  }`}
+                  coordinate={marker.coordinate}
+                  title={marker.title}
+                  description={marker.description}
+                  image={marker.icon}
+                />
+              ))}
+              {routeInfo.coordinates.length > 0 && (
+                <Polyline
+                  coordinates={routeInfo.coordinates}
+                  strokeColor="#464BDC"
+                  strokeWidth={4}
+                />
+              )}
+            </MapView>
+          ) : (
+            <Text style={styles.errorText}>
+              {routeInfo.name === "Ошибка загрузки"
+                ? "Не удалось загрузить данные маршрута"
+                : "Карта не доступна"}
+            </Text>
+          )}
+        </View>
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.mapContainer}>
-            {loading ? (
-              <ActivityIndicator size="large" style={styles.loader} />
-            ) : routeInfo.region && routeInfo.coordinates.length > 0 ? (
-              <MapView style={styles.map} initialRegion={routeInfo.region}>
-                {routeInfo.markers.map((marker, index) => (
-                  <Marker
-                    key={`marker-${index}-${
-                      marker.title?.replace(/\s/g, "-") || index
-                    }`}
-                    coordinate={marker.coordinate}
-                    title={marker.title}
-                    description={marker.description}
-                    image={marker.icon}
-                  />
-                ))}
-                {routeInfo.coordinates.length > 0 && (
-                  <Polyline
-                    coordinates={routeInfo.coordinates}
-                    strokeColor="#464BDC"
-                    strokeWidth={4}
-                  />
-                )}
-              </MapView>
-            ) : (
-              <Text style={styles.errorText}>
-                {routeInfo.name === "Ошибка загрузки"
-                  ? "Не удалось загрузить данные маршрута"
-                  : "Карта не доступна"}
-              </Text>
-            )}
-          </View>
-
           <View style={styles.contentPoints}>
             {(routeInfo.points || []).map((point, index) => (
               <Text key={`point-${index}`} style={styles.pointText}>
@@ -376,43 +379,41 @@ const PreviewRouteScreen = ({ navigation, route }) => {
               </Text>
             ))}
           </View>
-
-          <View style={styles.infoContainer}>
-            <View style={styles.timeDistanceContainer}>
-              <View style={styles.timeContainer}>
-                <Image
-                  source={require("../../assets/routeCardImages/clock.png")}
-                  style={styles.timeImage}
-                />
-                <Text style={styles.time}>
-                  {routeInfo.id && !loading ? duration : "--"}
-                </Text>
-              </View>
-
-              <Text style={styles.distance}>
-                {routeInfo.id && !loading ? distance : "--"}
-              </Text>
-
-              <View style={styles.ratingContainer}>
-                <Image
-                  source={require("../../assets/routeCardImages/rating.png")}
-                  style={styles.ratingImage}
-                />
-                <Text style={styles.rating}>
-                  {loading && rating === null
-                    ? "..."
-                    : typeof rating === "number"
-                    ? rating.toFixed(1)
-                    : rating === null && routeInfo.id
-                    ? "N/A"
-                    : routeInfo.id
-                    ? "0.0"
-                    : "--"}
-                </Text>
-              </View>
-            </View>
-          </View>
         </ScrollView>
+
+        <View style={styles.timeDistanceContainer}>
+          <View style={styles.timeContainer}>
+            <Image
+              source={require("../../assets/routeCardImages/clock.png")}
+              style={styles.timeImage}
+            />
+            <Text style={styles.time}>
+              {routeInfo.id && !loading ? duration : "--"}
+            </Text>
+          </View>
+
+          <Text style={styles.distance}>
+            {routeInfo.id && !loading ? distance : "--"}
+          </Text>
+
+          <View style={styles.ratingContainer}>
+            <Image
+              source={require("../../assets/routeCardImages/rating.png")}
+              style={styles.ratingImage}
+            />
+            <Text style={styles.rating}>
+              {loading && rating === null
+                ? "..."
+                : typeof rating === "number"
+                ? rating.toFixed(1)
+                : rating === null && routeInfo.id
+                ? "-"
+                : routeInfo.id
+                ? "-"
+                : "--"}
+            </Text>
+          </View>
+        </View>
 
         <View style={styles.footer}>
           <ChooseButton

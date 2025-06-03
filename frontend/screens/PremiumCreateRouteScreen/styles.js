@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 10,
   },
+  functionalImage: {
+    width: "100%",
+    alignItems: "flex-end",
+  },
   locationContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
