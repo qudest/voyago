@@ -12,51 +12,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "stretch",
   },
-  filtersContainer: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "flex-end",
-    flexDirection: "column",
+  titleContainer: {
+    marginTop: 20,
   },
-  filtersTitle: {
-    marginTop: 25,
-
-    fontSize: 16,
+  titlePremium: {
+    textAlign: "center",
+    fontSize: 23,
+    fontWeight: 600,
+    color: "#3E3C80",
+  },
+  descriptionPremium: {
+    marginTop: 20,
+    textAlign: "center",
+    fontSize: 19,
     fontWeight: 500,
-  },
-  filtersPlaceContainer: {
-    width: "100%",
-    marginTop: 30,
-
-    backgroundColor: "#EFF3FF",
-
-    borderRadius: 22,
-
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  filtersDurationContainer: {
-    flex: 1,
-    width: "100%",
-    height: 240,
-    backgroundColor: "#EFF3FF",
-
-    borderRadius: 22,
-
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
+    color: "#3E3C80",
   },
   tagContainer: {
     flexDirection: "row",
