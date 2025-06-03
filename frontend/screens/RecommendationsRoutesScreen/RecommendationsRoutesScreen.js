@@ -57,10 +57,7 @@ const RecommendationsRoutesScreen = () => {
           console.log("Данные пользователя из кэша:", parsedData);
         }
       } catch (error) {
-        console.error(
-          "Ошибка при получении данных пользователя из кэша:",
-          error
-        );
+        console.log("Ошибка при получении данных пользователя из кэша:", error);
         setTokenLoaded(true);
       }
     };
@@ -114,7 +111,7 @@ const RecommendationsRoutesScreen = () => {
       const data = await response.json();
 
       if (data.status !== "OK") {
-        return "Место не найдено";
+        console.log("Место не найдено");
       }
 
       const name =
@@ -125,7 +122,7 @@ const RecommendationsRoutesScreen = () => {
       setCityNamesCache((prev) => ({ ...prev, [cleanPlaceId]: name }));
       return name;
     } catch (error) {
-      return "Ошибка загрузки";
+      console.log("Ошибка загрузки");
     }
   };
 
