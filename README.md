@@ -13,9 +13,12 @@
 ### **Ссылки на сервисы**  
 - [Miro](https://miro.com/app/board/uXjVIe9QVfg=/?share_link_id=9825766657)  
 - [Jira](https://id.atlassian.com/invite/p/jira-software?id=K3AEkwtTQkyiv6ivcc7gnQ)
-- [Figma](https://www.figma.com/design/EqIQmygpggXKefPpovrrsU/Project-Tourist-Guide?node-id=0-1&t=ZUOqSJMtTMUjJAl5-1)   
+- [Figma](https://www.figma.com/design/EqIQmygpggXKefPpovrrsU/Project-Tourist-Guide?node-id=0-1&t=ZUOqSJMtTMUjJAl5-1)
+- [AppMetrica](https://appmetrica.yandex.ru/overview?period=week&group=day&currency=rub&accuracy=medium&appId=4753498)  | логин: **test.appmetric** пароль: **test.appmetric1**  
+    
 
 ### **Документация**  
+- Курсовая работа [pdf](Documentation/course_work.pdf) [doc](Documentation/course_work.docx)
 - Техническое задание [pdf](Documentation/Tech_zadanie_Voyago.pdf) [doc](Documentation/Tech_zadanie_Voyago.docx)  
 - SWOT и анализ конкурентов [pdf](Documentation/SWOT-and-competitors.pdf) [doc](Documentation/SWOT-and-competitors.docx)  
 - Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)  
@@ -23,7 +26,7 @@
 - План тестирования [pdf](Documentation/Testing-plan.pdf) [doc](Documentation/Testing-plan.docx)  
 - Технические риски [pdf](Documentation/Tech-risks.pdf) [doc](Documentation/Tech-risks.docx)
 - [Описание API](Documentation/api-docs.yaml)  
-- [Swagger](http://109.196.99.78:8090/swagger-ui/index.html#/) | логин: **swagger**, пароль: **swagger**  
+- [Swagger](http://109.196.99.78:8090/swagger-ui/index.html#/) | логин: **swagger** пароль: **swagger**  
 - [Инструкция по коммитам](https://docs.google.com/document/d/1Kp6qQRU94GrMkw1_fwGnygFp7ZVXXnQ5z1EHpDaxDIs/edit?usp=sharing) && [Conventional Commits](https://www.conventionalcommits.org/ru/v1.0.0/)
 
 ### **Тестирование**
@@ -35,6 +38,7 @@
 - Презентация (1 аттестация) [pdf](Documentation/Voyago-Presentation-1att.pdf) [pptx](Documentation/Voyago-Presentation-1att.pptx)  
 - Презентация MVP (2 аттестация) [pdf](Documentation/Voyago-Presentation-2-att.pdf) [pptx](Documentation/Voyago-Presentation-2-att.pptx)  
 - Презентация предзащиты [pdf](Documentation/pre-defense.pdf) [pptx](https://drive.google.com/drive/folders/1XFXzRAAWr5ckmWYNLUeRiaELAC6JWl_D?usp=drive_link)
+- Презентация на защиту проекта [pdf](Documentation/defense-presentation.pdf) [pptx](Documentation/defense-presentation.pptx)  
 
 ### **Видео**  
 - [Видеопрезентация (1 аттестация)](https://drive.google.com/drive/folders/1Ua8Rvy9Brealq3eASSgS_xT6fWVbKFON?usp=drive_link)
@@ -68,5 +72,6 @@
 - [05.05.2025-11.05.2025](Documentation/05_05_2025_11_05_2025.pdf)  
 - [12.05.2025-18.05.2025](Documentation/12_05_2025_18_05_2025.pdf)  
 - [19.05.2025-25.05.2025](Documentation/19_05_2025_25_05_2025.pdf)
-- [26.05.2025-01.06.2025](Documentation/26_05_2025_01_06_2025.pdf)  
+- [26.05.2025-01.06.2025](Documentation/26_05_2025_01_06_2025.pdf)
+- [Финальный отчет PM](Documentation/final_pm_report.pdf)
 
