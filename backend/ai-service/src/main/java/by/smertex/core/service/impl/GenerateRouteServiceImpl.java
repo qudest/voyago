@@ -31,10 +31,6 @@ public class GenerateRouteServiceImpl implements GenerateRouteService {
 
     private final Random random;
 
-    private int min = 6;
-
-    private int max = 12;
-
     @Override
     public RouteReadDto generateRoute(GenerateRouteDto dto) {
         AccountReadDto account = accountServiceClient.findAccountByPhoneNumber(dto.phone());
@@ -42,8 +38,7 @@ public class GenerateRouteServiceImpl implements GenerateRouteService {
         List<PlacesSearchResult> allResults = new ArrayList<>();
         List<Tag> preferences = account.preferences();
 
-        int totalPoints = random.nextInt(max - min + 1) + min;
-        int pointsPerPreference = Math.max(1, totalPoints / preferences.size());
+        int pointsPerPreference = Math.max(1, 6 / preferences.size());
 
         for (Tag pref : preferences) {
             PlacesSearchResponse response = findPointsService.findPoints(dto.country(), dto.city(), pref.getValue());

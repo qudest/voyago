@@ -7,7 +7,11 @@ import by.smertex.core.dto.service.route.input.RouteCreateOrUpdateDto;
 import by.smertex.core.dto.service.route.input.RouteUserDto;
 import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/routes")
 @RequiredArgsConstructor
+@Valid
 public class GatewayRouteControllerImpl implements GatewayRouteController {
 
     private final RouteServiceClient routeServiceClient;
@@ -41,7 +46,9 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            @RequestParam @PositiveOrZero Integer page,
+            @RequestParam @Positive Integer size
     ) {
         return routeServiceClient.findAllByFilter(
                 name,
@@ -53,7 +60,8 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
                 distanceTo,
                 durationFrom,
                 durationTo,
-                rating
+                rating,
+                PageRequest.of(page, size)
         );
     }
 
@@ -69,7 +77,9 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            @RequestParam @PositiveOrZero Integer page,
+            @RequestParam @Positive Integer size
     ) {
         return routeServiceClient.findAllFavoritesByFilter(
                 userId,
@@ -82,7 +92,8 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
                 distanceTo,
                 durationFrom,
                 durationTo,
-                rating
+                rating,
+                PageRequest.of(page, size)
         );
     }
 
@@ -98,7 +109,9 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
             @RequestParam(required = false) Long distanceTo,
             @RequestParam(required = false) Long durationFrom,
             @RequestParam(required = false) Long durationTo,
-            @RequestParam(required = false) Float rating
+            @RequestParam(required = false) Float rating,
+            @RequestParam @PositiveOrZero Integer page,
+            @RequestParam @Positive Integer size
     ) {
         return routeServiceClient.findAllPassedByFilter(
                 userId,
@@ -111,7 +124,8 @@ public class GatewayRouteControllerImpl implements GatewayRouteController {
                 distanceTo,
                 durationFrom,
                 durationTo,
-                rating
+                rating,
+                PageRequest.of(page, size)
         );
     }
 
