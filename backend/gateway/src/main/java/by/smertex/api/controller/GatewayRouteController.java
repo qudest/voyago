@@ -7,10 +7,14 @@ import by.smertex.core.dto.service.route.output.PageResponse;
 import by.smertex.core.dto.service.route.output.RouteReadDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.util.List;
 
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Контроллер маршрутов", description = "Контроллер для работы с маршрутами")
+@Valid
 public interface GatewayRouteController {
 
     @Operation(summary = "Поиск маршрута по id")
@@ -29,7 +33,9 @@ public interface GatewayRouteController {
             @Parameter(description = "Дистанция до") Long distanceTo,
             @Parameter(description = "Длительность от") Long durationFrom,
             @Parameter(description = "Длительность до") Long durationTo,
-            @Parameter(description = "Средний рейтинг") Float rating
+            @Parameter(description = "Средний рейтинг") Float rating,
+            @Parameter(description = "Номер страницы") @PositiveOrZero Integer page,
+            @Parameter(description = "Количество записей на странице") @Positive Integer size
     );
 
     @Operation(summary = "Поиск избранных маршрутов по фильтру")
@@ -44,8 +50,9 @@ public interface GatewayRouteController {
             @Parameter(description = "Дистанция до") Long distanceTo,
             @Parameter(description = "Длительность от") Long durationFrom,
             @Parameter(description = "Длительность до") Long durationTo,
-            @Parameter(description = "Средний рейтинг") Float rating
-
+            @Parameter(description = "Средний рейтинг") Float rating,
+            @Parameter(description = "Номер страницы") @PositiveOrZero Integer page,
+            @Parameter(description = "Количество записей на странице") @Positive Integer size
     );
 
     @Operation(summary = "Поиск пройденных маршрутов по фильтру")
@@ -60,7 +67,9 @@ public interface GatewayRouteController {
             @Parameter(description = "Дистанция до") Long distanceTo,
             @Parameter(description = "Длительность от") Long durationFrom,
             @Parameter(description = "Длительность до") Long durationTo,
-            @Parameter(description = "Средний рейтинг") Float rating
+            @Parameter(description = "Средний рейтинг") Float rating,
+            @Parameter(description = "Номер страницы") @PositiveOrZero Integer page,
+            @Parameter(description = "Количество записей на странице") @Positive Integer size
     );
 
 
