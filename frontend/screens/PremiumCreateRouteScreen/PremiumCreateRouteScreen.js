@@ -197,7 +197,7 @@ const PremiumCreateRouteScreen = () => {
     : { distance: "--", duration: "--" };
 
   const handleBackButton = () => {
-    navigation.navigate("RecommendationsRoutesScreen");
+    navigation.navigate("ProfileScreen");
   };
 
   const handleChooseRoute = async () => {
