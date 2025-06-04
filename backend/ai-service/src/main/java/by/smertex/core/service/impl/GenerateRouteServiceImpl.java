@@ -31,10 +31,6 @@ public class GenerateRouteServiceImpl implements GenerateRouteService {
 
     private final Random random;
 
-    private int min = 6;
-
-    private int max = 12;
-
     @Override
     public RouteReadDto generateRoute(GenerateRouteDto dto) {
         AccountReadDto account = accountServiceClient.findAccountByPhoneNumber(dto.phone());
