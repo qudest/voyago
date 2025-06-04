@@ -4,13 +4,13 @@ import qs from "qs";
 
 export const findAll = async (accessToken, params = {}) => {
   try {
-    const updatedParams = {
+    const defaultParams = {
       page: 0,
-      size: 500,
+      size: 10,
       ...params,
     };
 
-    const queryString = Object.entries(updatedParams)
+    const queryString = Object.entries(defaultParams)
       .map(([key, value]) => {
         if (Array.isArray(value)) {
           return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
@@ -19,15 +19,11 @@ export const findAll = async (accessToken, params = {}) => {
       })
       .join("&");
 
-    console.log(queryString);
-    return axios.get(
-      `https://${API_URL}/api/routes${queryString ? `?${queryString}` : ""}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    return axios.get(`https://${API_URL}/api/routes?${queryString}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   } catch (error) {
     console.log("Error fetching routes:", error);
   }
@@ -120,29 +116,30 @@ export const RouteDelete = async (id, accessToken) => {
   });
 };
 
-export const findAllFavorites = async (userId, accessToken, filters = {}) => {
-  const params = {
-    userId,
-    size: 500,
-    ...filters,
-  };
+export const findAllFavorites = async (userId, accessToken, params = {}) => {
+  try {
+    const defaultParams = {
+      page: 0,
+      size: 10,
+      ...params,
+    };
 
-  const queryString = qs.stringify(params, {
-    arrayFormat: "repeat",
-    skipNulls: true,
-    encoder: (value) => encodeURIComponent(value),
-  });
+    const queryString = Object.entries(defaultParams)
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join("&");
 
-  return await axios.get(
-    `https://${API_URL}/api/routes/favorites?${queryString}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-        Accept: "application/json, application/yaml",
-      },
-    }
-  );
+    return axios.get(
+      `https://${API_URL}/api/routes/favorites?userId=${userId}&${queryString}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+  } catch (error) {
+    console.log("Error fetching favorite routes:", error);
+    throw error;
+  }
 };
 
 export const addToFavorites = async (routeId, userId, accessToken) => {
@@ -171,12 +168,14 @@ export const deleteFavorites = async (routeId, userId, accessToken) => {
 };
 
 export const findDoneRoutes = async (userId, accessToken, filters = {}) => {
-  const params = {
+  const defaultParams = {
+    page: 0,
+    size: 10,
     userId,
     ...filters,
   };
 
-  const queryString = qs.stringify(params, {
+  const queryString = qs.stringify(defaultParams, {
     arrayFormat: "repeat",
     skipNulls: true,
     encoder: (value) => encodeURIComponent(value),
