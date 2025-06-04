@@ -42,7 +42,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 50,
+    borderRadius: 22,
+    padding: 15,
+    backgroundColor: "#EFF3FF",
+
+    marginBottom: 20,
   },
   mapContainer: {
     height: 200,
@@ -56,22 +60,13 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 10,
   },
-  contentPoints: {
-    borderRadius: 22,
-    padding: 15,
-    backgroundColor: "#EFF3FF",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
-    marginBottom: 20,
-  },
+  contentPoints: {},
   pointText: {
     marginVertical: 7,
     fontSize: 16,
   },
   timeDistanceContainer: {
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -110,16 +105,13 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   footer: {
-    position: "absolute",
+    marginTop: 40,
     bottom: 50,
-    left: 20,
-    right: 20,
     zIndex: 10,
   },
   chooseButton: {
     width: "100%",
     height: 50,
-    justifyContent: "center",
   },
 });
 

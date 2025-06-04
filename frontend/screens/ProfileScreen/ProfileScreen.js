@@ -59,8 +59,7 @@ const ProfileScreen = () => {
     navigation.navigate("LikeRoutesScreen");
   };
   const handlePremiumRoutesPress = () => {
-    if (premium) {
-      console.log(premium);
+    if (userData.premium) {
       navigation.navigate("PremiumCreateRouteScreen");
     } else {
       navigation.navigate("PremiumScreen");

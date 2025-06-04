@@ -11,6 +11,7 @@ spring:
           rating-service.url: ${RATING_SERVICE}
           route-service.url: ${ROUTE_SERVICE}
           subscription-service.url: ${SUBSCRIPTION-SERVICE}
+          ai-service.url: ${AI_SERVICE}
 
 springdoc:
   swagger-ui:

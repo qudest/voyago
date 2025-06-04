@@ -22,7 +22,8 @@ public class SwaggerConfiguration {
                 .info(new Info().title("Voyago Gateway API")
                         .description("Описание API Voyago"))
                 .servers(List.of(
-                        new Server().url("https://voyago-app.ru")
+                        new Server().url("https://voyago-app.ru"),
+                        new Server().url("http://localhost:8090")
                 ));
     }
 

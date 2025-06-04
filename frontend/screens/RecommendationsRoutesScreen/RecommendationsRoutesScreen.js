@@ -41,7 +41,11 @@ const RecommendationsRoutesScreen = () => {
       button_name: "премиум_маршруты",
       screen: "Экран просмотра маршрутов",
     });
-    navigation.navigate("PremiumCreateRouteScreen");
+    if (userData.premium) {
+      navigation.navigate("PremiumCreateRouteScreen");
+    } else {
+      navigation.navigate("PremiumScreen");
+    }
   };
 
   useEffect(() => {
@@ -57,10 +61,7 @@ const RecommendationsRoutesScreen = () => {
           console.log("Данные пользователя из кэша:", parsedData);
         }
       } catch (error) {
-        console.error(
-          "Ошибка при получении данных пользователя из кэша:",
-          error
-        );
+        console.log("Ошибка при получении данных пользователя из кэша:", error);
         setTokenLoaded(true);
       }
     };
@@ -114,7 +115,7 @@ const RecommendationsRoutesScreen = () => {
       const data = await response.json();
 
       if (data.status !== "OK") {
-        return "Место не найдено";
+        console.log("Место не найдено");
       }
 
       const name =
@@ -125,7 +126,7 @@ const RecommendationsRoutesScreen = () => {
       setCityNamesCache((prev) => ({ ...prev, [cleanPlaceId]: name }));
       return name;
     } catch (error) {
-      return "Ошибка загрузки";
+      console.log("Ошибка загрузки");
     }
   };
 
@@ -241,7 +242,7 @@ const RecommendationsRoutesScreen = () => {
             newFiltersFromScreen
           );
         } catch (e) {
-          console.error("Не удалось сохранить фильтры в AsyncStorage", e);
+          console.log("Не удалось сохранить фильтры в AsyncStorage", e);
         }
       },
     });
@@ -310,7 +311,7 @@ const RecommendationsRoutesScreen = () => {
 
   const mapRouteToCard = (route) => {
     if (!route.routePoints) {
-      console.error("Отсутствуют routePoints в маршруте:", route);
+      console.log("Отсутствуют routePoints в маршруте:", route);
       return null;
     }
 

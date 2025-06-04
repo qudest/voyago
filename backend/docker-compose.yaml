@@ -50,6 +50,7 @@ services:
       - RATING_SERVICE=http://rating-service:8090
       - ROUTE_SERVICE=http://route-service:8090
       - SUBSCRIPTION-SERVICE=http://subscription-service:8090
+      - AI_SERVICE=http://ai-service:8090
       - APP_PORT=8090
       - IN_MEMORY_USERNAME=${GATEWAY_USERNAME:-username}
       - IN_MEMORY_PASSWORD=${GATEWAY_PASSWORD:-password}
@@ -61,8 +62,11 @@ services:
       - rating-service
       - subscription-service
       - route-service
+      - ai-service
     ports:
       - "8090:8090"
+
+
 
   notification-service:
     image: qudest/voyago:notification-service
@@ -73,6 +77,9 @@ services:
     environment:
       - KAFKA_CONSUMER_BOOTSTRAP_SERVERS=kafka-1:9090,kafka-2:9090
       - APP_PORT=8090
+      - SMS_EMAIL=${SMS_EMAIL}
+      - SMS_API_KEY=${SMS_API_KEY}
+      - PROFILE=prod
     expose:
       - "8090"
     depends_on:
@@ -187,6 +194,23 @@ services:
       - kafka-1
       - kafka-2
       - kafka-3
+
+  ai-service:
+    image: qudest/voyago:ai-service
+    container_name: "ai-service"
+    build: ./ai-service
+    platform: linux/amd64
+    restart: always
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-google_api_key}
+      - APP_PORT=8090
+      - ACCOUNT_SERVICE=http://account-service:8090
+    expose:
+      - "8090"
+    networks:
+      - app
+    depends_on:
+      - account-service
 
   kafka-1:
     container_name: kafka-1
