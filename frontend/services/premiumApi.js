@@ -22,3 +22,19 @@ export const findPremiumUser = async (phoneNumber, accessToken) => {
     },
   });
 };
+
+export const aiRoute = async (phoneNumber, country, city, accessToken) => {
+  return axios.post(
+    `https://${API_URL}/api/ai`,
+    {
+      phone: phoneNumber,
+      country: country,
+      city: city,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+};

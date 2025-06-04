@@ -641,7 +641,7 @@ const MainScreen = () => {
                 image={
                   index === currentIndex
                     ? require("../../assets/markers/currentmini2.png")
-                    : marker.icon
+                    : marker.image || marker.icon
                 }
               />
             ))}
