@@ -4,6 +4,7 @@ import qs from "qs";
 
 export const findAll = async (accessToken, params = {}) => {
   try {
+<<<<<<< HEAD
     const defaultParams = {
       page: 0,
       size: 10,
@@ -11,6 +12,15 @@ export const findAll = async (accessToken, params = {}) => {
     };
 
     const queryString = Object.entries(defaultParams)
+=======
+    const updatedParams = {
+      page: 0,
+      size: 500,
+      ...params,
+    };
+
+    const queryString = Object.entries(updatedParams)
+>>>>>>> 49c8e3ef83e0059942e37c5441610f100e7ea6b5
       .map(([key, value]) => {
         if (Array.isArray(value)) {
           return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
@@ -26,7 +36,6 @@ export const findAll = async (accessToken, params = {}) => {
     });
   } catch (error) {
     console.log("Error fetching routes:", error);
-    throw error;
   }
 };
 
@@ -117,6 +126,7 @@ export const RouteDelete = async (id, accessToken) => {
   });
 };
 
+<<<<<<< HEAD
 export const findAllFavorites = async (userId, accessToken, params = {}) => {
   try {
     const defaultParams = {
@@ -124,6 +134,14 @@ export const findAllFavorites = async (userId, accessToken, params = {}) => {
       size: 10,
       ...params,
     };
+=======
+export const findAllFavorites = async (userId, accessToken, filters = {}) => {
+  const params = {
+    userId,
+    size: 500,
+    ...filters,
+  };
+>>>>>>> 49c8e3ef83e0059942e37c5441610f100e7ea6b5
 
     const queryString = Object.entries(defaultParams)
       .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
