@@ -18,8 +18,8 @@
     
 
 ### **Документация**  
-- Курсовая работа [pdf](Documentation/course_work.pdf) [doc](Documentation/course_work.docx)
-- Техническое задание [pdf](Documentation/Tech_zadanie_Voyago.pdf) [doc](Documentation/Tech_zadanie_Voyago.docx)  
+- Курсовая работа [pdf](Documentation/course_work_titul.pdf) [doc](Documentation/course_work.docx)
+- Техническое задание [pdf](Documentation/Tech_zadanie_Voyago_titul.pdf) [doc](Documentation/Tech_zadanie_Voyago_titul.docx)  
 - SWOT и анализ конкурентов [pdf](Documentation/SWOT-and-competitors.pdf) [doc](Documentation/SWOT-and-competitors.docx)  
 - Финансовая модель [pdf](Documentation/Financial-model.pdf) [doc](Documentation/Financial-model.docx)  
 - Диаграммы [png](Documentation/uml)  
